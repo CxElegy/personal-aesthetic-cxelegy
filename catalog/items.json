@@ -1,0 +1,633 @@
+{
+ "categories": [
+  {
+   "id": "motion",
+   "name": "动效",
+   "desc": "单个元素自己会动的效果：发光、流动、数字滚动。"
+  },
+  {
+   "id": "interaction",
+   "name": "交互",
+   "desc": "需要人去操作才发生的效果：长按、拖拽、跟随鼠标、打字、撕开。"
+  },
+  {
+   "id": "ui",
+   "name": "界面风格",
+   "desc": "一整个界面的样子：毛玻璃、暗色卡片墙、复古终端。"
+  },
+  {
+   "id": "visual",
+   "name": "视觉与画面",
+   "desc": "海报、配色、插画、实物设计的画面风格。"
+  },
+  {
+   "id": "prompt",
+   "name": "出图提示词",
+   "desc": "能直接拿去生成图片的提示词和它的写法。"
+  },
+  {
+   "id": "concept",
+   "name": "产品理念",
+   "desc": "值得借鉴的产品想法和体验设计。"
+  },
+  {
+   "id": "resource",
+   "name": "组件与资源",
+   "desc": "可以直接装、直接用的组件库和 AI Skill。"
+  },
+  {
+   "id": "rule",
+   "name": "核心规则",
+   "desc": "从 Wishlist 里定下的、所有设计都要遵守的规则。"
+  }
+ ],
+ "statuses": {
+  "replicated": "已复刻",
+  "todo": "待复刻",
+  "needs-asset": "需要素材",
+  "use-library": "直接用现成库",
+  "n/a": "不需要复刻"
+ },
+ "items": [
+  {
+   "id": "glow-button",
+   "title": "发光按钮・流光边框",
+   "category": "motion",
+   "tags": [
+    "按钮",
+    "暗色",
+    "彩虹光"
+   ],
+   "summary": "暗色胶囊按钮，一圈彩虹光沿边框流动；只给页面最重要的那一个按钮。",
+   "source": {
+    "type": "录屏",
+    "title": "我发的录屏"
+   },
+   "ref": "references/motion",
+   "video": "motion/glow-button.mp4",
+   "thumb": "references/motion/like-发光按钮-流光边框.jpg",
+   "contact": null,
+   "demo": "demos/glow-button.html",
+   "status": "replicated",
+   "verify": {
+    "date": "2026-11-20",
+    "score": 85,
+    "image": "verify/glow-button.jpg",
+    "match": [
+     "暗色胶囊按钮、细白内边、彩虹光沿边框流动 ✓",
+     "第一版做成整圈彩虹，对比后改成只有一段彩虹像流星绕圈 ✓"
+    ],
+    "diff": [
+     "原作光晕更柔、更宽一点"
+    ],
+    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
+   }
+  },
+  {
+   "id": "typing-cat",
+   "title": "桌面打字小黑猫",
+   "category": "interaction",
+   "tags": [
+    "小猫",
+    "鼠标跟随",
+    "键盘",
+    "可爱"
+   ],
+   "summary": "眼睛跟着鼠标，摸头眯眼，你打字它就敲键盘、弹出字母键帽。小猫项目要复刻的对象。",
+   "ref": "references/xhs/2026-11-20-有没有能get到的🐱-018db4",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/3xwgVK18VQO",
+    "author": "艾_",
+    "title": "有没有能get到的🐱"
+   },
+   "video": "xhs/6b0009d3000000002a018db4.mp4",
+   "thumb": "references/xhs/2026-11-20-有没有能get到的🐱-018db4/frame-02.jpg",
+   "contact": "references/xhs/2026-11-20-有没有能get到的🐱-018db4/contact-sheet.jpg",
+   "demo": "demos/typing-cat.html",
+   "status": "replicated",
+   "verify": {
+    "date": "2026-11-20",
+    "score": 75,
+    "image": "verify/typing-cat.jpg",
+    "match": [
+     "扁平黑猫、大黄绿眼睛、胡须、尾巴 ✓",
+     "眼睛跟随鼠标、摸头眯眼、打字时爪子敲键盘、字母键帽弹出 ✓",
+     "对比后补上键盘黑边和左边白色圆按钮 ✓"
+    ],
+    "diff": [
+     "原作打字时身体前倾、两只爪子抬起交替敲",
+     "原作摸头时会伸爪去按圆按钮",
+     "原作背景是用户的桌面壁纸（桌宠），这里是网页"
+    ],
+    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
+   }
+  },
+  {
+   "id": "mouse-tracking",
+   "title": "鼠标追踪的 3D 小黑猫首屏",
+   "category": "interaction",
+   "tags": [
+    "小猫",
+    "鼠标跟随",
+    "AI 视频"
+   ],
+   "summary": "AI 生成写实小猫 → AI 视频让它转身 → 按鼠标横向位置切换视频帧。",
+   "ref": "references/xhs/2026-11-20-鼠标追踪‼️充满趣味的网站首页交互效果-02887b",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/16qYt4URJdI",
+    "author": "Astro设计笔记",
+    "title": "鼠标追踪‼️充满趣味的网站首页交互效果"
+   },
+   "video": "xhs/6abc7965000000000202887b.mp4",
+   "thumb": "references/xhs/2026-11-20-鼠标追踪‼️充满趣味的网站首页交互效果-02887b/frame-02.jpg",
+   "contact": "references/xhs/2026-11-20-鼠标追踪‼️充满趣味的网站首页交互效果-02887b/contact-sheet.jpg",
+   "demo": null,
+   "status": "needs-asset",
+   "status_note": "需要先用 AI 生成小猫图片和转身视频，代码部分很简单；素材准备好再复刻。",
+   "verify": null
+  },
+  {
+   "id": "liquid-tab",
+   "title": "液态标签页",
+   "category": "interaction",
+   "tags": [
+    "标签页",
+    "SVG",
+    "弹簧动画"
+   ],
+   "summary": "标签和面板是一条连续路径，拖起标签时连接处的弯角像液体一样拉长、断开、再融合。",
+   "ref": "references/xhs/2026-11-20-如何利用ai-复刻X上31w人围观的液态标签页！-031959",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/7PZn8rmHoDE",
+    "author": "设计招财头",
+    "title": "如何利用ai 复刻X上31w人围观的液态标签页！"
+   },
+   "video": "xhs/6b0012e2000000001c031959.mp4",
+   "thumb": "references/xhs/2026-11-20-如何利用ai-复刻X上31w人围观的液态标签页！-031959/frame-02.jpg",
+   "contact": "references/xhs/2026-11-20-如何利用ai-复刻X上31w人围观的液态标签页！-031959/contact-sheet.jpg",
+   "demo": "demos/liquid-tab.html",
+   "status": "replicated",
+   "verify": {
+    "date": "2026-11-20",
+    "score": 70,
+    "image": "verify/liquid-tab.jpg",
+    "match": [
+     "标签和面板是一条连续路径、反向圆角 ✓",
+     "拖起拉伸 → 断开浮起（Floating）→ 弹簧落回融合（Seamless）✓",
+     "切换标签时白色形状滑过去 ✓",
+     "调试面板显示 lift / fillet / velocity ✓"
+    ],
+    "diff": [
+     "原作拉伸时只在两个底角拉出细丝，我的「脖子」太粗像气泡",
+     "原作有点阵背景和辅助线标注",
+     "原作标签带关闭 × 和 + 号"
+    ],
+    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
+   }
+  },
+  {
+   "id": "holo-pack",
+   "title": "撕开卡包的开奖动画",
+   "category": "interaction",
+   "tags": [
+    "收藏",
+    "开包",
+    "彩纸",
+    "镭射"
+   ],
+   "summary": "撕开铝箔卡包 → 彩虹波浪喷出 → 五张闪卡扇形飞出 + 彩纸。适合抽奖、领奖励。",
+   "ref": "references/xhs/2026-11-20-抽奖的灵感有着落了！-03cbe9",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/544mW3K5BDk",
+    "author": "cmg",
+    "title": "抽奖的灵感有着落了！"
+   },
+   "video": "xhs/6af3eb03000000002903cbe9.mp4",
+   "thumb": "references/xhs/2026-11-20-抽奖的灵感有着落了！-03cbe9/frame-02.jpg",
+   "contact": "references/xhs/2026-11-20-抽奖的灵感有着落了！-03cbe9/contact-sheet.jpg",
+   "demo": "demos/holo-pack.html",
+   "status": "replicated",
+   "verify": {
+    "date": "2026-11-20",
+    "score": 70,
+    "image": "verify/holo-pack.jpg",
+    "match": [
+     "铝箔卡包随鼠标倾斜反光 ✓",
+     "撕开顶部 → 卡片飞出扇形展开 → 排成一排 + 彩纸 ✓",
+     "对比时发现脚本因变量名冲突完全没运行，已修复 ✓"
+    ],
+    "diff": [
+     "原作的彩虹波浪更粗、更明显，从开口一直冲出画面",
+     "原作卡面是 3D 角色插画，我用的是 emoji",
+     "原作有藏青、红、粉三种颜色的卡包轮换"
+    ],
+    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
+   }
+  },
+  {
+   "id": "hold-to-delete",
+   "title": "长按删除",
+   "category": "interaction",
+   "tags": [
+    "删除",
+    "进度环",
+    "撤销"
+   ],
+   "summary": "按住垃圾桶不放，红色进度环走满才删除；松手取消；删空可全部找回。",
+   "ref": "references/xhs/2026-11-20-这个“删除”的交互方式对你有没有启发-0315d9",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/4LyZRK0FLHo",
+    "author": "逸少UIUX",
+    "title": "这个“删除”的交互方式对你有没有启发"
+   },
+   "video": "xhs/6affca1300000000160315d9.mp4",
+   "thumb": "references/xhs/2026-11-20-这个“删除”的交互方式对你有没有启发-0315d9/frame-02.jpg",
+   "contact": "references/xhs/2026-11-20-这个“删除”的交互方式对你有没有启发-0315d9/contact-sheet.jpg",
+   "demo": "demos/hold-to-delete.html",
+   "status": "replicated",
+   "verify": {
+    "date": "2026-11-20",
+    "score": 95,
+    "image": "verify/hold-to-delete.jpg",
+    "match": [
+     "长按进度环、红色提示文字、松手取消、行收起、数量更新、删空后找回 ✓"
+    ],
+    "diff": [
+     "文字改成了中文（有意为之）"
+    ],
+    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
+   }
+  },
+  {
+   "id": "ai-status-cards",
+   "title": "满屏会动的 AI 状态卡片",
+   "category": "ui",
+   "tags": [
+    "暗色",
+    "卡片墙",
+    "数据"
+   ],
+   "summary": "黑底上铺满任务卡片，进度条、数字、声波各自在动，信息密但想一直看。",
+   "ref": "references/xhs/2026-11-20-🆓救命！这个UI动效-Skill-也太好看了吧-008af8",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/8GvoheRBics",
+    "author": "大厂劝退师",
+    "title": "🆓救命！这个UI动效 Skill 也太好看了吧"
+   },
+   "video": "xhs/6afc0db90000000025008af8.mp4",
+   "thumb": "references/xhs/2026-11-20-🆓救命！这个UI动效-Skill-也太好看了吧-008af8/frame-02.jpg",
+   "contact": "references/xhs/2026-11-20-🆓救命！这个UI动效-Skill-也太好看了吧-008af8/contact-sheet.jpg",
+   "demo": null,
+   "status": "todo",
+   "verify": null
+  },
+  {
+   "id": "glass-dashboard",
+   "title": "暖色毛玻璃仪表盘",
+   "category": "ui",
+   "tags": [
+    "毛玻璃",
+    "数字滚动",
+    "珊瑚红"
+   ],
+   "summary": "半透明卡片透出暖色背景，数字像老虎机逐位滚动，悬停浮起。",
+   "ref": "references/xhs/2026-11-20-精美在每个看得见的细节里-02bfda",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/8tRsBA29Iak",
+    "author": "海归程序员李工",
+    "title": "精美在每个看得见的细节里"
+   },
+   "video": "xhs/6af6f7a3000000002a02bfda.mp4",
+   "thumb": "references/xhs/2026-11-20-精美在每个看得见的细节里-02bfda/frame-02.jpg",
+   "contact": "references/xhs/2026-11-20-精美在每个看得见的细节里-02bfda/contact-sheet.jpg",
+   "demo": "demos/glass-stats.html",
+   "status": "replicated",
+   "verify": {
+    "date": "2026-11-20",
+    "score": 75,
+    "image": "verify/glass-dashboard.jpg",
+    "match": [
+     "暖色毛玻璃卡片、珊瑚红主卡、斜体衬线强调词 ✓",
+     "数字逐位老虎机滚动、悬停浮起 ✓"
+    ],
+    "diff": [
+     "原作开场是从一个圆形模糊里放大出现",
+     "原作侧边栏会展开成带文字的菜单",
+     "原作头像会绕着进度环转"
+    ],
+    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
+   }
+  },
+  {
+   "id": "eva-magi",
+   "title": "EVA 风格电子工牌",
+   "category": "ui",
+   "tags": [
+    "动漫",
+    "复古终端",
+    "汉字"
+   ],
+   "summary": "FoloToy 自制固件，MAGI 三面板跳出「承認」「否定」「審議」。",
+   "ref": "references/xhs/2026-11-20-发朋友圈没人懂，但发小红书一定有人懂-01f1a8",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/128oT6qu8bt",
+    "author": "Nedtric",
+    "title": "发朋友圈没人懂，但发小红书一定有人懂"
+   },
+   "video": "xhs/6af82764000000002501f1a8.mp4",
+   "thumb": "references/xhs/2026-11-20-发朋友圈没人懂，但发小红书一定有人懂-01f1a8/frame-02.jpg",
+   "contact": "references/xhs/2026-11-20-发朋友圈没人懂，但发小红书一定有人懂-01f1a8/contact-sheet.jpg",
+   "demo": null,
+   "status": "todo",
+   "verify": null
+  },
+  {
+   "id": "blossom-carousel",
+   "title": "Blossom Carousel 轮播组件",
+   "category": "resource",
+   "tags": [
+    "轮播",
+    "卡片",
+    "AI Skill"
+   ],
+   "summary": "Cover Flow、Flipbook、叠放卡片等；自带 AI Skill：npx skills add https://blossom-carousel.com",
+   "ref": "references/xhs/2026-11-20-高质量-UI-交互组件-+-AI-Skill-安装-02cee6",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/6KEDM7IBx7l",
+    "author": "象限设计局",
+    "title": "高质量 UI 交互组件 + AI Skill 安装"
+   },
+   "video": "xhs/6aec80d3000000000402cee6.mp4",
+   "thumb": "references/xhs/2026-11-20-高质量-UI-交互组件-+-AI-Skill-安装-02cee6/frame-02.jpg",
+   "contact": "references/xhs/2026-11-20-高质量-UI-交互组件-+-AI-Skill-安装-02cee6/contact-sheet.jpg",
+   "demo": null,
+   "status": "use-library",
+   "status_note": "直接装官方 Skill 使用，不手写。",
+   "verify": null
+  },
+  {
+   "id": "react-bits",
+   "title": "React Bits 动效组件库",
+   "category": "resource",
+   "tags": [
+    "动效",
+    "组件库"
+   ],
+   "summary": "文字逐字出现、粒子、磁吸、点击火花、网格律动背景。做动效先来这里找。",
+   "source": {
+    "type": "录屏截图",
+    "url": "https://reactbits.dev",
+    "title": "reactbits.dev"
+   },
+   "ref": "references/product",
+   "video": null,
+   "thumb": "references/product/like-reactbits-动效组件库.jpg",
+   "contact": null,
+   "demo": null,
+   "status": "use-library",
+   "verify": null
+  },
+  {
+   "id": "revlo",
+   "title": "Revlo：把实物收藏成卡片",
+   "category": "concept",
+   "tags": [
+    "收藏",
+    "稀有度",
+    "AI 识别",
+    "卡片"
+   ],
+   "summary": "拍路上的车 → AI 认车型 → 生成带稀有度的收藏卡（Photo in. Card out.）。",
+   "ref": "references/xhs/2026-11-20-车迷做了个“汽车版宝可梦”，收入1.7万美金！-015aac",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/3VpqnHes5Nb",
+    "author": "逸蒙的赛博空间",
+    "title": "车迷做了个“汽车版宝可梦”，收入1.7万美金！"
+   },
+   "video": "xhs/6b0022c9000000001f015aac.mp4",
+   "thumb": "references/xhs/2026-11-20-车迷做了个“汽车版宝可梦”，收入1.7万美金！-015aac/frame-02.jpg",
+   "contact": "references/xhs/2026-11-20-车迷做了个“汽车版宝可梦”，收入1.7万美金！-015aac/contact-sheet.jpg",
+   "demo": null,
+   "status": "n/a",
+   "verify": null
+  },
+  {
+   "id": "cat-collector",
+   "title": "Cat Collector：只收真猫",
+   "category": "concept",
+   "tags": [
+    "收藏",
+    "现实×虚拟",
+    "地图",
+    "小猫"
+   ],
+   "summary": "路上拍到真猫它就归你：变成图鉴卡片、起名、标在地图上；只认当场拍的真猫。",
+   "ref": "references/xhs/2026-11-20-只收真猫的App，30万人抓了46万只猫-000021",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/8PZevr2910U",
+    "author": "一亿个AI想法",
+    "title": "只收真猫的App，30万人抓了46万只猫"
+   },
+   "video": "xhs/6b000ab8000000002b000021.mp4",
+   "thumb": "references/xhs/2026-11-20-只收真猫的App，30万人抓了46万只猫-000021/frame-02.jpg",
+   "contact": "references/xhs/2026-11-20-只收真猫的App，30万人抓了46万只猫-000021/contact-sheet.jpg",
+   "demo": null,
+   "status": "n/a",
+   "verify": null
+  },
+  {
+   "id": "3d-simulator",
+   "title": "可以点的实时 3D 模拟器",
+   "category": "concept",
+   "tags": [
+    "3D",
+    "等距",
+    "仪表盘"
+   ],
+   "summary": "积木玩具风格的施工现场，机器自己干活、进度实时上涨、点哪台看哪台。",
+   "ref": "references/xhs/2026-11-20-如果你一直想把任何行业变成一个实时模拟器-024711",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/5iDBma7iVcG",
+    "author": "未来鹰｜硅基猿AI资讯",
+    "title": "如果你一直想把任何行业变成一个实时模拟器"
+   },
+   "video": "xhs/6afff2660000000018024711.mp4",
+   "thumb": "references/xhs/2026-11-20-如果你一直想把任何行业变成一个实时模拟器-024711/frame-02.jpg",
+   "contact": "references/xhs/2026-11-20-如果你一直想把任何行业变成一个实时模拟器-024711/contact-sheet.jpg",
+   "demo": null,
+   "status": "n/a",
+   "verify": null
+  },
+  {
+   "id": "poster-3-steps",
+   "title": "丑海报变高级的三步",
+   "category": "visual",
+   "tags": [
+    "排版",
+    "海报"
+   ],
+   "summary": "主体不抢眼就放大；单调就加细节；没焦点就用对比强调。",
+   "ref": "references/xhs/2026-11-20-排版Skill拆解构图原理🍎丑海报3步变高级-035f2c",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/4XJYPKYzZEg",
+    "author": "酷兔AIGC",
+    "title": "排版Skill拆解构图原理🍎丑海报3步变高级"
+   },
+   "video": "xhs/6ae15c43000000002b035f2c.mp4",
+   "thumb": "references/xhs/2026-11-20-排版Skill拆解构图原理🍎丑海报3步变高级-035f2c/frame-02.jpg",
+   "contact": "references/xhs/2026-11-20-排版Skill拆解构图原理🍎丑海报3步变高级-035f2c/contact-sheet.jpg",
+   "demo": null,
+   "status": "n/a",
+   "verify": null
+  },
+  {
+   "id": "raster-poster",
+   "title": "线条光栅海报",
+   "category": "prompt",
+   "tags": [
+    "海报",
+    "提示词",
+    "生成式"
+   ],
+   "summary": "上半原照，下半用细密平行线把主体「顶」出来。提示词原文见 AESTHETIC.md 第 11 节。",
+   "ref": "references/xhs/2026-11-20-一天一个AI提示词✨-02cf01",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/ACmN2CMRE4o",
+    "author": "AI构筑师Vision",
+    "title": "一天一个AI提示词✨"
+   },
+   "video": null,
+   "thumb": "references/xhs/2026-11-20-一天一个AI提示词✨-02cf01/img-01.jpg",
+   "contact": null,
+   "demo": null,
+   "status": "n/a",
+   "verify": null
+  },
+  {
+   "id": "geometry-poster",
+   "title": "几何拆解海报",
+   "category": "prompt",
+   "tags": [
+    "海报",
+    "提示词",
+    "包豪斯",
+    "衬线"
+   ],
+   "summary": "米白纸面、包豪斯几何插画、细高斜体衬线双色标题。",
+   "ref": "references/xhs/2026-11-20-这个是提示词审美太赞了吧！-038e7e",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/8tChWX35mFv",
+    "author": "Jennie_AI学习记",
+    "title": "这个是提示词审美太赞了吧！"
+   },
+   "video": null,
+   "thumb": "references/xhs/2026-11-20-这个是提示词审美太赞了吧！-038e7e/img-01.jpg",
+   "contact": null,
+   "demo": null,
+   "status": "n/a",
+   "verify": null
+  },
+  {
+   "id": "bible-mug",
+   "title": "圣经书本叠杯",
+   "category": "visual",
+   "tags": [
+    "莫兰迪",
+    "烫金",
+    "手作"
+   ],
+   "summary": "低饱和莫兰迪色 + 烫金衬线字 + 手绘野花。",
+   "source": {
+    "type": "截图"
+   },
+   "ref": "references/visual",
+   "video": null,
+   "thumb": "references/visual/like-书本叠杯-圣经马克杯.jpg",
+   "contact": null,
+   "demo": null,
+   "status": "n/a",
+   "verify": null
+  },
+  {
+   "id": "starbucks-capsule",
+   "title": "星巴克毛绒扭蛋",
+   "category": "visual",
+   "tags": [
+    "收藏",
+    "扭蛋",
+    "可爱"
+   ],
+   "summary": "成套的迷你毛绒挂件，限定款。",
+   "source": {
+    "type": "截图"
+   },
+   "ref": "references/visual",
+   "video": null,
+   "thumb": "references/visual/like-星巴克扭蛋挂件海报.jpg",
+   "contact": null,
+   "demo": null,
+   "status": "n/a",
+   "verify": null
+  },
+  {
+   "id": "reze-poster",
+   "title": "电锯人蕾塞篇海报",
+   "category": "visual",
+   "tags": [
+    "单色",
+    "电影感",
+    "动漫"
+   ],
+   "summary": "整片电光蓝 + 斜雨线，情绪性的电影瞬间。",
+   "source": {
+    "type": "截图"
+   },
+   "ref": "references/visual",
+   "video": null,
+   "thumb": "references/visual/like-电锯人蕾塞篇-蓝色雨海报.jpg",
+   "contact": null,
+   "demo": null,
+   "status": "n/a",
+   "verify": null
+  },
+  {
+   "id": "wishlist-rules",
+   "title": "Wishlist 的审美规则（P5 版面）",
+   "category": "rule",
+   "tags": [
+    "留白",
+    "图片",
+    "层级",
+    "P5"
+   ],
+   "summary": "无意图的空白全部扣分；不切字和脸；一页一个高光；硬阴影 + 轻倾斜 + 平行四边形标签。",
+   "source": {
+    "type": "GitHub",
+    "url": "https://github.com/CxElegy/Wishlist",
+    "title": "CxElegy/Wishlist"
+   },
+   "ref": "references/product",
+   "video": null,
+   "thumb": null,
+   "contact": null,
+   "demo": null,
+   "status": "n/a",
+   "verify": null
+  }
+ ]
+}

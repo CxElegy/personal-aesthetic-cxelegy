@@ -1,0 +1,6 @@
+{
+  "supabaseUrl": "",
+  "anonKey": "",
+  "table": "aesthetic_items",
+  "videoBucket": "aesthetic-videos"
+}

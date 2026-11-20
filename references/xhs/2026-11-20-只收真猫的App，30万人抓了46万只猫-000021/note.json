@@ -1,0 +1,44 @@
+{
+ "id": "6b000ab8000000002b000021",
+ "type": "video",
+ "title": "只收真猫的App，30万人抓了46万只猫",
+ "desc": "路上碰到一只猫，掏出手机拍一下，它就归你了。\n\t\n这个 App 叫 Cat Collector，说白了就是抓真猫的宝可梦。拍到的猫会变成你图鉴里的一张卡，可以起名字、标在地图上。现在 AI 一秒就能做出一只猫，它偏偏只认真猫：必须用 App 里的相机当场拍，相册里的不行，AI 做的更不行。\n\t\n做它的是加拿大蒙特利尔的一个小团队，带头的叫 Nicholas。他自己修 bug 也用 AI 编程工具 Claude Code，可推广这件事，AI 没帮上忙：AI 做的种草视频基本只有一千播放，他把第一条介绍视频反复重发，第二天冲到了两百五十万。\n\t\n现在已经有三十万人，在一百九十三个国家，抓了四十六万只猫。前两天，它还冲到了台湾地区、香港地区 App Store 家庭游戏免费榜第一。\n#AI应用[话题]#  #独立开发[话题]#  #撸猫[话题]#  #流浪猫[话题]#  #AI产品案例[话题]#",
+ "user": "一亿个AI想法",
+ "tags": [
+  "AI应用",
+  "独立开发",
+  "撸猫",
+  "流浪猫",
+  "AI产品案例"
+ ],
+ "interact": {
+  "liked": false,
+  "likedCount": "190",
+  "collected": false,
+  "collectedCount": "212",
+  "commentCount": "3",
+  "relation": "none",
+  "shareCount": "88",
+  "followed": false,
+  "niceCount": ""
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611210742/45b09d1ffd9190d9e9064f0690b2285e/spectrum/1040g0k0327pngpml6e005o4kil1g8m81fvuo6kg!nd_dft_wlteh_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v11.rednotecdn.com/stream/1/110/258/01eb000a8808c0ab01037001a1f82a6182_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/1/110/258/01eb000a8808c0ab01037001a1f82a6182_258.mp4"
+   ],
+   "w": 720,
+   "h": 1280,
+   "size": 10189011
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/8PZevr2910U",
+ "fetched": "2026-11-20T23:43:08.046Z",
+ "videoNote": ""
+}

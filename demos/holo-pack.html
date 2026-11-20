@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>撕开卡包</title>
+<!-- 复刻：小红书「抽奖的灵感有着落了！」（作者 YASH）。立体铝箔卡包随鼠标倾斜反光；点击撕开顶部 → 彩虹波浪喷出 → 五张闪卡扇形飞出 + 彩纸 → 排成一排。 -->
+<style>
+:root{--bg:#ECEAE6;--ink:#1C1C22}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;overflow:hidden;background:radial-gradient(70% 60% at 50% 45%,#F6F5F2,var(--bg));font:14px/1.4 Inter,"Noto Sans SC",system-ui,sans-serif;color:var(--ink)}
+.stage{position:fixed;inset:0;display:grid;place-items:center;perspective:900px}
+.pack{position:relative;width:150px;height:200px;transform-style:preserve-3d;cursor:pointer;transition:transform .15s ease-out}
+.pack .body,.pack .top{position:absolute;left:0;right:0;border-radius:10px;overflow:hidden;
+  background:linear-gradient(160deg,#20243A,#141726 60%,#1E2236);box-shadow:0 30px 40px -20px rgba(0,0,0,.45)}
+.pack .body{top:22px;bottom:0;border-top-left-radius:2px;border-top-right-radius:2px}
+.pack .top{top:0;height:24px;border-bottom-left-radius:0;border-bottom-right-radius:0;transform-origin:85% 100%;
+  background:repeating-linear-gradient(90deg,#2A2F4A 0 6px,#20243A 6px 12px)}
+.pack .top::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:6px;background:radial-gradient(circle at 3px 0,transparent 3px,#141726 3.5px) 0 0/6px 6px repeat-x}
+.pack .logo{position:absolute;left:14px;top:12px;font:800 18px/1 Inter,sans-serif;color:#fff;letter-spacing:-.02em}
+.pack .star{position:absolute;left:50%;top:55%;width:74px;height:74px;transform:translate(-50%,-50%);
+  clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);
+  background:conic-gradient(from var(--h,0deg),#FF9AD5,#9AE6FF,#C8FF9A,#FFE49A,#C49AFF,#FF9AD5)}
+.pack .sheen{position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.22) 45%,transparent 60%);
+  background-size:250% 100%;background-position:var(--sx,50%) 0;mix-blend-mode:screen}
+.shadow{position:absolute;width:140px;height:18px;border-radius:50%;background:rgba(0,0,0,.18);filter:blur(8px);transform:translateY(122px)}
+.wave{position:absolute;width:150px;height:0;bottom:50%;left:calc(50% - 75px);overflow:hidden;pointer-events:none;transform-origin:50% 100%}
+.wave i{position:absolute;bottom:0;width:14px;height:100%;border-radius:7px;
+  background:linear-gradient(#FF5A5A,#FF9F43,#FFE15A,#4BD37B,#3BA7FF,#8E6CFF,#FF5ACD) 0 0/100% 400px;animation:wob .5s ease-in-out infinite alternate}
+@keyframes wob{to{transform:translateX(6px)}}
+.card{position:absolute;width:96px;height:132px;border-radius:9px;padding:8px;color:#fff;font:700 11px Inter,sans-serif;display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:0 10px 20px -8px rgba(0,0,0,.35),inset 0 0 0 1.5px rgba(255,255,255,.35);opacity:0;will-change:transform}
+.card .art{align-self:center;font-size:40px;line-height:1;filter:drop-shadow(0 4px 6px rgba(0,0,0,.25))}
+.card small{display:block;font-weight:500;opacity:.8;font-size:9px}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.35) 48%,transparent 62%);mix-blend-mode:overlay}
+.again{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);border:0;border-radius:999px;padding:9px 16px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.08);font:500 12px Inter,sans-serif;cursor:pointer;opacity:0;transition:opacity .3s}
+.hint{position:fixed;left:0;right:0;bottom:30px;text-align:center;font-size:12px;color:#777}
+canvas{position:fixed;inset:0;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.wave i{animation:none}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="shadow"></div>
+  <div class="wave" id="wave"></div>
+  <div class="pack" id="pack"><div class="body"><div class="logo">holo</div><div class="star"></div><div class="sheen"></div></div><div class="top" id="top"></div></div>
+</div>
+<canvas id="fx"></canvas>
+<div class="hint" id="hint">移动鼠标看反光，点一下撕开卡包</div>
+<button class="again" id="again">再开一包</button>
+<script>
+const CARDS=[{n:'Cloud',r:'Rare',a:'☁️',bg:'linear-gradient(150deg,#5B3CC4,#1E1A6B 60%,#0E8A8A)'},{n:'Ringo',r:'Epic',a:'🪐',bg:'linear-gradient(150deg,#2B2E9E,#5A2AA0 50%,#1A1450)'},
+  {n:'Blo',r:'Common',a:'🔴',bg:'linear-gradient(150deg,#FFB3A7,#F08A7E)'},{n:'Nova',r:'Legend',a:'⭐',bg:'conic-gradient(from 200deg,#FF6B6B,#FFD93D,#6BCB77,#4D96FF,#FF6B6B)'},
+  {n:'Cube',r:'Uncommon',a:'🟩',bg:'linear-gradient(150deg,#D5F5A6,#9BDB6A)'}];
+const pack=document.getElementById('pack'),tearTop=document.getElementById('top'),wave=document.getElementById('wave'),stage=document.getElementById('stage'),again=document.getElementById('again'),hint=document.getElementById('hint');
+const cv=document.getElementById('fx'),cx=cv.getContext('2d');let parts=[];function size(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio}size();addEventListener('resize',size);
+let opened=false;
+// 随鼠标倾斜 + 反光移动
+addEventListener('pointermove',e=>{if(opened)return;const x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5;
+  pack.style.transform=`rotateY(${x*28}deg) rotateX(${-y*20}deg)`;pack.style.setProperty('--sx',(50+x*120)+'%');pack.querySelector('.star').style.setProperty('--h',(x*180)+'deg')});
+for(let i=0;i<9;i++){const s=document.createElement('i');s.style.left=(i*16)+'px';s.style.animationDelay=(i*.05)+'s';s.style.backgroundPosition=`0 ${-i*30}px`;wave.appendChild(s)}
+function confetti(x,y){const C=['#FF5A5A','#FFB03B','#FFE15A','#4BD37B','#3BA7FF','#8E6CFF','#FF5ACD'];
+  for(let i=0;i<120;i++)parts.push({x,y,vx:(Math.random()-.5)*9,vy:-Math.random()*10-3,s:3+Math.random()*4,c:C[i%C.length],r:Math.random()*6,vr:(Math.random()-.5)*.3,life:1})}
+(function loop(){cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);cx.clearRect(0,0,innerWidth,innerHeight);
+  parts=parts.filter(p=>p.life>0);parts.forEach(p=>{p.vy+=.25;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.life-=.008;cx.save();cx.globalAlpha=Math.min(1,p.life*2);cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);cx.restore()});
+  requestAnimationFrame(loop)})();
+async function open(){if(opened)return;opened=true;hint.style.opacity=0;pack.style.transform='';
+  const r=pack.getBoundingClientRect();
+  // 1 撕开顶部
+  await tearTop.animate([{transform:'rotate(0)'},{transform:'translate(30px,-26px) rotate(28deg)',opacity:1},{transform:'translate(90px,60px) rotate(70deg)',opacity:0}],{duration:650,easing:'cubic-bezier(.3,.6,.4,1)',fill:'forwards'}).finished;
+  // 2 彩虹波浪喷出
+  wave.style.bottom=(innerHeight-r.top-22)+'px';
+  wave.animate([{height:'0px'},{height:'320px'},{height:'0px',transform:'translateY(-320px)'}],{duration:1100,easing:'cubic-bezier(.2,.7,.3,1)'});
+  await new Promise(s=>setTimeout(s,280));
+  // 3 卡片飞出、扇形展开、撒彩纸
+  confetti(r.left+r.width/2,r.top+20);
+  pack.animate([{transform:'translateY(0)',opacity:1},{transform:'translateY(140px) scale(.85)',opacity:0}],{duration:700,delay:300,easing:'ease-in',fill:'forwards'});
+  const n=CARDS.length,gap=Math.min(108,(innerWidth-40)/n);
+  CARDS.forEach((c,i)=>{const el=document.createElement('div');el.className='card';el.style.background=c.bg;el.innerHTML=`<span>${c.n}<small>${c.r}</small></span><div class="art">${c.a}</div><small>#00${i+1} · holo</small>`;stage.appendChild(el);
+    const fan=(i-(n-1)/2),ang=fan*14,fx=fan*58,fy=-150+Math.abs(fan)*18,lx=fan*gap;
+    el.animate([{transform:'translate(0,40px) scale(.4) rotate(0)',opacity:0},{transform:`translate(${fx}px,${fy}px) rotate(${ang}deg) scale(1)`,opacity:1,offset:.45},
+      {transform:`translate(${fx}px,${fy}px) rotate(${ang}deg) scale(1)`,opacity:1,offset:.7},{transform:`translate(${lx}px,0) rotate(${(Math.random()-.5)*4}deg) scale(1)`,opacity:1}],
+      {duration:1700,delay:i*70,easing:'cubic-bezier(.2,.8,.2,1)',fill:'forwards'})});
+  setTimeout(()=>again.style.opacity=1,1900)}
+pack.addEventListener('click',open);
+again.onclick=()=>{document.querySelectorAll('.card').forEach(c=>c.remove());tearTop.getAnimations().forEach(a=>a.cancel());pack.getAnimations().forEach(a=>a.cancel());again.style.opacity=0;hint.style.opacity=1;opened=false};
+</script>
+</body>
+</html>

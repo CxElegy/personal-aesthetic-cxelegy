@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>液态标签页</title>
+<!-- 复刻：小红书「如何利用ai 复刻X上31w人围观的液态标签页！」（设计招财头）。
+     选中的标签和下面的白色面板是同一条 SVG 路径；把标签往上拖，连接处像液体一样被拉细，拉过头就断开浮起；松手后用弹簧（刚度 300、阻尼 20）落回并重新融合。点别的标签，白色形状滑过去。 -->
+<style>
+:root{--bg:#EDECE8;--frame:#1C1C1E;--paper:#FFFFFF;--sub:#8E8E93;--mono:ui-monospace,"JetBrains Mono",monospace;--green:#2FBF71}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font:14px/1.4 Inter,"Noto Sans SC",system-ui,sans-serif;color:#111;padding:16px}
+.wrap{width:min(560px,100%)}
+h1{font-size:20px;margin:0 0 2px}.lead{margin:0 0 14px;color:#666;font-size:12px}
+.win{position:relative;background:var(--frame);border-radius:18px;padding:0;overflow:hidden;touch-action:none;user-select:none}
+svg{display:block;width:100%;height:auto}
+.label{font:500 13px Inter,sans-serif;pointer-events:none}
+.hud{position:absolute;right:12px;top:10px;font:11px/1.5 var(--mono);color:#cfcfd4;background:rgba(255,255,255,.06);padding:6px 8px;border-radius:8px;white-space:pre}
+.state{position:absolute;left:12px;bottom:12px;font:11px var(--mono);padding:4px 8px;border-radius:999px;background:#F2F2F4;color:#333}
+.state b{color:var(--green)}.state.float b{color:#E5484D}
+.foot{display:flex;justify-content:space-between;margin-top:10px;font:11px var(--mono);color:#888}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>为什么丝滑软件的标签页像液体？</h1>
+  <p class="lead">把白色标签往上拖一拖，或者点别的标签。</p>
+  <div class="win" id="win">
+    <svg id="svg" viewBox="0 0 560 320"><path id="shape" fill="var(--paper)"/><g id="labels"></g></svg>
+    <div class="hud" id="hud"></div>
+    <div class="state" id="state">R_in 14.0px · <b>Seamless</b></div>
+  </div>
+  <div class="foot"><span>Spring(300, 20) · SVG Continuous Path</span><span>demos/liquid-tab.html</span></div>
+</div>
+<script>
+const W=560,H=320,P=120,TH=32,TW=110,R=14,RC=10,X0=60,GAP=8; // P=面板顶边 y，TH=标签高，R=反向圆角
+const TABS=['General','Tokens','Motion'];
+const shape=document.getElementById('shape'),labels=document.getElementById('labels'),svg=document.getElementById('svg');
+const hud=document.getElementById('hud'),stateEl=document.getElementById('state');
+const tabX=i=>X0+i*(TW+GAP);
+// 弹簧
+function spring(v){return{v,t:v,vel:0}}
+const sx=spring(tabX(0)),lift=spring(0),fil=spring(R);let active=0,dragging=false,detached=false,dragStart=0;
+function step(s,dt){const k=300,c=20;const a=-k*(s.v-s.t)-c*s.vel;s.vel+=a*dt;s.v+=s.vel*dt}
+function path(tx,L,f){
+  const T=P-TH-L, bot=T+TH, pinch=Math.min(TW*.46,L*.9);
+  let d=`M0 ${P} `;
+  if(!detached){
+    d+=`L${tx-f} ${P} `;
+    if(L<0.5){ d+=`Q${tx} ${P} ${tx} ${P-f} `; }
+    else { d+=`C${tx+pinch*.2} ${P} ${tx+pinch} ${P-Math.min(L,P)*.35} ${tx+pinch} ${(P+bot)/2} C${tx+pinch} ${bot+(P-bot)*.15} ${tx} ${bot+4} ${tx} ${bot} `; }
+    d+=`L${tx} ${T+RC} Q${tx} ${T} ${tx+RC} ${T} L${tx+TW-RC} ${T} Q${tx+TW} ${T} ${tx+TW} ${T+RC} `;
+    if(L<0.5){ d+=`L${tx+TW} ${P-f} Q${tx+TW} ${P} ${tx+TW+f} ${P} `; }
+    else { d+=`L${tx+TW} ${bot} C${tx+TW} ${bot+4} ${tx+TW-pinch} ${bot+(P-bot)*.15} ${tx+TW-pinch} ${(P+bot)/2} C${tx+TW-pinch} ${P-Math.min(L,P)*.35} ${tx+TW-pinch*.2} ${P} ${tx+TW+f} ${P} `; }
+    d+=`L${W} ${P} L${W} ${H} L0 ${H} Z`;
+  } else {
+    // 断开：面板上留下逐渐缩回的小鼓包；标签单独一块浮着
+    const b=Math.max(0,f);
+    d+=`L${tx-b} ${P} Q${tx+TW/2} ${P-b*1.2} ${tx+TW+b} ${P} L${W} ${P} L${W} ${H} L0 ${H} Z `;
+    d+=`M${tx} ${T+RC} Q${tx} ${T} ${tx+RC} ${T} L${tx+TW-RC} ${T} Q${tx+TW} ${T} ${tx+TW} ${T+RC} L${tx+TW} ${bot-RC} Q${tx+TW} ${bot} ${tx+TW-RC} ${bot} L${tx+RC} ${bot} Q${tx} ${bot} ${tx} ${bot-RC} Z`;
+  }
+  return d;
+}
+function drawLabels(tx,L){labels.innerHTML='';TABS.forEach((t,i)=>{const on=i===active;const x=(on?tx:tabX(i))+TW/2,y=(on?P-TH-L:P-TH)+TH/2+5;
+  labels.insertAdjacentHTML('beforeend',`<circle cx="${x-34}" cy="${y-4}" r="5" fill="${['#2FBF71','#4F8BFF','#F5A623'][i]}"/><text class="label" x="${x-24}" y="${y}" fill="${on?'#111':'#C7C7CC'}">${t}</text>`)})}
+let last=performance.now();
+function frame(t){const dt=Math.min(.032,(t-last)/1000);last=t;
+  if(!dragging){step(lift,dt)} step(sx,dt); step(fil,dt);
+  if(detached&&!dragging&&lift.v<6){detached=false;fil.v=0;fil.t=R}
+  shape.setAttribute('d',path(sx.v,Math.max(0,lift.v),fil.v));drawLabels(sx.v,Math.max(0,lift.v));
+  hud.textContent=`lift_y   ${lift.v.toFixed(1)}px\nfillet_R ${Math.max(0,fil.v).toFixed(1)}px\nvelocity ${Math.abs(lift.vel).toFixed(0)} px/s`;
+  stateEl.innerHTML=`R_in ${Math.max(0,fil.v).toFixed(1)}px · <b>${detached?'Floating':'Seamless'}</b>`;stateEl.classList.toggle('float',detached);
+  requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+function toSvgY(e){const r=svg.getBoundingClientRect();return (e.clientY-r.top)*H/r.height}
+function toSvgX(e){const r=svg.getBoundingClientRect();return (e.clientX-r.left)*W/r.width}
+svg.addEventListener('pointerdown',e=>{const x=toSvgX(e),y=toSvgY(e);
+  const i=TABS.findIndex((_,k)=>x>=tabX(k)&&x<=tabX(k)+TW);if(i<0||y>P||y<P-TH-lift.v-4)return;
+  if(i!==active){active=i;sx.t=tabX(i);return}
+  dragging=true;dragStart=y+lift.v;svg.setPointerCapture(e.pointerId)});
+svg.addEventListener('pointermove',e=>{if(!dragging)return;const L=Math.max(0,Math.min(72,dragStart-toSvgY(e)));lift.v=L;lift.vel=0;lift.t=0;
+  if(!detached){fil.t=Math.max(2,R-L*.25)}
+  if(!detached&&L>44){detached=true;fil.v=R;fil.t=0}});
+svg.addEventListener('pointerup',()=>{if(!dragging)return;dragging=false;lift.t=0;if(!detached)fil.t=R});
+</script>
+</body>
+</html>

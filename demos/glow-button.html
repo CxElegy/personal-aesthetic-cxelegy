@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>发光按钮</title>
+<!-- 复刻：我发的录屏「发光按钮 / 流光边框」。暗色胶囊按钮，一圈彩虹光沿边框缓慢流动，外面一层同色光晕，内侧一道细白边。 -->
+<style>
+@property --a{syntax:'<angle>';inherits:false;initial-value:0deg}
+:root{--bg:#0B0B0C;--panel:#141416;--line:#26262A;--sub:#8B8B92}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font:14px/1.4 Inter,"Noto Sans SC",system-ui,sans-serif;color:#fff}
+.panel{width:min(360px,92vw);padding:28px 22px 22px;border-radius:22px;background:linear-gradient(180deg,#151517,#0F0F11);border:1px solid var(--line);display:grid;gap:22px;justify-items:center}
+.glow{--rainbow:conic-gradient(from var(--a),rgba(255,255,255,.55) 0deg,rgba(255,255,255,.55) 200deg,#FF5F6D 230deg,#FFC371 255deg,#5EFCE8 285deg,#736EFE 315deg,#E05CFF 340deg,rgba(255,255,255,.55) 360deg);
+  position:relative;isolation:isolate;border:0;border-radius:999px;padding:12px 22px;background:#050506;color:#fff;font:600 14px Inter,sans-serif;
+  display:inline-flex;gap:8px;align-items:center;cursor:pointer;animation:spin 3s linear infinite}
+/* 彩虹边框：用 mask 只留下 1.5px 的边 */
+.glow::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;background:var(--rainbow);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;z-index:1}
+/* 外面的光晕：同一圈彩虹模糊开 */
+.glow::after{content:"";position:absolute;inset:-3px;border-radius:inherit;background:conic-gradient(from var(--a),transparent 0deg 210deg,#FF5F6D 235deg,#FFC371 260deg,#5EFCE8 290deg,#736EFE 320deg,transparent 350deg);filter:blur(10px);opacity:.8;z-index:-1;transition:opacity .3s,filter .3s}
+.glow:hover::after{opacity:.85;filter:blur(14px)}
+.glow:active{transform:scale(.97)}
+.glow span.rim{position:absolute;inset:2px;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.55);pointer-events:none;z-index:2}
+@keyframes spin{to{--a:360deg}}
+.row{width:100%;display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line);color:var(--sub);font-size:12px}
+.metric{width:100%;padding:14px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
+.metric small{color:var(--sub)}.metric b{display:block;font-size:24px;margin-top:4px;color:#E6E6EA}
+@media (prefers-reduced-motion:reduce){.glow{animation:none}}
+</style>
+</head>
+<body>
+<div class="panel">
+  <button class="glow"><span class="rim"></span>✦ Think with AI</button>
+  <div class="row"><span>📅 Last 30 days</span><span>⌄</span></div>
+  <div class="metric"><small>Conversion</small><b>4.62%</b></div>
+</div>
+</body>
+</html>

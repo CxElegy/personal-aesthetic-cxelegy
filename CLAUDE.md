@@ -20,5 +20,14 @@
 ## 演示（demos/）
 - 学到的交互、动效、视觉效果都要做成单文件 HTML 演示放进 `demos/`（不依赖构建，直接用浏览器打开），用 Playwright 实际操作并截图检查，再在 `AESTHETIC.md` 对应条目里写上演示路径。
 
+## 审美图鉴网站（整套流程）
+1. **抓取**：`node tools/xhs/fetch.js <链接>`（云端加 `XHS_HEADLESS=1`）→ `node tools/xhs/media.js <文件夹>` 下载图片视频、抽关键帧。
+2. **学习**：看图片和 `contact-sheet.jpg`，写进 `AESTHETIC.md` 和该条 `note.md` 的「学到的」。
+3. **登记**：在 `catalog/items.json` 加一条：分类（`categories` 里的 id）、标签、摘要、来源、`video`（数据库里的路径 `xhs/<笔记id>.mp4`）、状态。
+4. **复刻**（能便宜复刻的就做）：单文件 HTML 放 `demos/`，在 `tools/verify/scenarios.js` 写操作剧本。
+5. **核对**：`node tools/verify/compare.js <id>` 生成 `verify/<id>.jpg`（上排原作、下排复刻），自己看图，把分数、对上的、不一样的写进该条的 `verify`；分数低就改演示再核对一次。
+6. **视频**：`bash tools/xhs/compress.sh <video.mp4>` 压成 AV1，`node tools/db/upload.js` 上传到数据库并同步条目（需要 `SUPABASE_URL`、`SUPABASE_SERVICE_KEY` 环境变量）。视频不进 git。
+7. **发布**：推到 main 后 `.github/workflows/pages.yml` 自动生成并发布网站；本地预览 `node tools/site/build.js` 后打开 `dist/`。
+
 ## 在其他任务中
 做任何带审美判断的工作时，先读 `AESTHETIC.md` 并遵循。

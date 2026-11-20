@@ -6,7 +6,7 @@
 <title>打字小黑猫</title>
 <!-- 复刻：小红书「有没有能get到的🐱」（艾_）。眼睛跟着鼠标；摸头会眯眼；你打字时它用爪子敲小键盘，按下的字母键帽弹出去。 -->
 <style>
-:root{--cat:#141416;--eye:#D7F23A;--pupil:#141416;--line:#3A3B40;--kb:#F4F1EA;--kb-edge:#DAD5CA;--key:#FFFFFF;--accent:#F28C28;
+:root{--cat:#141416;--eye:#D7F23A;--pupil:#141416;--line:#3A3B40;--kb:#F4F1EA;--kb-edge:#1B1B1E;--key:#FFFFFF;--accent:#F28C28;
   --sky1:#E8E4DA;--sky2:#B9BCC6;--ink:#2A2B30}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -67,10 +67,12 @@ svg#cat{width:min(340px,80vw);height:auto;overflow:visible;touch-action:none}
   </g>
   <!-- 键盘 -->
   <g id="kb">
-    <rect x="58" y="262" width="184" height="46" rx="8" fill="var(--kb-edge)"/>
+    <rect x="54" y="254" width="192" height="56" rx="10" fill="var(--kb-edge)"/>
     <rect x="58" y="258" width="184" height="44" rx="8" fill="var(--kb)"/>
     <g id="keys"></g>
+    <rect x="226" y="266" width="9" height="9" rx="2" fill="var(--accent)"/>
   </g>
+  <circle cx="34" cy="276" r="10" fill="#FFFFFF" stroke="#D6D2C8" stroke-width="1.5"/>
   <!-- 爪子（在键盘前面） -->
   <g class="paw" id="pawL"><ellipse cx="122" cy="262" rx="15" ry="10" fill="var(--cat)"/><path d="M116 266 v4 M122 267 v4 M128 266 v4" stroke="var(--line)" stroke-width="1.5" stroke-linecap="round"/></g>
   <g class="paw" id="pawR"><ellipse cx="178" cy="262" rx="15" ry="10" fill="var(--cat)"/><path d="M172 266 v4 M178 267 v4 M184 266 v4" stroke="var(--line)" stroke-width="1.5" stroke-linecap="round"/></g>
