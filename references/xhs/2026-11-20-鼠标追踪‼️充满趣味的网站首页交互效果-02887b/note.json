@@ -1,0 +1,50 @@
+{
+ "id": "6abc7965000000000202887b",
+ "type": "video",
+ "title": "鼠标追踪‼️充满趣味的网站首页交互效果",
+ "desc": "鼠标移动一下，网站首页里的角色居然会跟着你“动”起来！👀\n\t\n先用 AI 生图提示词生成网页首屏主体，再用 AI 生成视频软件把静态角色变成动态素材。\n\t\n最后结合网页交互，就能做出这种有趣又有沉浸感的鼠标追踪效果\n\t\n#ai短视频制作[话题]# #ai生图软件[话题]# #可灵[话题]##可灵AI[话题]#   #AI还可以这样玩[话题]# #AI智能分镜[话题]# #网页设计[话题]# #UX设计[话题]# #UI设计[话题]# #AI全能参考[话题]#",
+ "user": "Astro设计笔记",
+ "tags": [
+  "ai短视频制作",
+  "ai生图软件",
+  "可灵",
+  "可灵AI",
+  "AI还可以这样玩",
+  "AI智能分镜",
+  "网页设计",
+  "UX设计",
+  "UI设计",
+  "AI全能参考"
+ ],
+ "interact": {
+  "followed": false,
+  "liked": false,
+  "collectedCount": "2800",
+  "shareCount": "240",
+  "relation": "none",
+  "niceCount": "",
+  "likedCount": "2676",
+  "collected": false,
+  "commentCount": "25"
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611210723/7aa135d7662da8e2389fe9b995ea7521/1040g2sg325nnpcthke704a6sl9hk929e7jk6jno!nd_dft_wlteh_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v28.rednotecdn.com/stream/79/110/258/01eabc79641507a64f037001a0f03a666a_258.mp4",
+    "http://sns-v11.rednotecdn.com/stream/79/110/258/01eabc79641507a64f037001a0f03a666a_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/79/110/258/01eabc79641507a64f037001a0f03a666a_258.mp4"
+   ],
+   "w": 720,
+   "h": 1280,
+   "size": 4307902
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/16qYt4URJdI",
+ "fetched": "2026-11-20T23:23:57.111Z",
+ "videoNote": "视频下载失败：apiRequestContext.get: getaddrinfo ENOTFOUND sns-v27.rednotecdn.com\nCall log:\n\u001b[2m  - → GET https://sns-v27.rednotecdn.com/stream/79/110/258/01eabc79641507a64f037001a0f03a666a_258.mp4\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.8103.78 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - Referer: https://www.rednote.com/discovery/item/6abc7965000000000202887b?app_platform=android&ignoreEngage=true&app_version=9.54.0&share_from_user_hidden=true&xsec_source=app_share&type=video&xsec_token=CBuqRgEATkYzClXyqP-kSnAZ6WtU4C6nw2uwoaE3wStIo%3D&author_share=1&xhsshare=CopyLink&shareRedId=ODo0Qkc2Oj42NzUyOTgwNjc1OTg2OTc-&apptime=1795216037&share_id=f1d9633a8a16445d80d4fc01d8d9a544&share_channel=copy_link&track_code=16qYt4URJdI\u001b[22m\n"
+}

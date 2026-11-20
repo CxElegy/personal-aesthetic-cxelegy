@@ -1,0 +1,42 @@
+{
+ "id": "6af82764000000002501f1a8",
+ "type": "video",
+ "title": "发朋友圈没人懂，但发小红书一定有人懂",
+ "desc": "Folotoy自制小固件，支持随机决策与模拟人格决策。除此以外，还能作为电子工牌使用（有小彩蛋）。\n支持中英日三语。\n#EVA[话题]# #新世纪福音战士[话题]# #folotoy[话题]#",
+ "user": "Nedtric",
+ "tags": [
+  "EVA",
+  "新世纪福音战士",
+  "folotoy"
+ ],
+ "interact": {
+  "liked": false,
+  "collectedCount": "335",
+  "commentCount": "84",
+  "relation": "none",
+  "likedCount": "2277",
+  "collected": false,
+  "shareCount": "160",
+  "followed": false,
+  "niceCount": ""
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611210724/7b1d56658381e7635556c46699d296dd/1040g2sg327i0ufic706g5pbip30mdt70mriqs6o!nd_dft_wlteh_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v11.rednotecdn.com/stream/1/110/258/01eaf8276423e97f01037001a1d959fa85_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/1/110/258/01eaf8276423e97f01037001a1d959fa85_258.mp4"
+   ],
+   "w": 720,
+   "h": 1280,
+   "size": 629931
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/128oT6qu8bt",
+ "fetched": "2026-11-20T23:24:14.923Z",
+ "videoNote": "视频下载失败：apiRequestContext.get: getaddrinfo ENOTFOUND sns-v27.rednotecdn.com\nCall log:\n\u001b[2m  - → GET https://sns-v27.rednotecdn.com/stream/1/110/258/01eaf8276423e97f01037001a1d959fa85_258.mp4\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.8103.78 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - Referer: https://www.rednote.com/discovery/item/6af82764000000002501f1a8?app_platform=android&ignoreEngage=true&app_version=9.54.0&share_from_user_hidden=true&xsec_source=app_share&type=video&xsec_token=CBpImcJ1_v0JUgIOBiEgwAuErF3odVtATyynlJtv5rHfM%3D&author_share=1&xhsshare=CopyLink&shareRedId=ODo0Qkc2Oj42NzUyOTgwNjc1OTg2OTc-&apptime=1795216901&share_id=64711bcd65e2432a8a97b27478ef3f5b&share_channel=copy_link&track_code=128oT6qu8bt\u001b[22m\n"
+}

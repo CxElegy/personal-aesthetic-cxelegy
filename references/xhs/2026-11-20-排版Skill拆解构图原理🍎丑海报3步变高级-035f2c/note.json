@@ -1,0 +1,49 @@
+{
+ "id": "6ae15c43000000002b035f2c",
+ "type": "video",
+ "title": "排版Skill拆解构图原理🍎丑海报3步变高级",
+ "desc": "给大家分享一个排版Skill：\n基于原海报调整布局、优化排版、建立视觉焦点，再按需要补充细节。\n主体不突出、信息太挤？都可以试试，制作方法及思路放在视频里了。\n@Lovart @设计薯\n*案例由AI辅助完成，仅供交流学习\n#这个AI设计真好看[话题]#  #Lovart[话题]#  #设计[话题]#  #平面设计[话题]#  #AI教程[话题]#  #AI工具[话题]#  #海报[话题]#  #排版[话题]#  #构图[话题]# #ps[话题]#",
+ "user": "酷兔AIGC",
+ "tags": [
+  "这个AI设计真好看",
+  "Lovart",
+  "设计",
+  "平面设计",
+  "AI教程",
+  "AI工具",
+  "海报",
+  "排版",
+  "构图",
+  "ps"
+ ],
+ "interact": {
+  "liked": false,
+  "commentCount": "1034",
+  "shareCount": "1957",
+  "followed": false,
+  "likedCount": "2.4万",
+  "collected": false,
+  "collectedCount": "1.9万",
+  "relation": "none",
+  "niceCount": ""
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611210723/1a141bd52cf55520864f68da6daca5df/spectrum/1040g34o326r0k44q460g5o65h1509bnfqr8tvhg!nd_dft_wlteh_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v11.rednotecdn.com/stream/79/110/258/01eae096895defef4f037001a18050c9c1_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/79/110/258/01eae096895defef4f037001a18050c9c1_258.mp4"
+   ],
+   "w": 720,
+   "h": 1280,
+   "size": 12672216
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/4XJYPKYzZEg",
+ "fetched": "2026-11-20T23:23:38.825Z",
+ "videoNote": "视频下载失败：apiRequestContext.get: getaddrinfo ENOTFOUND sns-v27.rednotecdn.com\nCall log:\n\u001b[2m  - → GET https://sns-v27.rednotecdn.com/stream/79/110/258/01eae096895defef4f037001a18050c9c1_258.mp4\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.8103.78 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - Referer: https://www.rednote.com/discovery/item/6ae15c43000000002b035f2c?app_platform=android&ignoreEngage=true&app_version=9.54.0&share_from_user_hidden=true&xsec_source=app_share&type=video&xsec_token=CBaBykOZwd0a5NPOpwx4dB0AyYDMUi98txdo1Ew8a-H28%3D&author_share=1&xhsshare=CopyLink&shareRedId=ODo0Qkc2Oj42NzUyOTgwNjc1OTg2OTc-&apptime=1795141341&share_id=288af67b2bcf4e65b3a15d75a77709d7&share_channel=copy_link&track_code=4XJYPKYzZEg\u001b[22m\n"
+}

@@ -6,15 +6,21 @@
 // 第一次运行会打开浏览器窗口，在窗口里登录小红书即可；登录状态保存在 tools/xhs/.profile/（已 gitignore），之后不用再登。
 // 每条笔记保存到 references/xhs/<日期>-<标题>-<id>/：
 //   note.md（标题、正文、标签、热门评论、素材）、note.json、img-NN.jpg、video.mp4、frame-NN.jpg（关键帧）、contact-sheet.jpg（总览）
+// 云端（没有屏幕）：XHS_HEADLESS=1 XHS_PROFILE=<临时目录> node tools/xhs/fetch.js …  需要登录时会把二维码截图存到 XHS_QR，用手机小红书扫码。
+// 只补下载图片和视频：node tools/xhs/media.js references/xhs/<笔记文件夹>
 // 依赖：Node.js、playwright（npm i playwright && npx playwright install chromium）、ffmpeg（抽帧用，没有就跳过抽帧）
 const {chromium}=require('playwright');
 const fs=require('fs'),path=require('path'),{execFileSync}=require('child_process');
 
-const ROOT=path.join(__dirname,'../../references/xhs');
-const PROFILE=path.join(__dirname,'.profile');
+const ROOT=process.env.XHS_OUT||path.join(__dirname,'../../references/xhs');
+const PROFILE=process.env.XHS_PROFILE||path.join(__dirname,'.profile');
+// 没有屏幕的环境（云端）：XHS_HEADLESS=1，登录时把二维码截图存到 XHS_QR，用手机小红书扫码登录
+const HEADLESS=process.env.XHS_HEADLESS==='1';
+const QR=process.env.XHS_QR||path.join(__dirname,'login-qr.png');
 const MAX_VIDEO_MB=20;      // 超过就只留关键帧，不把视频放进仓库
 const MAX_COMMENTS=10;
-const LOGIN_WAIT_MS=5*60e3; // 等你登录的时间
+const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
+const LOGIN_WAIT_MS=10*60e3; // 等你登录的时间
 
 const links=process.argv.slice(2).map(s=>(s.match(/https?:\/\/[^\s，。]+/)||[])[0]).filter(Boolean);
 if(!links.length){console.error('用法: node tools/xhs/fetch.js "<分享文字或链接>" ...');process.exit(1)}
@@ -50,8 +56,19 @@ async function readNote(page){
 async function fetchOne(ctx,page,url){
   await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
   if(isLogin(page.url())){
-    console.log('→ 需要登录：请在打开的浏览器窗口里登录小红书（最多等 5 分钟）…');
-    await page.waitForURL(u=>!isLogin(u.toString()),{timeout:LOGIN_WAIT_MS});
+    if(HEADLESS){
+      console.log('→ 需要登录：二维码截图在',QR,'，请用手机小红书扫码（最多等 10 分钟）');
+      const t0=Date.now();
+      while(isLogin(page.url())&&Date.now()-t0<LOGIN_WAIT_MS){
+        await page.screenshot({path:QR}).catch(()=>{}); // 二维码会过期刷新，所以每 15 秒重截一次
+        await page.waitForTimeout(15000);
+      }
+      if(isLogin(page.url())) throw new Error('等登录超时');
+      console.log('→ 已登录');
+    } else {
+      console.log('→ 需要登录：请在打开的浏览器窗口里登录小红书（最多等 10 分钟）…');
+      await page.waitForURL(u=>!isLogin(u.toString()),{timeout:LOGIN_WAIT_MS});
+    }
     await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
   }
   await page.waitForFunction(()=>window.__INITIAL_STATE__,null,{timeout:30000}).catch(()=>{});
@@ -65,8 +82,9 @@ async function fetchOne(ctx,page,url){
   // 依次试主地址和备用地址；http 先改 https
   const save=async(us,f)=>{let err;
     for(let u of [].concat(us)){u=u.replace(/^http:/,'https:');
-      try{const r=await ctx.request.get(u,{headers:{Referer:page.url()},timeout:180000});
-        if(r.ok()){fs.writeFileSync(path.join(dir,f),await r.body());return f} err=new Error(r.status()+' '+u)}catch(e){err=e}}
+      // 用 curl 下载：它会走系统的 HTTPS 代理（Playwright 自己的请求不走代理）
+      try{execFileSync('curl',['-sSfL','-m','300','-e',page.url(),'-A',UA,'-o',path.join(dir,f),u],{stdio:['ignore','ignore','pipe']});return f}
+      catch(e){err=new Error(String(e.stderr||e.message).trim()+' '+u)}}
     throw err};
 
   const imgs=[];
@@ -112,7 +130,7 @@ async function fetchOne(ctx,page,url){
 
 (async()=>{
   // 带界面的真实浏览器 + 固定的登录资料夹：和你平时用浏览器看小红书一样
-  const ctx=await chromium.launchPersistentContext(PROFILE,{headless:false,viewport:{width:1280,height:900},locale:'zh-CN'});
+  const ctx=await chromium.launchPersistentContext(PROFILE,{headless:HEADLESS,viewport:{width:1280,height:900},locale:'zh-CN'});
   const page=ctx.pages()[0]||await ctx.newPage();
   let failed=0;
   for(const u of links){

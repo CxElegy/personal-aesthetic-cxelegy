@@ -1,0 +1,48 @@
+{
+ "id": "6b0012e2000000001c031959",
+ "type": "video",
+ "title": "如何利用ai 复刻X上31w人围观的液态标签页！",
+ "desc": "直接给大家开源！评论区玩起来\n#UI设计[话题]# #UX设计[话题]# #交互设计[话题]# #动效设计[话题]# #微交互[话题]# #VibeCoding[话题]# #前端开发[话题]# #设计细节[话题]# #howto入门vibecoding[话题]#",
+ "user": "设计招财头",
+ "tags": [
+  "UI设计",
+  "UX设计",
+  "交互设计",
+  "动效设计",
+  "微交互",
+  "VibeCoding",
+  "前端开发",
+  "设计细节",
+  "howto入门vibecoding"
+ ],
+ "interact": {
+  "collectedCount": "979",
+  "shareCount": "54",
+  "relation": "none",
+  "niceCount": "",
+  "collected": false,
+  "commentCount": "72",
+  "followed": false,
+  "liked": false,
+  "likedCount": "786"
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611210723/da2c9355434b92fe3847b9fc852c0bba/1040g2sg327pohh4eme004aq3tgd4fscmon3qdpg!nd_dft_wlteh_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v11.rednotecdn.com/stream/1/110/258/01eb0012e208e0fa01037001a1f849e1d5_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/1/110/258/01eb0012e208e0fa01037001a1f849e1d5_258.mp4"
+   ],
+   "w": 720,
+   "h": 960,
+   "size": 465396
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/7PZn8rmHoDE",
+ "fetched": "2026-11-20T23:24:02.823Z",
+ "videoNote": "视频下载失败：apiRequestContext.get: getaddrinfo ENOTFOUND sns-v27.rednotecdn.com\nCall log:\n\u001b[2m  - → GET https://sns-v27.rednotecdn.com/stream/1/110/258/01eb0012e208e0fa01037001a1f849e1d5_258.mp4\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.8103.78 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - Referer: https://www.rednote.com/discovery/item/6b0012e2000000001c031959?app_platform=android&ignoreEngage=true&app_version=9.54.0&share_from_user_hidden=true&xsec_source=app_share&type=video&xsec_token=CBnJX3ut44J45vkyPqUkmWuf6pegon2E_jq1DidbS6ZUo%3D&author_share=1&xhsshare=CopyLink&shareRedId=ODo0Qkc2Oj42NzUyOTgwNjc1OTg2OTc-&apptime=1795216789&share_id=35b00d2aeb0e4cafb6e7b727db2a595f&share_channel=copy_link&track_code=7PZn8rmHoDE\u001b[22m\n"
+}
