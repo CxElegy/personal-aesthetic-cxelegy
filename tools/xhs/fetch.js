@@ -13,7 +13,9 @@ const {chromium}=require('playwright');
 const fs=require('fs'),path=require('path'),{execFileSync}=require('child_process');
 
 const ROOT=process.env.XHS_OUT||path.join(__dirname,'../../references/xhs');
-const PROFILE=process.env.XHS_PROFILE||path.join(__dirname,'.profile');
+// 登录状态缓存：默认放在用户目录 ~/.cache/rednote-profile（不在仓库里，不会被提交）。
+// 扫码登录一次后，同一台机器上以后都不用再登，直到小红书让登录过期。
+const PROFILE=process.env.XHS_PROFILE||path.join(require('os').homedir(),'.cache','rednote-profile');
 // 没有屏幕的环境（云端）：XHS_HEADLESS=1，登录时把二维码截图存到 XHS_QR，用手机小红书扫码登录
 const HEADLESS=process.env.XHS_HEADLESS==='1';
 const QR=process.env.XHS_QR||path.join(__dirname,'login-qr.png');

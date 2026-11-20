@@ -1,0 +1,45 @@
+{
+ "id": "6afff2660000000018024711",
+ "type": "video",
+ "title": "如果你一直想把任何行业变成一个实时模拟器",
+ "desc": "如果你一直想把任何行业变成一个实时模拟器，那就看看这个。\n\t\n有人为 Claude 做了一个免费的技能，它能构建 3D 模拟器，用它他完成了一个完整的作品：从光秃秃的土地到墙壁。\n\t\n演示如何运作：\n→ 挖掘机挖沟渠，卡车运走泥土\n→ 搅拌机到来，浇筑混凝土板，进度实时上升\n→ 在另外两栋房子上，你看到砌块墙在上升\n→ 你点击每台机器，就能看到它在做什么\n\t\n它有什么用：\n→ 构建任何操作的演示，而无需手动建模一切\n→ 看看 Claude Code 如何分配工作：2 个子代理和 3,829 行代码\n#硅基猿AI[话题]# #ai[话题]# #ai工具[话题]# #ai学习[话题]# #人工智能[话题]#",
+ "user": "未来鹰｜硅基猿AI资讯",
+ "tags": [
+  "硅基猿AI",
+  "ai",
+  "ai工具",
+  "ai学习",
+  "人工智能"
+ ],
+ "interact": {
+  "liked": false,
+  "likedCount": "",
+  "collected": false,
+  "collectedCount": "2",
+  "shareCount": "",
+  "relation": "none",
+  "niceCount": "",
+  "commentCount": "",
+  "followed": false
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611210727/e830b3dee9862655edd1a50b8b94ef49/1040g2sg327pkhkjfmqe05nv47v508ieion4cnto!nd_dft_wgth_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v28.rednotecdn.com/stream/79/110/258/01eafff35934361d4f037001a1f7cebffb_258.mp4",
+    "http://sns-v11.rednotecdn.com/stream/79/110/258/01eafff35934361d4f037001a1f7cebffb_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/79/110/258/01eafff35934361d4f037001a1f7cebffb_258.mp4"
+   ],
+   "w": 888,
+   "h": 498,
+   "size": 3821414
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/5iDBma7iVcG",
+ "fetched": "2026-11-20T23:27:59.975Z",
+ "videoNote": ""
+}

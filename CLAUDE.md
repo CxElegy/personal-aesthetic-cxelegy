@@ -14,8 +14,11 @@
 - 与已有规则冲突时，不要静默覆盖，向用户确认。
 
 ## 小红书素材
-- 用 `tools/xhs/fetch.js` 抓取（见 `tools/xhs/README.md`），只在用户自己的电脑上、用用户自己的登录跑；不要伪装身份或绕过登录。
+- 用 `tools/xhs/fetch.js` 抓取（见 `tools/xhs/README.md`）。不要伪装身份或绕过登录；需要登录时用户扫码（云端：`XHS_HEADLESS=1`，二维码截图发给用户）。登录状态缓存在 `~/.cache/rednote-profile`，不进仓库。
 - 抓完后看每条的图片、`contact-sheet.jpg` 和 `frame-*.jpg`，填写 `note.md` 的「学到的」，再按上面的步骤更新 `AESTHETIC.md`。
+
+## 演示（demos/）
+- 学到的交互、动效、视觉效果都要做成单文件 HTML 演示放进 `demos/`（不依赖构建，直接用浏览器打开），用 Playwright 实际操作并截图检查，再在 `AESTHETIC.md` 对应条目里写上演示路径。
 
 ## 在其他任务中
 做任何带审美判断的工作时，先读 `AESTHETIC.md` 并遵循。

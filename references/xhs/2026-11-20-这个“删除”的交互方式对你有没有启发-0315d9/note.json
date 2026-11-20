@@ -1,0 +1,45 @@
+{
+ "id": "6affca1300000000160315d9",
+ "type": "video",
+ "title": "这个“删除”的交互方式对你有没有启发",
+ "desc": "#设计技巧[话题]# #设计干货[话题]# #交互设计[话题]# #用户体验设计[话题]# #UI界面设计[话题]#",
+ "user": "逸少UIUX",
+ "tags": [
+  "设计技巧",
+  "设计干货",
+  "交互设计",
+  "用户体验设计",
+  "UI界面设计"
+ ],
+ "interact": {
+  "liked": false,
+  "collectedCount": "84",
+  "niceCount": "",
+  "likedCount": "65",
+  "collected": false,
+  "commentCount": "4",
+  "shareCount": "2",
+  "followed": false,
+  "relation": "none"
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611210728/5d46b75e6f9831a048996e62a3a98614/1040g2sg327pfjh9mmqs05pvi3k5ji06ffl5s868!nd_dft_wlteh_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v28.rednotecdn.com/stream/79/110/258/01eaffc9b73439064f037001a1f72d6b0a_258.mp4",
+    "http://sns-v11.rednotecdn.com/stream/79/110/258/01eaffc9b73439064f037001a1f72d6b0a_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/79/110/258/01eaffc9b73439064f037001a1f72d6b0a_258.mp4"
+   ],
+   "w": 720,
+   "h": 720,
+   "size": 227511
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/4LyZRK0FLHo",
+ "fetched": "2026-11-20T23:28:06.106Z",
+ "videoNote": ""
+}
