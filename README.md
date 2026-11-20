@@ -8,6 +8,7 @@
   - `writing/`：喜欢的文字片段、文案
   - `product/`：喜欢的 App、交互
   - `motion/`：动效录屏
+  - `xhs/`：用 `tools/xhs/fetch.js` 抓下来的小红书笔记
   - 文件名可以写上态度，例如 `like-某网站首页.png`、`dislike-渐变按钮.png`
 
 ## 怎么喂素材
