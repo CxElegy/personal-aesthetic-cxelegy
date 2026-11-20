@@ -2,3 +2,4 @@ tools/xhs/.profile/
 node_modules/
 references/xhs/**/video.mp4
 tools/xhs/login-qr.png
+references/xhs/**/video.av1.mp4

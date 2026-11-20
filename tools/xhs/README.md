@@ -25,3 +25,9 @@ node tools/xhs/fetch.js "抽奖的灵感有着落了！… https://xhslink.cn/o/
 
 ## 注意
 存的是别人的作品，仓库请保持**私有**；公开的话只留关键帧、文字和原链接。
+
+## 视频压缩
+```bash
+bash tools/xhs/compress.sh references/xhs/*/video.mp4
+```
+保持原分辨率和帧率，转成 AV1（`video.av1.mp4`）。大视频压缩明显（52MB → 约 21MB，SSIM 0.96），本来就小的视频压完基本不变；如果压完反而更大，就保留原片。原片和压缩版都不进 git（仓库是公开的），压缩版上传到数据库。

@@ -1,0 +1,38 @@
+{
+ "id": "6af6f7a3000000002a02bfda",
+ "type": "video",
+ "title": "精美在每个看得见的细节里",
+ "desc": "#网页设计 #前端 #CSS #UIUX #ui设计",
+ "user": "海归程序员李工",
+ "tags": [],
+ "interact": {
+  "likedCount": "16",
+  "relation": "none",
+  "liked": false,
+  "collected": false,
+  "collectedCount": "12",
+  "commentCount": "1",
+  "shareCount": "",
+  "followed": false,
+  "niceCount": ""
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611210739/cc9c73c040865c3d949e67be084d23ec/spectrum/1040g34o327grssr1ma105p5br5nnosdrkuiira8!nd_dft_wlteh_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v11.rednotecdn.com/stream/79/110/258/01eaf6f7109187fd4f037001a1d4b767ba_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/79/110/258/01eaf6f7109187fd4f037001a1d4b767ba_258.mp4"
+   ],
+   "w": 720,
+   "h": 960,
+   "size": 430520
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/8tRsBA29Iak",
+ "fetched": "2026-11-20T23:39:08.351Z",
+ "videoNote": ""
+}
