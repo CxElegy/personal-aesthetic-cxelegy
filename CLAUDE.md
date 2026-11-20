@@ -2,6 +2,9 @@
 
 这个仓库是用户的个人审美档案，核心文件是 `AESTHETIC.md`。
 
+## 来源
+- `references/product/wishlist-*.md`：从 CxElegy/Wishlist 复制的原文（带我的原话和日期）。Wishlist 里的规则更新后，重新同步并更新 `AESTHETIC.md`。
+
 ## 在这个仓库里工作时
 - 用户往 `references/` 里放了新素材（图片、截图、链接、文字片段），或者告诉你喜欢 / 不喜欢什么时：
   1. 认真看素材，找出共同点，而不是逐个描述。
