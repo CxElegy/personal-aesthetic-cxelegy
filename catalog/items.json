@@ -39,6 +39,11 @@
    "id": "rule",
    "name": "核心规则",
    "desc": "从 Wishlist 里定下的、所有设计都要遵守的规则。"
+  },
+  {
+   "id": "video",
+   "name": "视频与宣传片",
+   "desc": "做产品视频、宣传片时可以照着拆的结构、节奏、文案和镜头。"
   }
  ],
  "statuses": {
@@ -1182,7 +1187,7 @@
   {
    "id": "live-commerce",
    "title": "直播电商宣传片：概念板块的讲法",
-   "category": "motion",
+   "category": "video",
    "tags": [
     "宣传片",
     "橙色",
@@ -1314,6 +1319,33 @@
     "prompt": "Moody dark navy studio photograph, [canvas tote bag held by a hand | open glass laptop on a black desk | back of a black leather jacket | rough stone floating in fog], centered, the upper-middle area left plain for a logo, low-key lighting, cool navy and warm cream tones, minimal, 9:16, no text.",
     "accept": "RUBRIC ≥ 7：字标位置一帧都不能跳，切换节奏和色调一致"
    }
+  },
+  {
+   "id": "flowith-promo",
+   "title": "Flowith 3.0 产品宣传片：做视频的配方",
+   "category": "video",
+   "tags": [
+    "宣传片",
+    "产品介绍",
+    "文案",
+    "节奏",
+    "白底"
+   ],
+   "rating": 3,
+   "summary": "32 秒讲清一个 AI 画布产品：白底上漂浮的界面卡片、镜头在画布上穿行，短句文案里一个斜体衬线词做强调，结尾转黑底用价格和数量收尾。我做视频时的参考。",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/67PhrTT62ec",
+    "author": "创意者科技UI动画",
+    "title": "UI交互动画‼️产品功能介绍要清晰易懂"
+   },
+   "ref": "references/xhs/2026-11-21-UI交互动画‼️产品功能介绍要清晰易懂-02aacd",
+   "video": "xhs/6b005ba7000000001802aacd.mp4",
+   "thumb": "references/xhs/2026-11-21-UI交互动画‼️产品功能介绍要清晰易懂-02aacd/frame-04.jpg",
+   "contact": "references/xhs/2026-11-21-UI交互动画‼️产品功能介绍要清晰易懂-02aacd/contact-sheet.jpg",
+   "demo": null,
+   "status": "n/a",
+   "verify": null
   }
  ],
  "ratings": {

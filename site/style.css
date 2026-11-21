@@ -1,15 +1,15 @@
 /* 版式：收藏家的图鉴。分类是一排书脊；每条素材是一张收藏卡（稀有度 = 我的评价）；详情是一本摊开的画册（左页原作、右页复刻、下方规格）。 */
 :root{
   --paper:#F1EDE6;--leaf:#FBF9F5;--ink:#211F24;--sub:#6F6A74;--rule:#D9D2C6;--gold:#A8843F;--gold-hi:#E9CF8C;--good:#5E8A6E;--warn:#B5705F;
-  --sp-all:#D7CDB9;--sp-motion:#A9BCD0;--sp-interaction:#CDA7A1;--sp-ui:#A9B7A3;--sp-visual:#E3D7BE;--sp-prompt:#BBB1CC;--sp-concept:#D6B98F;--sp-resource:#9FAAB5;--sp-rule:#E2C3C5;
+  --sp-all:#D7CDB9;--sp-motion:#A9BCD0;--sp-interaction:#CDA7A1;--sp-ui:#A9B7A3;--sp-visual:#E3D7BE;--sp-prompt:#BBB1CC;--sp-concept:#D6B98F;--sp-resource:#9FAAB5;--sp-rule:#E2C3C5;--sp-video:#C7C3BA;
   --display:"Bodoni Moda","Noto Serif SC",Georgia,serif;--serif:"Noto Serif SC","Songti SC",Georgia,serif;--sans:Inter,"Noto Sans SC","PingFang SC",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;
   color-scheme:light}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --paper:#17161A;--leaf:#201F24;--ink:#ECE6DA;--sub:#A29CA6;--rule:#38353D;--gold:#CFAE6A;--gold-hi:#F3DFA6;--good:#8DB89A;--warn:#D9927F;
-  --sp-all:#5A5448;--sp-motion:#475A6C;--sp-interaction:#6B4B47;--sp-ui:#4B5A48;--sp-visual:#6A604B;--sp-prompt:#554C66;--sp-concept:#6E5A3E;--sp-resource:#454F59;--sp-rule:#6A4F52;color-scheme:dark}}
+  --sp-all:#5A5448;--sp-motion:#475A6C;--sp-interaction:#6B4B47;--sp-ui:#4B5A48;--sp-visual:#6A604B;--sp-prompt:#554C66;--sp-concept:#6E5A3E;--sp-resource:#454F59;--sp-rule:#6A4F52;--sp-video:#55524C;color-scheme:dark}}
 :root[data-theme="dark"]{
   --paper:#17161A;--leaf:#201F24;--ink:#ECE6DA;--sub:#A29CA6;--rule:#38353D;--gold:#CFAE6A;--gold-hi:#F3DFA6;--good:#8DB89A;--warn:#D9927F;
-  --sp-all:#5A5448;--sp-motion:#475A6C;--sp-interaction:#6B4B47;--sp-ui:#4B5A48;--sp-visual:#6A604B;--sp-prompt:#554C66;--sp-concept:#6E5A3E;--sp-resource:#454F59;--sp-rule:#6A4F52;color-scheme:dark}
+  --sp-all:#5A5448;--sp-motion:#475A6C;--sp-interaction:#6B4B47;--sp-ui:#4B5A48;--sp-visual:#6A604B;--sp-prompt:#554C66;--sp-concept:#6E5A3E;--sp-resource:#454F59;--sp-rule:#6A4F52;--sp-video:#55524C;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.65 var(--sans)}
 a{color:inherit}
