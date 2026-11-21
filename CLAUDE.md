@@ -44,6 +44,7 @@
      3. 云端：同时后台运行 `node tools/db/upload-videos.js --wait`（权限没开就每 30 秒重试）。
      4. PC 会话自己闭环：开权限 → 等视频出现在桶里 → **立刻关权限** → 用 `send_message` 把结果发回云端会话。
      5. 云端收到回信后用公开地址核对（HTTP 200、大小一致），再告诉用户最终结果。
+   - 开 PC 会话、互发消息、查看对方进度这几个工具已在 `.claude/settings.json` 里预先允许，不用每次让用户授权。
    - **不需要也不要索取 service_role 密钥。**
    - 视频不进 git。
 7. **发布**：推到 main 后 `.github/workflows/pages.yml` 自动生成并发布网站；本地预览 `node tools/site/build.js` 后打开 `dist/`。
