@@ -59,7 +59,7 @@ svg#lines path{fill:none;stroke:currentColor;stroke-width:1;opacity:.55}
 svg#lines circle{fill:currentColor}
 .frame{position:absolute;border:1px solid currentColor;opacity:.22;z-index:1;pointer-events:none;transition:opacity .5s}
 .hint{position:absolute;left:6.5vw;bottom:24px;font-size:11px;opacity:.55;z-index:4}
-@media (max-width:760px){.copy{left:6vw;top:12vh;transform:none;width:88vw}h1{font-size:44px}.copy p{display:none}#burger{left:50%;top:64%;width:76vw}.num{top:auto;bottom:64px;right:6vw;font-size:26px}nav span{display:none}.arrow{display:none}.note{font-size:9px}}
+@media (max-width:760px){.copy{left:6vw;top:12vh;transform:none;width:88vw}h1{font-size:44px}.copy p{display:none}#burger{left:50%;top:66%;width:70vw}.num{top:74px;right:6vw;font-size:22px}#notes,svg#lines,.frame{display:none}.hint{left:6vw;right:6vw;top:178px;bottom:auto}nav span{display:none}.arrow{display:none}.note{font-size:9px}}
 @media (prefers-reduced-motion:reduce){.line>span{transition:none}}
 </style>
 </head>
@@ -128,7 +128,7 @@ function layout(){const out={};let face=null;
   return out}
 const POS=layout();
 
-let baseYs=null,cur=0,shown=-1,hover=0,hoverT=0,mx=0,my=0;
+let lock=0,baseYs=null,cur=0,shown=-1,hover=0,hoverT=0,mx=0,my=0;
 function setScreen(i,instant){i=Math.max(0,Math.min(N-1,i));if(i===shown)return;const prev=shown;shown=i;const S=SCREENS[i];
   // 背景：下一屏颜色从底部升起
   const fromBg=prev<0?S.bg:SCREENS[prev].bg;
@@ -152,7 +152,7 @@ function swapText(S,instant){
   for(const [id,txt] of [['#eb',S.eb],['#p',S.p],['#num .line',S.num]]){const el=$(id);el.classList.add('out');
     setTimeout(()=>{el.firstElementChild.textContent=txt;el.classList.remove('out');el.classList.add('pre');requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.remove('pre')))},instant?0:300)}
   $('#num small').textContent=['●','○','○','○','○','○'].map((_,k)=>k===shown?'●':'○').join(' ');
-  $('#hint').style.opacity=shown===N-1?'.55':shown===0?'.55':'0';$('#hint').textContent=shown===N-1?'把鼠标放在汉堡上：拉开成爆炸图':'往下滚动 · 每一屏叠一层';
+  $('#hint').style.opacity=shown===N-1?'.55':shown===0?'.55':'0';$('#hint').textContent=shown===N-1?(matchMedia('(hover:hover)').matches?'把鼠标放在汉堡上：拉开成爆炸图':'点一下汉堡：拉开成爆炸图'):'往下滚动 · 每一屏叠一层';
 }
 
 // 导航：滚动吸附到每一屏 + 圆点 + 箭头 + 方向键
@@ -161,14 +161,15 @@ const go=i=>scrollTo({top:Math.max(0,Math.min(N-1,i))*innerHeight,behavior:match
 document.querySelectorAll('.dots button').forEach((b,k)=>b.onclick=()=>go(k));
 $('#prev').onclick=()=>go(shown-1);$('#next').onclick=()=>go(shown+1);
 addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(shown+1);if(e.key==='ArrowLeft')go(shown-1)});
-addEventListener('pointermove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;const r=burger.getBoundingClientRect();
+addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'||shown!==N-1)return;const r=burger.getBoundingClientRect();if(e.clientY>r.top-60&&e.clientY<r.bottom)lock=lock?0:1});
+addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;const r=burger.getBoundingClientRect();
   hoverT=(shown===N-1&&e.clientX>r.left&&e.clientX<r.right&&e.clientY>r.top-60&&e.clientY<r.bottom)?1:0});
 
 // 动画
 const ease=t=>1-Math.pow(1-t,3);
 // 落地：带一点压缩回弹
 function landCurve(t){if(t<.62){const u=t/.62;return {y:1-u*u,sq:0}}const u=(t-.62)/.38;return {y:0,sq:Math.sin(u*Math.PI)*(1-u)*.9}}
-function frame(now){const W=burger.clientWidth;hover+=(hoverT-hover)*.08;
+function frame(now){const W=burger.clientWidth;const ht=shown===N-1?Math.max(hoverT,lock):0;hover+=(ht-hover)*.08;
   const stackShift=shown>=5?ease(Math.min(1,(now-(els.plate.land??now))/900)):0;
   // 整个汉堡的中心：叠得越高越往下沉，保持在画面中间
   const topMost=Math.min(...ING.filter(g=>g.id!=='plate'&&els[g.id].land!=null&&now>=els[g.id].land).map(g=>POS[g.id].top),POS['bun-bottom'].top);
@@ -179,7 +180,7 @@ function frame(now){const W=burger.clientWidth;hover+=(hoverT-hover)*.08;
   order.forEach((id,z)=>{const e=els[id],g=e.g,P=POS[id];const w=g.w*W*(id==='plate'?1:1-stackShift*.08),h=P.h*W*(id==='plate'?1:1-stackShift*.08);
     let ty,rot=0,sx=1,sy=1,op=1,shOp=1;
     // 爆炸图：最后一屏悬停时各层按顺序拉开
-    const ex=(z-1)*hover*W*.085*(id==='plate'?0:1);
+    const ex=(z-4)*hover*W*.075;
     const restTop=baseY+P.top*W*(id==='plate'?1:1-stackShift*.08)-ex;
     if(e.land==null){ // 不在场：飞回上方
       const t=e.leave?Math.min(1,(now-e.leave)/500):1;ty=lerp(restTop,-W*1.6,ease(t));op=1-t;shOp=0}
@@ -195,7 +196,7 @@ function frame(now){const W=burger.clientWidth;hover+=(hoverT-hover)*.08;
     const shY=restTop+h-(g.ry*h)*1.1;e.sh.style.cssText=`width:${w*.92}px;height:${g.ry*h*1.5}px;transform:translate(calc(-50% + ${px}px),${shY+py+(id==='plate'?h*.12:0)}px);opacity:${shOp*(id==='plate'?.55:.75)};z-index:${z*2}`;
     // 标注线
     const showNote=e.land!=null&&now-e.land>(id==='bun-bottom'?0:700)&&(id!=='plate'||shown===N-1);const n=e.n;n.classList.toggle('on',showNote);
-    if(showNote){const br=burger.getBoundingClientRect();const cx=br.left+W/2+px,cy=br.top+ty+py+h*(1-g.ry);const ax=cx+w*.47,lx=br.left+W*1.3;
+    if(showNote){const br=burger.getBoundingClientRect();const cx=br.left+W/2+px,cy=br.top+ty+py+h*(1-g.ry);const ax=cx+w*.47,lx=br.left+W*1.22;
       const k=Math.min(1,(now-e.land-(id==='bun-bottom'?0:700))/450);NOTES.push({n,ax,ay:cy,lx,k})}
   });
   // 标注：按高度排开，间距至少 30px，折线连过去
