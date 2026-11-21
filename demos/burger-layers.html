@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一层层叠起来的汉堡</title>
+<!-- 复刻：小红书「把汉堡做成网页动效🍔」（海淀掌管用户增长的神，原作 Clico 的 Stackhouse）。
+     往下滚动，每一屏有一层食材从上方落下、叠到汉堡上；背景色和左边的大标题跟着换；最后落到盘子里。
+     原作用实拍食材，这里食材是 SVG 画的；鼠标移动时汉堡轻微倾斜，像实物跟着页面互动。 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1B1A17}
+*{box-sizing:border-box}
+html{scroll-behavior:auto}
+body{margin:0;font:14px/1.5 Inter,"Noto Sans SC",system-ui,sans-serif;color:var(--ink);background:#EFE8DC}
+nav{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;gap:22px;padding:16px 4vw;font-size:12px;color:currentColor;transition:color .5s}
+nav b{font-size:15px;margin-right:12px}nav span{opacity:.75}nav .order{margin-left:auto;background:var(--ink);color:#fff;border-radius:999px;padding:6px 14px;transition:background .5s,color .5s}
+.stage{position:sticky;top:0;height:100vh;overflow:hidden}
+.copy{position:absolute;left:7vw;top:50%;transform:translateY(-50%);width:min(40vw,440px)}
+.eyebrow{font-size:11px;letter-spacing:.18em;font-weight:600;text-transform:uppercase;opacity:.8;margin-bottom:12px}
+h1{margin:0;font:500 clamp(40px,6.2vw,88px)/.95 "Playfair Display",Georgia,serif;text-transform:uppercase;letter-spacing:-.01em}
+.copy p{max-width:300px;margin:18px 0 22px;opacity:.75;font-size:13px}
+.btn{display:inline-flex;gap:8px;align-items:center;border-radius:999px;padding:9px 18px;font-weight:600;font-size:12px;background:var(--ink);color:#fff;transition:background .5s,color .5s}
+.swap{display:block;overflow:hidden}
+.swap>span{display:block;transition:transform .55s cubic-bezier(.2,.8,.2,1),opacity .4s}
+.swap.out>span{transform:translateY(-105%);opacity:0}
+.swap.in>span{transform:translateY(105%);opacity:0;transition:none}
+.dots{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);display:flex;gap:8px}
+.dots i{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.25;transition:opacity .3s,width .3s}.dots i.on{opacity:.9;width:18px;border-radius:3px}
+.num{position:absolute;right:6vw;top:18vh;font:500 34px/1 "Playfair Display",serif;opacity:.85}
+.burger{position:absolute;left:67%;top:55%;width:min(46vw,600px);aspect-ratio:1/1;transform:translate(-50%,-50%);perspective:900px}
+.tilt{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .2s ease-out}
+.layer{position:absolute;left:0;width:100%;will-change:transform;filter:drop-shadow(0 14px 14px rgba(0,0,0,.22))}
+.layer svg{display:block;width:100%;height:auto}
+.wipe{position:absolute;left:0;right:0;bottom:0;height:0;pointer-events:none}
+.shadow{position:absolute;left:12%;right:12%;bottom:6%;height:9%;border-radius:50%;background:rgba(0,0,0,.25);filter:blur(12px)}
+.scroller section{height:100vh}
+@media (max-width:760px){.copy{left:6vw;top:16vh;transform:none;width:88vw}.burger{left:50%;top:68%;width:86vw}.num{top:auto;bottom:70px}nav span{display:none}}
+@media (prefers-reduced-motion:reduce){.swap>span,.stage{transition:none}}
+</style>
+</head>
+<body>
+<nav id="nav"><b>Stackhouse</b><span>Order</span><span>Ingredients</span><span>Story</span><span>Locations</span><span class="order">Order</span></nav>
+<div class="stage" id="stage"><div class="wipe" id="wipe"></div>
+  <div class="copy">
+    <div class="eyebrow swap" id="eb"><span></span></div>
+    <h1 class="swap" id="h1"><span></span></h1>
+    <p class="swap" id="p"><span></span></p>
+    <a class="btn" id="btn">Start More →</a>
+  </div>
+  <div class="num" id="num">01</div>
+  <div class="burger" id="burger"><div class="shadow" id="shadow"></div><div class="tilt" id="tilt"></div></div>
+  <div class="dots" id="dots"></div>
+</div>
+<div class="scroller" id="scroller"></div>
+<script>
+// ---------- 食材（SVG，宽 400） ----------
+const SES=[...Array(14)].map((_,i)=>{const a=(i/14)*Math.PI*2,r=60+((i*37)%60);return `<ellipse cx="${200+Math.cos(a)*r*1.9}" cy="${72+Math.sin(a)*r*.32}" rx="5" ry="2.6" fill="#FBEFD2" transform="rotate(${(i*29)%60-30} ${200+Math.cos(a)*r*1.9} ${72+Math.sin(a)*r*.32})"/>`}).join('');
+const G=(id,stops)=>`<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">${stops.map(([o,c])=>`<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient>`;
+const L={
+ bottom:{h:70,y:300,svg:`<svg viewBox="0 0 400 80"><defs>${G('bb',[[0,'#F0B567'],[1,'#B66A27']])}</defs><path d="M30 18 Q200 4 370 18 L360 52 Q200 82 40 52 Z" fill="url(#bb)"/><path d="M30 18 Q200 4 370 18 Q200 30 30 18Z" fill="#F7DDB0"/></svg>`},
+ patty:{h:70,y:262,svg:`<svg viewBox="0 0 400 80"><defs>${G('pt',[[0,'#7A4126'],[.5,'#4E2614'],[1,'#2E160B']])}<filter id="gr"><feTurbulence baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .2  0 0 0 0 .1  0 0 0 0 .05  0 0 0 .55 0"/><feComposite in2="SourceGraphic" operator="in"/></filter></defs><path d="M22 26 Q200 0 378 26 Q386 44 376 58 Q200 82 24 58 Q14 44 22 26Z" fill="url(#pt)"/><path d="M22 26 Q200 0 378 26 Q386 44 376 58 Q200 82 24 58 Q14 44 22 26Z" filter="url(#gr)"/><path d="M40 30 Q200 12 360 30" stroke="#9B5A35" stroke-width="3" fill="none" opacity=".6"/></svg>`},
+ cheese:{h:60,y:246,svg:`<svg viewBox="0 0 400 70"><defs>${G('ch',[[0,'#FFD35A'],[1,'#F4A21E']])}</defs><path d="M28 18 L372 12 L360 30 L330 58 L318 32 L250 34 L228 64 L214 34 L120 36 L96 60 L86 36 L36 34 Z" fill="url(#ch)"/></svg>`},
+ lettuce:{h:70,y:226,svg:`<svg viewBox="0 0 400 80"><defs>${G('lt',[[0,'#B6E35B'],[1,'#4E9A2B']])}</defs><path d="M10 40 ${[...Array(16)].map((_,i)=>`Q${22+i*24} ${i%2?66:14} ${34+i*24} 40`).join(' ')} L390 46 Q200 70 10 46Z" fill="url(#lt)"/><path d="M30 42 Q200 30 370 42" stroke="#E7F7B8" stroke-width="2" fill="none" opacity=".7"/></svg>`},
+ tomato:{h:60,y:204,svg:`<svg viewBox="0 0 400 70"><defs><radialGradient id="tm" cx=".5" cy=".4" r=".6"><stop offset="0" stop-color="#FF6B57"/><stop offset="1" stop-color="#C8261C"/></radialGradient></defs>${[70,200,330].map(x=>`<ellipse cx="${x}" cy="34" rx="72" ry="22" fill="url(#tm)"/><ellipse cx="${x}" cy="32" rx="52" ry="14" fill="none" stroke="#FFB4A6" stroke-width="3" opacity=".7"/><g fill="#FFE0A8">${[-24,-8,8,24].map(d=>`<ellipse cx="${x+d}" cy="${33+(d%16?3:-3)}" rx="4" ry="2"/>`).join('')}</g>`).join('')}</svg>`},
+ onion:{h:50,y:190,svg:`<svg viewBox="0 0 400 60">${[[110,28],[230,24],[300,32],[170,34]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="58" ry="16" fill="none" stroke="#B0438A" stroke-width="7"/><ellipse cx="${x}" cy="${y}" rx="58" ry="16" fill="none" stroke="#F4D3E8" stroke-width="2"/>`).join('')}</svg>`},
+ top:{h:190,y:40,svg:`<svg viewBox="0 0 400 190"><defs><radialGradient id="tb" cx=".45" cy=".25" r=".85"><stop offset="0" stop-color="#F6C27A"/><stop offset=".6" stop-color="#D2852F"/><stop offset="1" stop-color="#8E4A14"/></radialGradient></defs><path d="M24 176 Q20 40 200 20 Q380 40 376 176 Q200 196 24 176Z" fill="url(#tb)"/><g transform="translate(0,20)">${SES}</g><path d="M80 70 Q150 36 230 40" stroke="#FFE6B8" stroke-width="8" fill="none" opacity=".35" stroke-linecap="round"/></svg>`},
+ plate:{h:120,y:300,svg:`<svg viewBox="0 0 400 120"><defs><radialGradient id="pl" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="#F7F5F1"/><stop offset=".8" stop-color="#D9D5CE"/><stop offset="1" stop-color="#B9B4AB"/></radialGradient></defs><ellipse cx="200" cy="64" rx="196" ry="50" fill="url(#pl)"/><ellipse cx="200" cy="60" rx="140" ry="32" fill="none" stroke="#CFCAC1" stroke-width="2"/></svg>`},
+};
+// ---------- 每一屏：标题、背景色、这一屏落下的食材 ----------
+const S=[
+ {eb:'Premium to start',h:'Built in<br>layers',p:'Every great burger starts with a soft, toasted base.',bg:'#EFE8DC',fg:'#1B1A17',add:['bottom']},
+ {eb:'Grill time, sizzle',h:'Start<br>with fire',p:'Flame-grilled beef, seared hot for a deep, smoky crust.',bg:'#141312',fg:'#F4EFE7',add:['patty']},
+ {eb:'Premium & fresh',h:'Crisp<br>by nature',p:'Melted cheddar under cool, crunchy lettuce.',bg:'#A9BFA3',fg:'#17231A',add:['cheese','lettuce']},
+ {eb:'Picked at peak',h:'Fresh<br>by design',p:'Ripe tomato and sweet red onion, sliced to order.',bg:'#E46E5C',fg:'#2A0F0B',add:['tomato','onion']},
+ {eb:'Premium by design',h:'Stacked<br>to finish',p:'A golden sesame crown holds every layer together.',bg:'#C99A6E',fg:'#24160C',add:['top']},
+ {eb:'Premium to start',h:'Built<br>to bite',p:'Plated, warm and ready. Order in two taps.',bg:'#F1ECE4',fg:'#1B1A17',add:['plate']},
+];
+const ORDER=['plate','bottom','patty','cheese','lettuce','tomato','onion','top'];   // 叠放顺序（下 → 上）
+const tilt=document.getElementById('tilt'),els={};
+ORDER.forEach(k=>{const d=document.createElement('div');d.className='layer';d.innerHTML=L[k].svg;d.style.top=(L[k].y/420*100)+'%';d.style.zIndex=ORDER.indexOf(k);tilt.appendChild(d);els[k]=d});
+const scroller=document.getElementById('scroller');S.slice(1).forEach(()=>scroller.insertAdjacentHTML('beforeend','<section></section>'));   // 舞台本身占第一屏，所以只需要再加 S.length-1 屏
+document.getElementById('dots').innerHTML=S.map(()=>'<i></i>').join('');
+// 每种食材在第几屏落下
+const when={};S.forEach((s,i)=>s.add.forEach((k,j)=>when[k]=i-(s.add.length-1-j)*.22));   // 同一屏的食材依次落下，停在这一屏时都已经落好
+// 盘子出现时，整个汉堡往下落一点到盘子上
+const stage=document.getElementById('stage'),nav=document.getElementById('nav');
+let cur=-1,prog=0,shown=0,mx=0,my=0,tx=0,ty=0;
+function swapText(id,html){const el=document.getElementById(id);el.classList.add('out');setTimeout(()=>{el.classList.remove('out');el.classList.add('in');el.firstElementChild.innerHTML=html;el.offsetHeight;el.classList.remove('in')},260)}
+function section(i){if(i===cur)return;cur=i;const s=S[i];stage.style.color=s.fg;nav.style.color=s.fg;
+  const o=document.querySelector('.order'),b=document.getElementById('btn');[o,b].forEach(e=>{e.style.background=s.fg;e.style.color=s.bg});
+  swapText('eb',s.eb);swapText('h1',s.h);swapText('p',s.p);document.getElementById('num').textContent='0'+(i+1);
+  document.querySelectorAll('.dots i').forEach((d,k)=>d.classList.toggle('on',k===i))}
+addEventListener('scroll',()=>{const m=document.documentElement.scrollHeight-innerHeight;prog=m>0?scrollY/m*(S.length-1):0;section(Math.min(S.length-1,Math.round(prog)))});
+addEventListener('pointermove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+const easeOutBack=t=>{const c=1.5;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2)};
+(function loop(){shown+=(prog-shown)*.12;
+  ORDER.forEach(k=>{const w=when[k];let t=Math.max(0,Math.min(1,(shown-w+.55)/.55));   // 0 = 在画面上方，1 = 落到位
+    const y=(1-easeOutBack(t))*-140,rot=(1-t)*(k==='top'?-14:8),op=t>0?1:0;
+    const plateDrop=k==='plate'?0:Math.max(0,Math.min(1,shown-4.45))*10;               // 最后一屏：汉堡落到盘子上
+    els[k].style.transform=`translateY(calc(${y}vh + ${plateDrop}%)) rotate(${rot}deg)`;els[k].style.opacity=op});
+  // 换屏时下一屏的颜色从底部像幕布一样升上来（原作的转场）
+  const k=Math.floor(shown),f=shown-k,nx=S[Math.min(S.length-1,k+1)];const wp=document.getElementById('wipe');stage.style.backgroundColor=S[Math.min(S.length-1,k)].bg;wp.style.background=nx.bg;wp.style.height=(k+1<S.length&&f>.02?Math.min(100,f*100):0)+'%';
+  tx+=(mx-tx)*.08;ty+=(my-ty)*.08;tilt.style.transform=`rotateY(${tx*14}deg) rotateX(${-ty*10}deg) translate(${tx*10}px,${ty*6}px)`;
+  requestAnimationFrame(loop)})();
+section(0);
+</script>
+</body>
+</html>

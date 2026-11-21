@@ -1,0 +1,43 @@
+{
+ "id": "6affdde0000000002a00f625",
+ "type": "video",
+ "title": "把汉堡做成网页动效🍔",
+ "desc": "把汉堡的食材一层层叠起来，变成一个网页动效。🍔\n\t\n这个视觉思路很适合展示产品结构：让观众在几秒钟里看懂每一层。\n\t\n来自 Clico的设计作品。\n#网页设计[话题]#  #动效设计[话题]#  #设计灵感[话题]# #clico[话题]#",
+ "user": "海淀掌管用户增长的神",
+ "tags": [
+  "网页设计",
+  "动效设计",
+  "设计灵感",
+  "clico"
+ ],
+ "interact": {
+  "likedCount": "17",
+  "commentCount": "",
+  "relation": "none",
+  "niceCount": "",
+  "liked": false,
+  "collected": false,
+  "collectedCount": "15",
+  "shareCount": "1",
+  "followed": false
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611210802/45eb220dd5b582674de9177ee3ef8578/spectrum/1040g34o327pi21l16i105q55j9gmcb491npr43g!nd_dft_wlteh_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v11.rednotecdn.com/stream/79/110/258/01eaffddc034388c4f037001a1f77acb6e_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/79/110/258/01eaffddc034388c4f037001a1f77acb6e_258.mp4"
+   ],
+   "w": 720,
+   "h": 1280,
+   "size": 1101057
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/2QSGP1rScA6",
+ "fetched": "2026-11-21T00:02:31.343Z",
+ "videoNote": ""
+}

@@ -94,6 +94,49 @@
    "rating": 3
   },
   {
+   "id": "burger-layers",
+   "title": "一层层叠起来的汉堡官网",
+   "category": "interaction",
+   "tags": [
+    "滚动叙事",
+    "图层",
+    "产品结构",
+    "食物"
+   ],
+   "rating": 3,
+   "summary": "往下滚，每一屏落下一层食材叠到汉堡上，背景色和大标题跟着换，最后落到盘子里。适合展示「产品由哪几层组成」。",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/2QSGP1rScA6",
+    "author": "海淀掌管用户增长的神（原作 Clico：Stackhouse）",
+    "title": "把汉堡做成网页动效🍔"
+   },
+   "ref": "references/xhs/2026-11-21-把汉堡做成网页动效🍔-00f625",
+   "video": "xhs/6affdde0000000002a00f625.mp4",
+   "thumb": "references/xhs/2026-11-21-把汉堡做成网页动效🍔-00f625/frame-02.jpg",
+   "contact": "references/xhs/2026-11-21-把汉堡做成网页动效🍔-00f625/contact-sheet.jpg",
+   "demo": "demos/burger-layers.html",
+   "status": "replicated",
+   "verify": {
+    "date": "2026-11-21",
+    "score": 75,
+    "image": "verify/burger-layers.jpg",
+    "method": "tools/verify/compare.js：逐屏滚动截 6 帧，原视频抽 6 帧上下对比；另外截了两屏之间的转场帧单独对比",
+    "match": [
+     "六屏顺序、背景色（米白 → 黑 → 灰绿 → 珊瑚红 → 焦糖 → 米白）和标题文案",
+     "每屏落下一层食材叠到汉堡上，最后落到盘子里",
+     "换屏时下一屏颜色从底部像幕布升起（对比后补上）",
+     "汉堡占画面四成左右（对比后放大）",
+     "鼠标移动时汉堡轻微倾斜"
+    ],
+    "diff": [
+     "原作是实拍食材，从斜上方看得到面包顶面；这里是 SVG 插画、侧面视角",
+     "原作标题字体更窄更紧",
+     "原作右上角有「ONE」这类小号步骤字和细线框装饰"
+    ]
+   }
+  },
+  {
    "id": "glow-button",
    "title": "发光按钮・流光边框",
    "category": "motion",
@@ -852,6 +895,46 @@
     ],
     "prompt": null,
     "accept": "核对 ≥ 70 分：剪切节奏（每 1–2 秒一个画面）和过渡方式一致"
+   }
+  },
+  {
+   "id": "menu-point-swap",
+   "title": "指哪变哪的菜单联动",
+   "category": "interaction",
+   "tags": [
+    "菜单",
+    "悬停",
+    "产品切换",
+    "餐饮"
+   ],
+   "rating": 2,
+   "summary": "手指在菜单上滑，停在哪道菜，桌上的实物就变成那道菜，菜名同时出现。网页版：鼠标划过菜单，产品图和名字跟着切换。",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/8PFbU8RrSm5",
+    "author": "LuxeDream品牌出海营销",
+    "title": "海外社媒灵感：简单好复刻的顶级轮播创意"
+   },
+   "ref": "references/xhs/2026-11-21-海外社媒灵感：简单好复刻的顶级轮播创意-0256d2",
+   "video": "xhs/6afa42fd00000000190256d2.mp4",
+   "thumb": "references/xhs/2026-11-21-海外社媒灵感：简单好复刻的顶级轮播创意-0256d2/frame-08.jpg",
+   "contact": "references/xhs/2026-11-21-海外社媒灵感：简单好复刻的顶级轮播创意-0256d2/contact-sheet.jpg",
+   "demo": null,
+   "status": "queued",
+   "verify": null,
+   "plan": {
+    "size": "S",
+    "template": "basic",
+    "assets": [
+     "4–6 张同一角度、同一背景的产品图（去背景 PNG 最好）"
+    ],
+    "steps": [
+     "左边是菜单列表，右边是产品舞台",
+     "鼠标划过菜单项：产品图交叉淡入并轻微缩放，菜名用大字从上方滑入",
+     "停止划动后定格在当前产品，手机上改为点击"
+    ],
+    "prompt": null,
+    "accept": "核对 ≥ 80 分：切换跟手、不闪烁、名字和图同步"
    }
   }
  ],
