@@ -1610,6 +1610,49 @@
      "note": "原文针对钟楼示例写的，换图时把「钟楼、哥特式立面、街灯、树叶框景」和色块颜色改成新图里的元素；标题和副标题按图填。"
     }
    ]
+  },
+  {
+   "id": "pixel-day-night-toggle",
+   "title": "像素重组的日夜开关",
+   "category": "motion",
+   "tags": [
+    "开关",
+    "像素点阵",
+    "粒子",
+    "日夜切换",
+    "微交互"
+   ],
+   "rating": 2,
+   "summary": "拨动开关时，滑块上的点阵月亮散成粒子，滑到另一头重新聚成点阵太阳；整个场景同时从深靛夜色切到暖白，滑块的光从紫变橙。",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/8NWLsFPS7Yf",
+    "author": "坝上九步猫",
+    "title": "deepseek 开关mothion动效"
+   },
+   "ref": "references/xhs/2026-11-21-deepseek-开关mothion动效-032124",
+   "video": "xhs/6b0167590000000016032124-h264.mp4",
+   "thumb": "references/xhs/2026-11-21-deepseek-开关mothion动效-032124/frame-01.jpg",
+   "contact": "references/xhs/2026-11-21-deepseek-开关mothion动效-032124/contact-sheet.jpg",
+   "demo": null,
+   "status": "queued",
+   "status_note": "可以用 canvas 便宜复刻，交给复刻会话。",
+   "verify": null,
+   "plan": {
+    "size": "S",
+    "template": "basic",
+    "assets": [],
+    "steps": [
+     "两个 9×9 左右的点阵图标（月亮 + 两颗星，太阳 + 光芒），每个点是小方块",
+     "点击：滑块 0.6s 弹性滑到另一头；同时每个点向随机方向飞散（带一点漂浮），在滑块到位前 0.15s 按就近配对飞回新图标的位置",
+     "背景、开关底槽同时过渡：夜 #15131F 深靛 → 日 #ECEAE6 暖白；滑块光晕紫 #7B6CF6 → 暖橙 #F4A340，边缘一圈细亮边",
+     "点的颜色：夜里白点，白天深灰点；点数不同时多出来的点淡出",
+     "scenarios.js：点击两次，截飞散中和重组后的帧"
+    ],
+    "prompt": null,
+    "accept": "心动点（像素散开再重组 + 整屏日夜一起换）做到；RUBRIC ≥ 6"
+   },
+   "evidence": null
   }
  ],
  "ratings": {

@@ -1,0 +1,45 @@
+{
+ "id": "6b0167590000000016032124",
+ "type": "video",
+ "title": "deepseek 开关mothion动效",
+ "desc": "开关mothion动效果 #mothion[话题]# #deepseek[话题]# #动效设计[话题]# #动态设计[话题]# #图标设计[话题]# #产品动画[话题]#",
+ "user": "坝上九步猫",
+ "tags": [
+  "mothion",
+  "deepseek",
+  "动效设计",
+  "动态设计",
+  "图标设计",
+  "产品动画"
+ ],
+ "interact": {
+  "collected": false,
+  "collectedCount": "6",
+  "commentCount": "",
+  "shareCount": "1",
+  "relation": "none",
+  "niceCount": "",
+  "followed": false,
+  "liked": false,
+  "likedCount": "9"
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611211836/7727df43d4b860496573c0d8e46b1594/spectrum/1040g34o327r21vrsma105on3vq9nqoi3ssebpmg!nd_dft_wgth_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v11.rednotecdn.com/stream/79/110/258/01eb0166f32f37354f037001a1fd7bc9e0_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/79/110/258/01eb0166f32f37354f037001a1fd7bc9e0_258.mp4"
+   ],
+   "w": 952,
+   "h": 720,
+   "size": 774736
+  }
+ ],
+ "comments": [],
+ "source": "https://www.xiaohongshu.com/discovery/item/6b0167590000000016032124?app_platform=android&ignoreEngage=true&app_version=9.54.0&share_from_user_hidden=true&xsec_source=app_share&type=video&xsec_token=CBl-X_lZyj1sgNjjVPdEx48ykB5egrchz2Gicts_6NqOI%3D&author_share=1&xhsshare=CopyLink&shareRedId=ODo0Qkc2Oj42NzUyOTgwNjc1OTg2OTc-&apptime=1795257224&share_id=e2bb3549faa047eda6d8054ea3a634be&share_channel=copy_link&track_code=8NWLsFPS7Yf",
+ "fetched": "2026-11-21T10:36:26.790Z",
+ "videoNote": ""
+}
