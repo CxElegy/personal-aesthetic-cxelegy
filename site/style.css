@@ -92,3 +92,15 @@ dl{margin:0;display:grid;gap:12px}dt{font:500 11px var(--sans);letter-spacing:.1
 footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--rule);font-size:12px;color:var(--sub)}
 @media (max-width:820px){.spread,.spread.portrait,.specs,.lists{grid-template-columns:1fr}.shelf .desc{margin-left:0;padding-left:0;border-left:0;flex-basis:100%}.spread::after{display:none}.page iframe{height:460px}.tally{text-align:left}.mast{grid-template-columns:1fr}.search{width:100%}}
 @media (prefers-reduced-motion:reduce){.card,.spine{transition:none}}
+
+/* 播放器 */
+.player{position:relative;border-radius:4px;overflow:hidden;background:#000;outline:none}
+.player:focus-visible{box-shadow:0 0 0 2px var(--gold)}
+.player video{display:block;width:100%;height:auto;cursor:pointer}
+.pbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 10px;background:rgba(20,18,22,.92);color:#EDE7DC;font:12px var(--mono)}
+.pb{all:unset;cursor:pointer;min-width:26px;height:26px;display:inline-grid;place-items:center;border-radius:5px;padding:0 4px;color:#EDE7DC}
+.pb:hover{background:rgba(255,255,255,.1)}.pb[aria-pressed="true"]{background:rgba(233,207,140,.22);color:#F3DFA6}
+.pb:focus-visible{outline:1px solid #F3DFA6}
+.seek{flex:1 1 120px;min-width:0;accent-color:#CFAE6A}
+.rates{display:inline-flex;gap:2px}
+.perr{margin:0;padding:8px 10px;font-size:12px;color:#F0C9BF;background:#3A2522}

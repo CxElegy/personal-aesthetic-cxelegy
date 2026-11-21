@@ -21,7 +21,40 @@
     }
     D.items.forEach((it, i) => it.no = i + 1);
   }
-  const videoUrl = k => k && CFG.supabaseUrl ? `${CFG.supabaseUrl}/storage/v1/object/public/${CFG.videoBucket}/${enc(k)}` : null;
+  // 视频地址：本地预览用 videoBase；正式网站从数据库的存储桶读取
+  const videoUrl = k => !k ? null : CFG.videoBase ? CFG.videoBase + enc(k)
+    : CFG.supabaseUrl ? `${CFG.supabaseUrl}/storage/v1/object/public/${CFG.videoBucket}/${enc(k)}` : null;
+  // 看动效用的播放器：慢放、逐帧、循环、拖动进度
+  function player(src, poster) {
+    return `<div class="player" data-src="${esc(src)}">
+      <video src="${esc(src)}" ${poster ? `poster="${enc(poster)}"` : ''} playsinline muted loop preload="metadata"></video>
+      <div class="pbar">
+        <button class="pb play" aria-label="播放">▶</button>
+        <button class="pb step" data-d="-1" aria-label="后退一帧">‹</button>
+        <button class="pb step" data-d="1" aria-label="前进一帧">›</button>
+        <input class="seek" type="range" min="0" max="1000" value="0" aria-label="进度">
+        <span class="time">0:00</span>
+        <span class="rates">${[0.25, 0.5, 1].map(r => `<button class="pb rate" data-r="${r}" aria-pressed="${r === 1}">${r === 1 ? '1×' : r + '×'}</button>`).join('')}</span>
+        <button class="pb loop" aria-pressed="true" aria-label="循环">↻</button>
+      </div><p class="perr" hidden>视频读取失败：数据库里可能还没有这段视频。</p></div>`;
+  }
+  function wirePlayer(root) {
+    root.querySelectorAll('.player').forEach(pl => {
+      const v = pl.querySelector('video'), play = pl.querySelector('.play'), seek = pl.querySelector('.seek'), time = pl.querySelector('.time');
+      const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+      const sync = () => { play.textContent = v.paused ? '▶' : '❚❚'; play.setAttribute('aria-label', v.paused ? '播放' : '暂停'); };
+      play.onclick = () => { v.paused ? v.play().catch(() => {}) : v.pause(); };
+      v.addEventListener('click', () => play.click());
+      v.addEventListener('play', sync); v.addEventListener('pause', sync);
+      v.addEventListener('timeupdate', () => { if (v.duration) { seek.value = v.currentTime / v.duration * 1000; time.textContent = `${fmt(v.currentTime)} / ${fmt(v.duration)}`; } });
+      seek.oninput = () => { if (v.duration) v.currentTime = seek.value / 1000 * v.duration; };
+      pl.querySelectorAll('.step').forEach(b => b.onclick = () => { v.pause(); v.currentTime = Math.max(0, v.currentTime + (+b.dataset.d) / 30); });
+      pl.querySelectorAll('.rate').forEach(b => b.onclick = () => { v.playbackRate = +b.dataset.r; pl.querySelectorAll('.rate').forEach(x => x.setAttribute('aria-pressed', x === b)); });
+      const lp = pl.querySelector('.loop'); lp.onclick = () => { v.loop = !v.loop; lp.setAttribute('aria-pressed', v.loop); };
+      v.addEventListener('error', () => { pl.querySelector('.perr').hidden = false; });
+      pl.tabIndex = 0; pl.addEventListener('keydown', e => { if (e.key === ' ') { e.preventDefault(); play.click(); } if (e.key === 'ArrowRight') pl.querySelector('.step[data-d="1"]').click(); if (e.key === 'ArrowLeft') pl.querySelector('.step[data-d="-1"]').click(); });
+    });
+  }
   const cat = id => D.categories.find(c => c.id === id) || {name:id};
   const spineColor = id => `var(--sp-${id})`;
   const scoreOf = it => it.verify && it.verify.scale === 10 ? it.verify.score : null;
@@ -80,7 +113,7 @@
   function detail(it) {
     document.title = it.title + ' · 审美图鉴';
     const v = it.verify, src = it.source || {}, vu = videoUrl(it.video), c = cat(it.category);
-    const orig = vu ? `<video src="${vu}" controls loop muted playsinline preload="metadata"></video>`
+    const orig = vu ? player(vu, it.thumb)
       : it.thumb ? `<img src="${enc(it.thumb)}" alt="原作截图"><div class="note">${it.video ? '原视频还没上传到数据库，先显示截图。' : '原作没有视频。'}</div>` : '<div class="note">没有原作图片。</div>';
     const mine = it.demo ? `<iframe src="${enc(it.demo)}" title="复刻：${esc(it.title)}" loading="lazy"></iframe>`
       : `<div class="note">${esc(D.statuses[it.status] || '')}${it.status_note ? '：' + esc(it.status_note) : ''}</div>`;
@@ -116,6 +149,7 @@
       </article>${specs}${plan}
       <footer>编号 ${esc(it.id)} · 素材 ${esc(it.ref || '—')} · 视频 ${esc(it.video || '无')}</footer>`;
     document.getElementById('back').onclick = () => { location.hash = ''; };
+    wirePlayer(app);
     // 原作是竖屏时：左页按原作比例变窄，右页的复刻和左页一样高，两页之间不留空
     const spread = app.querySelector('.spread'), media = spread.querySelector('.page video, .page img'), fr = spread.querySelector('iframe');
     const fit = () => { if (!media) return; const w = media.videoWidth || media.naturalWidth, h = media.videoHeight || media.naturalHeight; if (!w || !h) return;
