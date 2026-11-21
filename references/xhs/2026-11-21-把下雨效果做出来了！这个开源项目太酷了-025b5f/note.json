@@ -1,0 +1,50 @@
+{
+ "id": "6afc1f62000000002a025b5f",
+ "type": "video",
+ "title": "把下雨效果做出来了！这个开源项目太酷了",
+ "desc": "🌧️ 如果手机屏幕可以模拟一扇正在下雨的窗户，会是什么效果？\n\t\n今天发现一个很有意思的开源项目：Shader Lab，由开发者 Fede Sánchez 开源。\n\t\n它不是普通的图片滤镜工具，而是一个实时 Metal Shader 视觉特效实验室。\n\t\n最吸引我的就是它的 Rain 雨滴效果！\n\t\n🔥 几个值得体验的功能：\n\t\n01｜真实雨滴模拟\n在玻璃表面生成动态雨滴，背景呈现自然的虚化效果，视觉上非常有沉浸感。\n\t\n02｜多种窗户场景\n支持 House（房屋）、Car（汽车）、Plane（飞机）三种窗口模式，不同场景会改变雨滴运动方向。\n\t\n03｜15种视觉特效\n除了 Rain，还包含 Ripple 波纹、Warp 扭曲、Fluted Glass 玻璃纹理、Chromatic 色彩偏移、Sphere 球体等效果。\n\t\n04｜实时参数调节\n可以直接调整特效参数，实时观察画面变化，不需要反复导出预览。\n\t\n05｜导出专属壁纸\n支持将生成的 Shader 效果导出为高清图片，保存到手机相册作为壁纸。\n\t\n💡 更有意思的是：\n这个项目已经开源，开发者还提供了 HomeView 虚拟机运行教程，可以自己搭建环境体验。\n\t\n📦 项目名称：Shader Lab\n\t\n🔗 GitHub：fedesanchez0/shader-lab\n\t\n适合：\nUI设计师、交互设计师、前端开发者、Shader技术爱好者，以及喜欢研究视觉特效的朋友。\n\t\n有时候好的视觉体验，不只是界面排版，而是代码、光影和交互共同创造出来的。\n\t\n#ShaderLab[话题]# #开源项目[话题]# #UI设计[话题]# #视觉特效[话题]# #Shader[话题]# #Metal[话题]# #交互设计[话题]# #VibeCoding[话题]# #程序员[话题]# #设计灵感[话题]#",
+ "user": "象限设计局",
+ "tags": [
+  "ShaderLab",
+  "开源项目",
+  "UI设计",
+  "视觉特效",
+  "Shader",
+  "Metal",
+  "交互设计",
+  "VibeCoding",
+  "程序员",
+  "设计灵感"
+ ],
+ "interact": {
+  "commentCount": "",
+  "shareCount": "15",
+  "niceCount": "",
+  "likedCount": "110",
+  "collected": false,
+  "collectedCount": "144",
+  "followed": false,
+  "relation": "none",
+  "liked": false
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611210930/2d10227dc1b371b911a65d0cb11b4f2d/1040g008327lt0m686q005poj4a07ebr0cfhp2io!nd_dft_wgth_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v28.rednotecdn.com/stream/79/110/258/01eafc5daa77d99e4f037001a1e9cdfa97_258.mp4",
+    "http://sns-v11.rednotecdn.com/stream/79/110/258/01eafc5daa77d99e4f037001a1e9cdfa97_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/79/110/258/01eafc5daa77d99e4f037001a1e9cdfa97_258.mp4"
+   ],
+   "w": 1280,
+   "h": 720,
+   "size": 1900573
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/88WLj75xREm",
+ "fetched": "2026-11-21T01:30:09.716Z",
+ "videoNote": ""
+}

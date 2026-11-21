@@ -1346,6 +1346,66 @@
    "demo": null,
    "status": "n/a",
    "verify": null
+  },
+  {
+   "id": "rain-glass",
+   "title": "窗玻璃上的雨滴（Shader Lab）",
+   "category": "motion",
+   "tags": [
+    "shader",
+    "雨滴",
+    "玻璃",
+    "折射",
+    "开源"
+   ],
+   "rating": 2,
+   "summary": "背景虚化，玻璃上每颗雨滴像小透镜，透出清晰倒置的背景，滑落时留下水痕；可切换飞机舷窗、车窗、房屋窗户。开源项目 Shader Lab（Metal shader）。",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/88WLj75xREm",
+    "author": "象限设计局",
+    "title": "把下雨效果做出来了！这个开源项目太酷了"
+   },
+   "ref": "references/xhs/2026-11-21-把下雨效果做出来了！这个开源项目太酷了-025b5f",
+   "video": "xhs/6afc1f62000000002a025b5f.mp4",
+   "thumb": "references/xhs/2026-11-21-把下雨效果做出来了！这个开源项目太酷了-025b5f/frame-03.jpg",
+   "contact": "references/xhs/2026-11-21-把下雨效果做出来了！这个开源项目太酷了-025b5f/contact-sheet.jpg",
+   "demo": null,
+   "status": "queued",
+   "verify": null,
+   "heart": "玻璃上的雨滴是真的在折射：每一颗都透出清晰的背景，而背景本身是虚的",
+   "evidence": [
+    {
+     "id": "E-01",
+     "finding": "背景整体虚化，雨滴里的背景是清晰、上下颠倒的（透镜折射）",
+     "confidence": "observed"
+    },
+    {
+     "id": "E-02",
+     "finding": "有飞机舷窗、汽车、房屋三种窗口，雨滴运动方向随场景变化",
+     "confidence": "observed（视频 + 作者说明）"
+    },
+    {
+     "id": "E-03",
+     "finding": "用 Metal shader 实时渲染，项目开源：github.com/fedesanchez0/shader-lab",
+     "confidence": "observed（作者说明）"
+    }
+   ],
+   "plan": {
+    "size": "M",
+    "template": "basic + WebGL 片段着色器",
+    "assets": [
+     "一张背景图（风景或壁纸，自己拍或 AI 生成）"
+    ],
+    "steps": [
+     "先读源头：fedesanchez0/shader-lab 里 Rain 的 Metal 着色器，确认许可证允许参考后，理解它的雨滴生成、折射、拖尾做法（只学做法，代码用自己的写法移植到 WebGL）",
+     "背景：对背景图做模糊作为底层；雨滴：程序化生成大小不一的水滴，在水滴内按法线偏移采样「清晰且翻转」的背景",
+     "动作：大水滴缓慢下滑、合并小水滴、留下拖尾和细小残留",
+     "场景切换：飞机舷窗（圆角椭圆遮罩）、车窗（斜向流动）、房屋窗户（垂直下落）"
+    ],
+    "prompt": null,
+    "accept": "RUBRIC ≥ 7，并且心动点通过：放大看，每颗雨滴里都是清晰的折射背景"
+   }
   }
  ],
  "ratings": {
