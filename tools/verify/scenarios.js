@@ -3,11 +3,14 @@
 const w=ms=>new Promise(r=>setTimeout(r,ms));
 module.exports={
   'glow-button':{viewport:{width:540,height:400},run:async(p,shot)=>{for(let i=0;i<6;i++){await shot();await w(600)}}},
-  'typing-cat':{viewport:{width:540,height:720},window:[0,.6],run:async(p,shot)=>{
-    await p.mouse.move(80,120);await w(400);await shot();
-    const h=await p.locator('#head').boundingBox();await p.mouse.move(h.x+h.width/2,h.y+h.height/3);await w(400);await shot();
-    await p.mouse.move(470,90);await w(400);await shot();
-    await p.keyboard.type('JDF',{delay:50});await shot();await p.keyboard.type('NEA',{delay:50});await shot();await w(300);await shot()}},
+  // 第 2 版（canvas 骨骼猫）。原作取样窗口 0–62%：约 2s 侧身搭鼠标、7s 被摸、11/16/20s 打字、25s 搭鼠标 + 打字
+  'typing-cat':{viewport:{width:540,height:720},window:[0,.62],run:async(p,shot)=>{
+    for(let i=0;i<10;i++){await p.mouse.move(150+i*10,560-i*4);await w(40)}await w(500);await shot();
+    const h=await p.evaluate(()=>({x:OX+curHead.x*SC,y:OY+(curHead.y-30)*SC}));
+    for(let i=0;i<8;i++){await p.mouse.move(h.x-20+i*5,h.y);await w(50)}await w(450);await shot();
+    await p.mouse.move(530,10);await w(2500);
+    await p.keyboard.type('HDSA',{delay:90});await shot();await p.keyboard.type('FEJ',{delay:90});await shot();await p.keyboard.type('KN',{delay:90});await shot();
+    for(let i=0;i<5;i++){await p.mouse.move(400+i*6,250);await w(40)}await p.keyboard.type('EA',{delay:100});await shot()}},
   'hold-to-delete':{viewport:{width:480,height:360},run:async(p,shot)=>{
     const press=async(i,ms)=>{const b=await p.locator('.bin').nth(i).boundingBox();await p.mouse.move(b.x+18,b.y+18);await p.mouse.down();await w(ms)};
     await shot();await press(1,450);await shot();await w(700);await p.mouse.up();await w(400);await shot();

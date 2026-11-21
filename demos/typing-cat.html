@@ -48,10 +48,10 @@ class Spring2{constructor(x,y,k,z){this.a=new Spring(x,k,z);this.b=new Spring(y,
 const BODY={
   front:[[-96,-292],[-130,-215],[-144,-132],[-152,-58],[-140,-12],[-100,0],[18,0],[54,-12],[64,-60],[54,-136],[32,-215],[6,-292]],
   lean: [[-205,-292],[-230,-226],[-206,-150],[-162,-80],[-120,-16],[-76,0],[24,0],[58,-16],[66,-70],[48,-136],[-12,-216],[-82,-296]],
-  type: [[-100,-292],[-136,-218],[-148,-134],[-154,-60],[-142,-12],[-100,0],[20,0],[56,-12],[66,-60],[58,-138],[36,-218],[2,-292]]};
-const HEAD={front:{x:-44,y:-322,r:0},lean:{x:-152,y:-324,r:-.16},type:{x:-46,y:-316,r:0}};
-const SHOULDER={front:[[-98,-178],[-14,-178]],lean:[[-196,-212],[-92,-142]],type:[[-104,-182],[18,-182]]};
-const TAILBASE={front:[52,-66],lean:[44,-104],type:[54,-70]};
+  type: [[-102,-238],[-142,-190],[-156,-124],[-160,-58],[-146,-12],[-100,0],[22,0],[60,-12],[70,-58],[62,-124],[40,-190],[0,-238]]};
+const HEAD={front:{x:-44,y:-322,r:0},lean:{x:-152,y:-324,r:-.16},type:{x:-48,y:-268,r:0}};
+const SHOULDER={front:[[-98,-178],[-14,-178]],lean:[[-196,-212],[-92,-142]],type:[[-108,-140],[22,-140]]};
+const TAILBASE={front:[52,-66],lean:[44,-104],type:[58,-56]};
 const TAILREST=[-.15,-.42,-.75,-1.0,-1.08,-.9,-.5,-.08,.28,.5];
 
 // ---------- 键盘布局（60%）----------
@@ -83,7 +83,7 @@ const S={
 
 // ---------- 布局 ----------
 function resize(){DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;
-  SC=Math.min(W/600,H/700)*1.0;OX=W/2+20*SC;OY=H*.6+110*SC*0;OY=H/2+130*SC;bg=makeWallpaper();for(const c of [back,front]){c.width=cv.width;c.height=cv.height}}
+  SC=Math.min(W/600,H/700)*.74;OX=W/2+20*SC;OY=H*.6+110*SC*0;OY=H/2+130*SC;bg=makeWallpaper();for(const c of [back,front]){c.width=cv.width;c.height=cv.height}}
 addEventListener('resize',resize);
 const toScene=(cx,cy)=>({x:(cx-OX)/SC,y:(cy-OY)/SC});
 
@@ -124,7 +124,7 @@ function hit(id){const k=KEYS[id];S.lastType=S.t;k.glow=1;
   const ch=LABEL[id]||(id.length===1?id:null);if(ch)addCap(ch,k)}
 
 // 键帽：胸前有一颗大的空白键帽；新字母从它旁边冒出来，把旧的往右推（原作 25–28 秒逐帧）
-const SLOT=25,MAXCAP=4,BIG={x:-40,y:-112};
+const SLOT=25,MAXCAP=4,BIG={x:-40,y:-74};
 function addCap(ch,k){for(const c of S.caps)c.slot++;S.caps.push({ch,slot:0,p:new Spring2(BIG.x+6,BIG.y,170,.6),a:new Spring(.9,200,.9),trail:[],
   dy:(Math.random()-.5)*10,rot:new Spring((Math.random()-.5)*.9,120,.5),r0:(Math.random()-.5)*.22});
   S.caps.forEach(c=>{if(c.slot>=MAXCAP)c.a.t=0;});}
@@ -152,7 +152,7 @@ function update(dt){const t=S.t;
   const bob=Math.sin(t*14)*3;
   const hover=[[-92,16+bob],[26,16-bob]];
   for(let i=0;i<2;i++){let x=lerp(rest[i][0],lean[i][0],L),y=lerp(rest[i][1],lean[i][1],L);x=lerp(x,hover[i][0],T);y=lerp(y,hover[i][1],T);
-    const pr=S.press[i],po=S.press[1-i];if(T>.5&&po&&t-po.t<.32&&(!pr||pr.t<po.t)){x=lerp(x,i?40:-110,.5);y=-78}
+    const pr=S.press[i],po=S.press[1-i];if(T>.5&&po&&t-po.t<.32&&(!pr||pr.t<po.t)){x=lerp(x,i?40:-110,.5);y=-52}
     if(i===0){const M=S.wMouseArm.x;const ck=t-S.click<.12?5:0;x=lerp(x,S.mouseDev.x+4,M);y=lerp(y,S.mouseDev.y-10+ck,M)}
     if(pr&&t-pr.t<.14){x=pr.k.cx;y=pr.k.cy-2}
     const sp=S.paw[i];sp.set(x,y);sp.a.k=sp.b.k=pr&&t-pr.t<.3?900:260;sp.step(dt);
