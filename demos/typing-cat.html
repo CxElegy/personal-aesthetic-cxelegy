@@ -71,7 +71,7 @@ const MOUSE={x:-248,y:22,r:27};
 
 // ---------- 状态 ----------
 const S={
-  wLean:new Spring(0,70,.62), wType:new Spring(0,90,.68), squint:new Spring(0,160,.8), tilt:new Spring(0,60,.55),
+  wLean:new Spring(0,70,.62), wMouseArm:new Spring(0,90,.7), big:new Spring(1,300,.35), click:-9, wType:new Spring(0,90,.68), squint:new Spring(0,160,.8), tilt:new Spring(0,60,.55),
   paw:[new Spring2(-96,-6,260,.62),new Spring2(-14,-6,260,.62)],
   mouseDev:new Spring2(MOUSE.x,MOUSE.y,120,.8),
   look:new Spring2(0,-200,90,.8),
@@ -111,34 +111,38 @@ cv.addEventListener('pointermove',e=>{const p=toScene(e.clientX,e.clientY);
 cv.addEventListener('pointerleave',()=>{S.cursor.in=false});
 cv.addEventListener('pointerdown',e=>{const p=toScene(e.clientX,e.clientY);S.cursor={...p,in:true};
   const k=keyList.find(k=>p.x>k.x&&p.x<k.x+k.w&&p.y>k.y&&p.y<k.y+k.h);if(k){hit(k.id);e.preventDefault()}
-  else if(e.pointerType!=='mouse'&&!overHead(p))document.getElementById('ime').focus()});
+  else{S.lastMouse=S.t;S.click=S.t;if(e.pointerType!=='mouse'&&!overHead(p))document.getElementById('ime').focus()}});
 addEventListener('keydown',e=>{if(e.metaKey||e.ctrlKey)return;let id=e.key.length===1?e.key.toUpperCase():e.key;
   if(id==='Shift'&&e.location===2)id='ShiftR';if(!KEYS[id]&&e.code==='Space')id=' ';if(KEYS[id]){hit(id);if(id===' '||id==='Tab')e.preventDefault()}});
 
 function hit(id){const k=KEYS[id];S.lastType=S.t;k.glow=1;
   // 左半边用左爪，右半边用右爪；同一只爪还没抬起时换另一只
   let arm=k.cx<-30?0:1;if(S.press[arm]&&S.t-S.press[arm].t<.08)arm=1-arm;
+  if(S.wMouseArm.t>.5)arm=1;  // 左爪按着鼠标时，全部由右爪来敲
+  S.big.v-=9;
   S.press[arm]={k,t:S.t};S.lastArm=arm;
   const ch=LABEL[id]||(id.length===1?id:null);if(ch)addCap(ch,k)}
 
-// 键帽：从被按的键位置弹起，排成一行悬在胸前；新的从右边进，旧的往左挤
-const SLOT=34,MAXCAP=6;
-function addCap(ch,k){for(const c of S.caps)c.slot--;S.caps.push({ch,slot:0,p:new Spring2(k.cx,k.cy-6,140,.62),a:new Spring(.85,200,.9),trail:[],rot:new Spring((Math.random()-.5)*.8,120,.5)});
-  S.caps.forEach(c=>{if(c.slot<=-MAXCAP)c.a.t=0;});}
+// 键帽：胸前有一颗大的空白键帽；新字母从它旁边冒出来，把旧的往右推（原作 25–28 秒逐帧）
+const SLOT=25,MAXCAP=4,BIG={x:-40,y:-112};
+function addCap(ch,k){for(const c of S.caps)c.slot++;S.caps.push({ch,slot:0,p:new Spring2(BIG.x+6,BIG.y,170,.6),a:new Spring(.9,200,.9),trail:[],
+  dy:(Math.random()-.5)*10,rot:new Spring((Math.random()-.5)*.9,120,.5),r0:(Math.random()-.5)*.22});
+  S.caps.forEach(c=>{if(c.slot>=MAXCAP)c.a.t=0;});}
 
 // ---------- 动画 ----------
 let last=performance.now(),curHead=null;
 function frame(now){let dt=Math.min(.033,(now-last)/1000);last=now;S.t=now/1000;update(dt);draw();requestAnimationFrame(frame)}
 
 function update(dt){const t=S.t;
-  const typing=t-S.lastType<1.3, mousing=!typing&&t-S.lastMouse<2.2;
-  S.wType.t=typing?1:0;S.wLean.t=mousing?1:0;S.wType.step(dt);S.wLean.step(dt);
+  const typing=t-S.lastType<1.3, mouseOn=t-S.lastMouse<2.2, mousing=!typing&&mouseOn;
+  // 分层状态机：身体（待机 / 侧身 / 打字）和左爪（搭不搭鼠标）各自独立
+  S.wType.t=typing?1:0;S.wLean.t=mousing?1:0;S.wMouseArm.t=mouseOn?1:0;S.wType.step(dt);S.wLean.step(dt);S.wMouseArm.step(dt);S.big.step(dt);
   const pet=S.cursor.in&&overHead(S.cursor)&&!typing;
   S.squint.t=pet?1:0;S.squint.step(dt);S.tilt.t=pet?clamp((S.cursor.x-(curHead?curHead.x:0))/90,-1,1)*.16+(-.04):0;S.tilt.step(dt);
   // 眨眼
   if(t>S.nextBlink){S.blink=1;S.nextBlink=t+2.2+Math.random()*3.5}S.blink=Math.max(0,S.blink-dt*7);
   // 鼠标设备：用鼠标时跟着光标小幅滑动
-  if(mousing&&S.cursor.in){S.mouseDev.set(MOUSE.x+clamp((S.cursor.x+40)*.05,-14,14),MOUSE.y+clamp((S.cursor.y+200)*.03,-6,8))}else S.mouseDev.set(MOUSE.x,MOUSE.y);S.mouseDev.step(dt);
+  if(mouseOn&&S.cursor.in){S.mouseDev.set(MOUSE.x+clamp((S.cursor.x+40)*.05,-14,14),MOUSE.y+clamp((S.cursor.y+200)*.03,-6,8))}else S.mouseDev.set(MOUSE.x,MOUSE.y);S.mouseDev.step(dt);
   // 视线
   if(typing){const a=S.press[S.lastArm];const tk=a?a.k:KEYS.G;S.look.set(tk.cx,tk.cy)}else if(S.cursor.in)S.look.set(S.cursor.x,S.cursor.y);else S.look.set(-40,-200);S.look.step(dt);
   // 爪子目标
@@ -149,6 +153,7 @@ function update(dt){const t=S.t;
   const hover=[[-92,16+bob],[26,16-bob]];
   for(let i=0;i<2;i++){let x=lerp(rest[i][0],lean[i][0],L),y=lerp(rest[i][1],lean[i][1],L);x=lerp(x,hover[i][0],T);y=lerp(y,hover[i][1],T);
     const pr=S.press[i],po=S.press[1-i];if(T>.5&&po&&t-po.t<.32&&(!pr||pr.t<po.t)){x=lerp(x,i?40:-110,.5);y=-78}
+    if(i===0){const M=S.wMouseArm.x;const ck=t-S.click<.12?5:0;x=lerp(x,S.mouseDev.x+4,M);y=lerp(y,S.mouseDev.y-10+ck,M)}
     if(pr&&t-pr.t<.14){x=pr.k.cx;y=pr.k.cy-2}
     const sp=S.paw[i];sp.set(x,y);sp.a.k=sp.b.k=pr&&t-pr.t<.3?900:260;sp.step(dt);
     const g=S.ghosts[i];g.unshift([sp.x,sp.y,sp.speed]);if(g.length>4)g.pop()}
@@ -157,10 +162,10 @@ function update(dt){const t=S.t;
   // 键帽
   const typingNow=typing;
   S.caps.forEach((c,i)=>{const n=S.caps.length;let tx,ty;
-    if(typingNow||i<n-1){tx=-28+c.slot*SLOT+ (MAXCAP-1)*0 + 70;ty=-136+Math.abs(c.slot)*1.5;}
-    else{tx=118;ty=-54+Math.sin(t*2.2)*3}  // 停下来后，最后一颗飘到尾巴旁边
-    if(!typingNow&&i<n-1)c.a.t=0;else if(c.slot>-MAXCAP)c.a.t=1;
-    c.p.set(tx,ty);c.p.step(dt);c.a.step(dt);c.rot.t=0;c.rot.step(dt);
+    if(typingNow||i<n-1){tx=BIG.x+40+c.slot*SLOT;ty=BIG.y+6+c.dy*.6;c.rot.t=c.r0}
+    else{tx=122;ty=-50+Math.sin(t*2.2)*3;c.rot.t=0}  // 停下来后，最后一颗飘到尾巴旁边
+    if(!typingNow&&i<n-1)c.a.t=0;else if(c.slot<MAXCAP)c.a.t=1;
+    c.p.set(tx,ty);c.p.step(dt);c.a.step(dt);c.rot.step(dt);
     c.trail.unshift([c.p.x,c.p.y]);if(c.trail.length>5)c.trail.pop()});
   S.caps=S.caps.filter(c=>!(c.a.t===0&&c.a.x<.02));
   // 尾巴：角度弹簧链 + 摆动
@@ -279,9 +284,13 @@ function drawKeyboard(g){const {x,y,w,h}=KB;
     if(glow>0){g.save();g.globalAlpha=glow*.7;g.filter='blur(5px)';g.fillStyle='#C6FF3A';rr(g,k.x-2,k.y-2,k.w+4,k.h+4,4);g.fill();g.restore()}}
 }
 function drawMouse(g){const m=S.mouseDev;g.fillStyle='rgba(0,0,0,.18)';g.beginPath();g.ellipse(m.x+2,m.y+5,MOUSE.r,MOUSE.r*.92,0,0,7);g.fill();
-  g.fillStyle='#F7F6F2';g.beginPath();g.arc(m.x,m.y,MOUSE.r,0,7);g.fill();g.strokeStyle='#D9D6CF';g.lineWidth=1.5;g.stroke();
+  const fl=clamp(1-(S.t-S.click)/.35,0,1);g.fillStyle=fl>0?mixHex('#F7F6F2','#B9F23A',fl):'#F7F6F2';g.beginPath();g.arc(m.x,m.y,MOUSE.r,0,7);g.fill();g.strokeStyle='#D9D6CF';g.lineWidth=1.5;g.stroke();
   g.strokeStyle='#8E8B84';g.lineWidth=2;g.beginPath();g.moveTo(m.x+2,m.y-7);g.lineTo(m.x-2,m.y+5);g.stroke()}
-function drawCaps(g){for(const c of S.caps){const a=c.a.x;if(a<.02)continue;
+function drawCaps(g){const T=clamp(S.wType.x,0,1);if(T>.02){const sc=S.big.x;g.save();g.globalAlpha=T;g.translate(BIG.x,BIG.y);g.scale(sc*1.0,sc*.94);
+    g.fillStyle='rgba(0,0,0,.35)';g.filter='blur(4px)';rr(g,-23,-12,46,34,8);g.fill();g.filter='none';
+    g.fillStyle='#CBC7BF';rr(g,-23,-15,46,34,8);g.fill();g.fillStyle='#FBFAF7';rr(g,-23,-17,46,30,8);g.fill();
+    g.strokeStyle='rgba(0,0,0,.08)';g.lineWidth=1;rr(g,-17,-13,34,20,6);g.stroke();g.restore()}
+for(const c of S.caps){const a=c.a.x;if(a<.02)continue;
   for(let j=2;j<c.trail.length;j+=2){const [x,y]=c.trail[j];const sp=Math.hypot(x-c.p.x,y-c.p.y);if(sp>4){g.globalAlpha=a*.22;g.fillStyle='#FFFFFF';rr(g,x-14,y-14,28,25,6);g.fill();g.globalAlpha=1}}
   cap(g,c.p.x,c.p.y,c.ch,a,c.rot.x)}}
 function cap(g,x,y,ch,a,r){g.save();g.globalAlpha=clamp(a,0,1);g.translate(x,y);g.rotate(r);g.fillStyle='rgba(0,0,0,.25)';rr(g,-14,-11,28,28,6);g.filter='blur(3px)';g.fill();g.filter='none';
