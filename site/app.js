@@ -12,7 +12,7 @@
   async function load() {
     try { CFG = await (await fetch('config.json', {cache:'no-store'})).json(); } catch { CFG = {}; }
     D = await (await fetch('catalog/items.json', {cache:'no-store'})).json();
-    if (CFG.supabaseUrl && CFG.anonKey) {
+    if (CFG.supabaseUrl && CFG.anonKey && CFG.table) {
       try {
         const r = await fetch(`${CFG.supabaseUrl}/rest/v1/${CFG.table}?select=*`, {headers:{apikey:CFG.anonKey, Authorization:'Bearer '+CFG.anonKey}});
         if (r.ok) { const rows = await r.json(); const by = Object.fromEntries(rows.map(x => [x.id, x]));

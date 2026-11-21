@@ -1,6 +1,6 @@
 {
-  "supabaseUrl": "",
-  "anonKey": "",
-  "table": "aesthetic_items",
-  "videoBucket": "aesthetic-videos"
+ "supabaseUrl": "https://elegy.tailc8cfff.ts.net",
+ "anonKey": "sb_publishable_GMIrDWafyZ2-NKp_YVOd9Z_SijEusJ4",
+ "table": "",
+ "videoBucket": "aesthetic-videos"
 }
