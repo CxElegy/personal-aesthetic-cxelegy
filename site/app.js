@@ -117,6 +117,11 @@
       : it.thumb ? `<img src="${enc(it.thumb)}" alt="原作截图"><div class="note">${it.video ? (CFG.preview ? '预览版不能播放视频，原视频在正式网站上播放。' : '原视频还没上传到数据库，先显示截图。') : '原作没有视频。'}</div>` : '<div class="note">没有原作图片。</div>';
     const mine = it.demo ? `<iframe src="${enc(it.demo)}" title="复刻：${esc(it.title)}" loading="lazy"></iframe>`
       : `<div class="note">${esc(D.statuses[it.status] || '')}${it.status_note ? '：' + esc(it.status_note) : ''}</div>`;
+    // 提示词条目：右页直接放提示词全文（可复制）；有复刻的放在下面
+    const P = (it.prompts || []).filter(x => x && x.text);
+    const promptHtml = P.map((x, k) => `<div class="pr">${x.name ? `<h6>${esc(x.name)}</h6>` : ''}<div class="prompt">${esc(x.text)}</div>
+      <div class="pr-foot">${x.note ? `<span>${esc(x.note)}</span>` : '<span></span>'}<button class="copy" data-k="${k}">复制提示词</button></div></div>`).join('');
+    const promptOnRight = P.length && !it.demo;
     let specs = '';
     if (v && v.scale === 10) {
       const g = v.gap || {};
@@ -145,10 +150,14 @@
         <p class="sum"><span class="tag"><i style="--c:${spineColor(it.category)}"></i>${esc(c.name)}</span> · ${esc(D.statuses[it.status] || '')} · ${esc(it.summary)}</p></header>
       <article class="spread">
         <section class="page"><h4>原作 ${src.url ? `<a href="${esc(src.url)}" target="_blank" rel="noopener">${esc(src.author || src.title || '来源')} ↗</a>` : `<span>${esc(src.type || '')}</span>`}</h4>${orig}</section>
-        <section class="page"><h4>复刻 ${it.demo ? `<a href="${enc(it.demo)}" target="_blank" rel="noopener">单独打开 ↗</a>` : ''}</h4>${mine}</section>
-      </article>${specs}${plan}
+        ${promptOnRight ? `<section class="page"><h4>提示词 <span>${P.length} 段 · 原文照录</span></h4>${promptHtml}</section>` : `<section class="page"><h4>复刻 ${it.demo ? `<a href="${enc(it.demo)}" target="_blank" rel="noopener">单独打开 ↗</a>` : ''}</h4>${mine}</section>`}
+      </article>${P.length && !promptOnRight ? `<section class="box cmp"><h5>提示词 · 原文照录</h5>${promptHtml}</section>` : ''}${specs}${plan}
       <footer>编号 ${esc(it.id)} · 素材 ${esc(it.ref || '—')} · 视频 ${esc(it.video || '无')}</footer>`;
     document.getElementById('back').onclick = () => { location.hash = ''; };
+    app.querySelectorAll('.copy').forEach(b => b.onclick = async () => {
+      try { await navigator.clipboard.writeText(P[b.dataset.k].text); b.textContent = '已复制'; }
+      catch { const r = document.createRange(); r.selectNodeContents(b.closest('.pr').querySelector('.prompt')); getSelection().removeAllRanges(); getSelection().addRange(r); b.textContent = '已选中，按 Ctrl+C'; }
+      setTimeout(() => { b.textContent = '复制提示词'; }, 1800); });
     wirePlayer(app);
     // 原作是竖屏时：左页按原作比例变窄，右页的复刻和左页一样高，两页之间不留空
     const spread = app.querySelector('.spread'), media = spread.querySelector('.page video, .page img'), fr = spread.querySelector('iframe');

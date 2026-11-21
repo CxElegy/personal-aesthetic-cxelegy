@@ -21,6 +21,7 @@
 ## 小红书素材
 - 用 `tools/xhs/fetch.js` 抓取（见 `tools/xhs/README.md`）。不要伪装身份或绕过登录；需要登录时用户扫码（云端：`XHS_HEADLESS=1`，二维码截图发给用户）。登录状态缓存在 `~/.cache/rednote-profile`，不进仓库。
 - 抓完后看每条的图片、`contact-sheet.jpg` 和 `frame-*.jpg`，填写 `note.md` 的「学到的」，再按上面的步骤更新 `AESTHETIC.md`。
+- **提示词类笔记**（2026-11-21 用户定的）：必须把提示词**全文**存下来。来源按正文 → 图片里的文字 → 评论区的顺序找；存进条目的 `prompts`（`name` / `text` / `note`），网站详情页会显示并可复制。找不全的，在 `note` 里写清缺了哪段、在哪（例如「在评论区，需要登录才能看」）。
 
 ## 演示（demos/）
 - 学到的交互、动效、视觉效果都要做成单文件 HTML 演示放进 `demos/`（不依赖构建，直接用浏览器打开），用 Playwright 实际操作并截图检查，再在 `AESTHETIC.md` 对应条目里写上演示路径。

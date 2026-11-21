@@ -104,3 +104,8 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--rule);font-si
 .seek{flex:1 1 120px;min-width:0;accent-color:#CFAE6A}
 .rates{display:inline-flex;gap:2px}
 .perr{margin:0;padding:8px 10px;font-size:12px;color:#F0C9BF;background:#3A2522}
+
+.pr+.pr{margin-top:22px}.pr h6{margin:0 0 2px;font:500 13px/1.4 var(--sans);color:var(--ink)}
+.page .pr .prompt{white-space:pre-wrap;max-height:520px;overflow:auto;font-size:12.5px}
+.pr-foot{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;margin-top:8px;font-size:12px;color:var(--sub)}
+.copy{flex:none;font:inherit;font-size:12px;color:var(--ink);background:none;border:1px solid currentColor;border-radius:999px;padding:4px 12px;cursor:pointer;opacity:.8}.copy:hover{opacity:1}
