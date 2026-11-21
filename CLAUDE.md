@@ -38,13 +38,8 @@
 5b. **耗 token 的复刻先排队**（2026-11-21 用户定的）：3D 建模、需要 AI 生成素材的效果，平时不做，只放原视频；在条目里写 `plan`（大小、模板、素材、步骤、AI 提示词、验收），状态设为 `queued`，运行 `node tools/replicate/queue.js` 更新 `tools/replicate/QUEUE.md`。用户说「开始做 <编号>」时，按 QUEUE.md 的固定步骤开工（`tools/replicate/new.sh` 生成起点）。
 6. **视频**（2026-11-21 定）：存在**店长 PC 的自建 Supabase**（`https://elegy.tailc8cfff.ts.net`，存储桶 `aesthetic-videos`，公开读取）。网站播放用 H.264（`video.web.mp4`，原片加 faststart；超过 20MB 的重编码 CRF 23），**不用 AV1**（很多设备播不了）。条目的 `video` 是桶里的路径 `xhs/<笔记id>-h264.mp4`。
    - 上传：`node tools/db/upload-videos.js`（用公开的 publishable key，已存在的会跳过；`--check` 只检查）。
-   - 上传权限是限时的，靠 PC 会话开关。**云端和 PC 两个会话自己对接，不要让用户传话或转述**（2026-11-21 用户定的）。固定做法：
-     1. 云端：`node tools/db/pc-handoff.js`，打印待传清单和 PC 指令；没有待传就结束。
-     2. 云端：`create_session` 在环境「Elegy:D:\Claude」开会话，prompt 就用打印出来的那段。
-     3. 云端：同时后台运行 `node tools/db/upload-videos.js --wait`（权限没开就每 30 秒重试）。
-     4. PC 会话自己闭环：开权限 → 等视频出现在桶里 → **立刻关权限** → 最后一条回复写一行 `RESULT: …`。**PC 会话不发消息**（在 PC 上会弹授权）。
-     5. 云端用 `get_session` / `list_events` 读 PC 的 RESULT，再用公开地址核对（HTTP 200、大小一致），只把最终结果告诉用户。PC 会话卡在等授权时，云端读它的事件判断哪一步完成了，然后 `interrupt_session` + `archive_session`，不让用户去点。
-   - 云端这边开 PC 会话、查看进度、停止和归档会话的工具已在 `.claude/settings.json` 里预先允许，不用每次让用户授权。
+   - 上传身份（2026-11-21 用户选的方案 1B）：**专用上传令牌**，数据库角色 `video_uploader`，只能往 `aesthetic-videos` 写。令牌存在云端环境的 Network secrets（主机 `elegy.tailc8cfff.ts.net`，Authorization: Bearer），代理自动加上，对话里看不到。
+   - **不要再开 PC 会话来上传**（用户原话「不要开会话」），也不要让用户传话。上传失败 401/403 时，告诉用户令牌缺失或过期：PC 上重新签一个（角色 video_uploader，一年有效），用户自己加到环境的 Network secrets。
    - **不需要也不要索取 service_role 密钥。**
    - 视频不进 git。
 7. **发布**：推到 main 后 `.github/workflows/pages.yml` 自动生成并发布网站；本地预览 `node tools/site/build.js` 后打开 `dist/`。
