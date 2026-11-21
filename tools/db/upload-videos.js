@@ -1,8 +1,9 @@
 // 把原作视频上传到自建 Supabase 的存储桶 aesthetic-videos（网站从这里播放）
 //   node tools/db/upload-videos.js            上传还没上传过的
 //   node tools/db/upload-videos.js --check    只检查哪些已经在桶里
+//   node tools/db/upload-videos.js --wait     被拒（权限还没开）就每 30 秒重试，最多 30 分钟；和 PC 会话配合用，见 tools/db/pc-handoff.js
 // 用的是公开的 publishable key（不是秘密）。上传权限由数据库的限时 policy 控制：见 db/open-video-upload.sql。
-// 视频文件：条目的 ref 文件夹里的 video.av1.mp4（没有就用 video.mp4）。
+// 视频文件：条目的 ref 文件夹里的 video.web.mp4（没有就用 video.mp4）。
 const fs=require('fs'),path=require('path'),{execFileSync}=require('child_process');
 // 用 curl 发请求：它会走系统的 HTTPS 代理（Node 自带的 fetch 不走代理）
 const curl=(args)=>{try{return execFileSync('curl',['-sS','-m','600',...args],{maxBuffer:1e7}).toString()}catch(e){return 'ERR '+String(e.stderr||e.message)}};
@@ -11,8 +12,8 @@ const cfg=JSON.parse(fs.readFileSync(path.join(ROOT,'site/config.json')));
 const URL_=cfg.supabaseUrl,KEY=cfg.anonKey,BUCKET=cfg.videoBucket;
 const H={apikey:KEY,Authorization:'Bearer '+KEY};
 const enc=p=>p.split('/').map(encodeURIComponent).join('/');
-const check=process.argv.includes('--check');
-(async()=>{
+const check=process.argv.includes('--check'),wait=process.argv.includes('--wait');
+const run=()=>{
   const cat=JSON.parse(fs.readFileSync(path.join(ROOT,'catalog/items.json')));
   let ok=0,skip=0,fail=0,miss=0;
   for(const it of cat.items){
@@ -28,4 +29,9 @@ const check=process.argv.includes('--check');
     if(st==='200'){ok++;console.log('✓',it.id,(fs.statSync(f).size/1e6).toFixed(1)+'MB')}else{fail++;console.error('✗',it.id,out.slice(0,240))}
   }
   console.log(`上传 ${ok}，已存在 ${skip}，失败 ${fail}，${check?'不在桶里':'本地没有'} ${miss}`);
-})();
+  return fail;
+};
+const sleep=ms=>Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0,ms);
+let left=wait?60:1;
+while(run()>0&&--left>0){console.log('  权限可能还没开，30 秒后重试…');sleep(30e3)}
+process.exitCode=left>0?0:1;
