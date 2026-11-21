@@ -111,6 +111,11 @@
        "need": "加线段余辉、充电波形；辉光改用 Canvas 的 bloom（叠加模式模糊）。中等 token。"
       }
      ]
+    },
+    "heart": {
+     "text": "一束白芯粉紫光沿线跑过去，碰到卡片就点亮它，一亮一暗",
+     "met": "yes",
+     "material_downgraded": false
     }
    },
    "rating": 3
@@ -189,7 +194,7 @@
     "食物"
    ],
    "rating": 3,
-   "summary": "往下滚，每一屏落下一层食材叠到汉堡上，背景色和大标题跟着换，最后落到盘子里。适合展示「产品由哪几层组成」。",
+   "summary": "往下滚，一个真实的汉堡被一层层拆开：烤面包的切面和气孔、融化的芝士、透光的生菜、番茄横切面、一粒粒芝麻，旁边有标注线说明每一层。",
    "source": {
     "type": "小红书",
     "url": "https://xhslink.cn/o/2QSGP1rScA6",
@@ -201,10 +206,10 @@
    "thumb": "references/xhs/2026-11-21-把汉堡做成网页动效🍔-00f625/frame-02.jpg",
    "contact": "references/xhs/2026-11-21-把汉堡做成网页动效🍔-00f625/contact-sheet.jpg",
    "demo": "demos/burger-layers.html",
-   "status": "replicated",
+   "status": "queued",
    "verify": {
     "date": "2026-11-21",
-    "score": 5,
+    "score": 1.5,
     "image": "verify/burger-layers.jpg",
     "method": "tools/verify/compare.js：逐屏滚动截 6 帧，原视频抽 6 帧上下对比；另外截了两屏之间的转场帧单独对比",
     "match": [
@@ -228,7 +233,7 @@
      "context": 6
     },
     "raw": 5.3,
-    "cap": 5,
+    "cap": 1.5,
     "rubric": "tools/verify/RUBRIC.md",
     "gap": {
      "original_tech": "网页滚动叙事（GSAP ScrollTrigger 一类），食材是去背景的实拍或 3D 渲染图片，从斜上方看。",
@@ -244,7 +249,32 @@
        "need": "标题换成更窄的高对比衬线体，加上原作的「ONE」步骤字和细线框。"
       }
      ]
-    }
+    },
+    "heart": {
+     "text": "真实食材被拆开，看得到内部构造和质感（面包气孔、番茄切面、芝麻、标注线）",
+     "met": "no",
+     "material_downgraded": true
+    },
+    "user_score": 1
+   },
+   "status_note": "第一版（卡通插画叠层）只得 1 分：丢了「真实拆解」这个心动点。要重做，需要写实的食材素材。",
+   "plan": {
+    "size": "M",
+    "template": "basic（写实图片分层 + 滚动），以后可升级 three-scene",
+    "assets": [
+     "8 张写实食材图，同一个斜上方 3/4 视角、同一光源、透明背景：底面包（切面朝上，看得到气孔）、肉饼、融化芝士片、生菜、番茄横切片 ×3、红洋葱圈、顶面包（芝麻清晰）、盘子",
+     "可选：每层一张「剖面特写」，用于标注线旁的放大圆"
+    ],
+    "steps": [
+     "先按 METHOD.md 写清单（verify/checklists/burger-layers.md），第一个必须项就是心动点",
+     "素材：AI 生成（提示词见下），用同一个种子 / 同一个参考图保证视角和光线一致，去背景后检查边缘",
+     "每屏一层食材从上方落下，带真实阴影（落下时阴影由淡变实）；落下时有轻微旋转，落地有一点压缩回弹",
+     "每层旁边画细标注线（1px 线 + 小圆点）和两行小字（名称、规格，如「Brioche bun · toasted 40s」），标注线随该层出现时画出来",
+     "背景色幕布转场、标题切换沿用第一版的代码",
+     "最后一屏汉堡完整落到盘子上，鼠标悬停可以把汉堡「拉开」成爆炸图"
+    ],
+    "prompt": "Studio product photo of a single [toasted brioche burger bun, cut side up, visible airy crumb | glossy flame-grilled beef patty | slice of melting cheddar draping | ruffled fresh green lettuce leaf, translucent edges | thick tomato slice cross-section with seeds and gel | red onion rings | sesame seed burger top bun], three-quarter top-down view at 35 degrees, soft key light from upper left, natural soft shadow, isolated on plain light background for cutout, ultra-detailed macro texture, consistent lighting across series, no text.",
+    "accept": "RUBRIC ≥ 7，并且心动点通过：一秒钟测试里能认出是「真实汉堡被拆开」；切面和质感清楚"
    }
   },
   {
@@ -300,6 +330,11 @@
        "need": "光晕叠三层不同模糊程度，面板加暗角，按原作调色。少量 token。"
       }
      ]
+    },
+    "heart": {
+     "text": "暗色里一段彩色流光绕着按钮边缘跑",
+     "met": "yes",
+     "material_downgraded": false
     }
    },
    "rating": 2
@@ -351,7 +386,7 @@
      "context": 3
     },
     "raw": 2.9,
-    "cap": 5,
+    "cap": 3,
     "rubric": "tools/verify/RUBRIC.md",
     "gap": {
      "original_tech": "很可能是 Rive 这类骨骼加网格变形的角色动画（也可能是手绘逐帧），用状态机切换「侧身搭爪待机 → 被摸眯眼 → 正面坐直打字」；做成桌面悬浮窗 App，监听全局键盘；按过的字母排成一行飘在键盘上方，带运动模糊；键盘上按到的键会亮绿色。",
@@ -372,7 +407,12 @@
       }
      ]
     },
-    "user_score": 3
+    "user_score": 3,
+    "heart": {
+     "text": "一只会变形、会表演的小黑猫：侧身搭爪、被摸眯眼、坐直打字",
+     "met": "no",
+     "material_downgraded": false
+    }
    },
    "rating": 3
   },
@@ -441,7 +481,7 @@
    "status": "replicated",
    "verify": {
     "date": "2026-11-21",
-    "score": 4.9,
+    "score": 3,
     "image": "verify/liquid-tab.jpg",
     "match": [
      "标签和面板是一条连续路径、反向圆角 ✓",
@@ -464,7 +504,7 @@
      "context": 5
     },
     "raw": 4.9,
-    "cap": 5,
+    "cap": 3,
     "rubric": "tools/verify/RUBRIC.md",
     "gap": {
      "original_tech": "一条连续的 SVG 路径，按物理（弹簧、速度）实时计算弯角半径；有调试面板和点阵背景。",
@@ -476,6 +516,11 @@
        "need": "重写路径：两个底角各自用贝塞尔曲线拉丝，宽度随距离和速度变化；加点阵背景和标注。中等 token。"
       }
      ]
+    },
+    "heart": {
+     "text": "标签被拉起时，两个底角像液体一样拉出细丝、再断开、再融合",
+     "met": "no",
+     "material_downgraded": false
     }
    },
    "rating": 2
@@ -505,7 +550,7 @@
    "status": "replicated",
    "verify": {
     "date": "2026-11-21",
-    "score": 4.2,
+    "score": 1.5,
     "image": "verify/holo-pack.jpg",
     "match": [
      "铝箔卡包随鼠标倾斜反光 ✓",
@@ -527,7 +572,7 @@
      "context": 5
     },
     "raw": 4.2,
-    "cap": 5,
+    "cap": 1.5,
     "rubric": "tools/verify/RUBRIC.md",
     "gap": {
      "original_tech": "3D 卡包和卡片（WebGL / three.js 或 Spline）：真实的铝箔反光、物理撕开、彩虹是粗的立体波浪、卡面是 3D 角色插画。",
@@ -543,6 +588,11 @@
        "need": "卡面需要 5 张角色插画（自己画或 AI 生成）。"
       }
      ]
+    },
+    "heart": {
+     "text": "撕开铝箔卡包的仪式感：3D 反光、彩虹喷出、立体角色闪卡飞出来",
+     "met": "no",
+     "material_downgraded": true
     }
    },
    "rating": 3
@@ -601,6 +651,11 @@
        "need": "收起改用弹簧曲线，环的线宽和颜色逐像素对齐原作。少量 token。"
       }
      ]
+    },
+    "heart": {
+     "text": "用「按住不放」代替确认弹窗：红色进度环走满的那一下手感",
+     "met": "yes",
+     "material_downgraded": false
     }
    },
    "rating": 2
@@ -665,7 +720,7 @@
    "status": "replicated",
    "verify": {
     "date": "2026-11-21",
-    "score": 5.8,
+    "score": 5,
     "image": "verify/glass-dashboard.jpg",
     "match": [
      "暖色毛玻璃卡片、珊瑚红主卡、斜体衬线强调词 ✓",
@@ -686,7 +741,7 @@
      "context": 6
     },
     "raw": 5.8,
-    "cap": 8,
+    "cap": 5,
     "rubric": "tools/verify/RUBRIC.md",
     "gap": {
      "original_tech": "React + Framer Motion：开场从圆形模糊里放大出现，侧边栏展开，头像沿圆环转动，数字逐位滚动。背景是一张实拍的暖色室内照片。",
@@ -702,6 +757,11 @@
        "need": "背景换成一张真实的暖色室内照片（自己拍，或 AI 生成）。"
       }
      ]
+    },
+    "heart": {
+     "text": "毛玻璃后面透出真实的暖色场景，数字逐位滚动",
+     "met": "partial",
+     "material_downgraded": true
     }
    },
    "rating": 3

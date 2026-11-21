@@ -90,6 +90,7 @@
       specs = `<div class="specs">
         <section class="box"><h5>复刻评分</h5>
           <div class="big"><b>${v.score}</b><span>/ 10${v.raw > v.score ? ` · 原始 ${v.raw}，被封顶到 ${v.cap}` : ''}</span></div>
+          ${v.heart ? `<p class="you">心动点：${esc(v.heart.text)}（${({yes:'做到了',partial:'部分做到',no:'没做到'})[v.heart.met] || ''}）</p>` : ''}
           ${v.user_score != null ? `<p class="you">你的评分：<b>${v.user_score} / 10</b></p>` : '<p class="you">你还没打分。</p>'}
           ${DIM.map(([k, n]) => `<div class="dim"><span>${n}</span><span class="bar"><i style="width:${(v.scores[k] || 0) * 10}%"></i></span><em>${v.scores[k]}</em></div>`).join('')}
           <p class="cap">标准：tools/verify/RUBRIC.md（动作 30%、造型 20%、状态 20%、质感 15%、情境 15%）</p></section>

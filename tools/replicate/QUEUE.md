@@ -24,6 +24,23 @@
 - 验收：RUBRIC ≥ 7：一秒钟测试能认出是同一个效果；极光要有流动的噪声质感
 - 原视频：数据库 `xhs/6afe9aa9000000002b025a2d.mp4`，本地 `references/xhs/2026-11-21-炫酷的交互动效分享-025a2d`
 
+## ❤❤❤ `burger-layers` 一层层叠起来的汉堡官网
+
+- 大小：中（半小时左右）
+- 模板：basic（写实图片分层 + 滚动），以后可升级 three-scene
+- 素材：8 张写实食材图，同一个斜上方 3/4 视角、同一光源、透明背景：底面包（切面朝上，看得到气孔）、肉饼、融化芝士片、生菜、番茄横切片 ×3、红洋葱圈、顶面包（芝麻清晰）、盘子；可选：每层一张「剖面特写」，用于标注线旁的放大圆
+- 步骤：
+  - 先按 METHOD.md 写清单（verify/checklists/burger-layers.md），第一个必须项就是心动点
+  - 素材：AI 生成（提示词见下），用同一个种子 / 同一个参考图保证视角和光线一致，去背景后检查边缘
+  - 每屏一层食材从上方落下，带真实阴影（落下时阴影由淡变实）；落下时有轻微旋转，落地有一点压缩回弹
+  - 每层旁边画细标注线（1px 线 + 小圆点）和两行小字（名称、规格，如「Brioche bun · toasted 40s」），标注线随该层出现时画出来
+  - 背景色幕布转场、标题切换沿用第一版的代码
+  - 最后一屏汉堡完整落到盘子上，鼠标悬停可以把汉堡「拉开」成爆炸图
+- AI 视频提示词：
+  > Studio product photo of a single [toasted brioche burger bun, cut side up, visible airy crumb | glossy flame-grilled beef patty | slice of melting cheddar draping | ruffled fresh green lettuce leaf, translucent edges | thick tomato slice cross-section with seeds and gel | red onion rings | sesame seed burger top bun], three-quarter top-down view at 35 degrees, soft key light from upper left, natural soft shadow, isolated on plain light background for cutout, ultra-detailed macro texture, consistent lighting across series, no text.
+- 验收：RUBRIC ≥ 7，并且心动点通过：一秒钟测试里能认出是「真实汉堡被拆开」；切面和质感清楚
+- 原视频：数据库 `xhs/6affdde0000000002a00f625.mp4`，本地 `references/xhs/2026-11-21-把汉堡做成网页动效🍔-00f625`
+
 ## ❤❤❤ `book-popup` 画册里长出实物
 
 - 大小：中（半小时左右）
