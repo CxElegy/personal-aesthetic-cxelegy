@@ -1,0 +1,46 @@
+{
+ "id": "6affdeee0000000016030f31",
+ "type": "video",
+ "title": "高级感UI交互，让产品视觉更有质感✨",
+ "desc": "🎯 项目名称：Live Commerce 直播电商平台宣传片\n✨ 简介：干净利落，动效丝滑！全新 Live Commerce 直播电商平台宣传片。以浅色基底配合高饱和橙色模块，通过打字机对话、商品节点关联与实时销售看板，直观展现无购物车下单与双端切换功能。\n🛠 制作拆解：\n1、分类：UI 界面动效 / 产品功能动画\n2、流程：动态分镜设计→多图层卡片与数字递增绑定→节奏剪辑与音效匹配\n3、软件：Illustrator + After Effects + Premiere\n⏱ 制作周期：约2周\n#科技UI动画[话题]#  #UI交互动画[话题]#  #motion动效设计[话题]#  #界面展示动画[话题]#  #ae动画[话题]#  #UIUX动效设计[话题]#  #SaaS产品宣传片[话题]#",
+ "user": "NEO商业动画制作",
+ "tags": [
+  "科技UI动画",
+  "UI交互动画",
+  "motion动效设计",
+  "界面展示动画",
+  "ae动画",
+  "UIUX动效设计",
+  "SaaS产品宣传片"
+ ],
+ "interact": {
+  "niceCount": "",
+  "commentCount": "",
+  "followed": false,
+  "relation": "none",
+  "liked": false,
+  "likedCount": "8",
+  "collected": false,
+  "collectedCount": "7",
+  "shareCount": "3"
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611210753/903e994f654ef964b0442251cb60d8d6/1040g008327pi5qm6n06g5p1t95ejb6s83g129a0!nd_dft_wgth_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v11.rednotecdn.com/stream/1/110/258/01eaffdec7093e5701037001a1f77ef322_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/1/110/258/01eaffdec7093e5701037001a1f77ef322_258.mp4"
+   ],
+   "w": 1280,
+   "h": 720,
+   "size": 3362608
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/sAiqF7e11W",
+ "fetched": "2026-11-20T23:53:20.385Z",
+ "videoNote": ""
+}

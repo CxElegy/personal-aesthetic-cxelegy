@@ -1,0 +1,89 @@
+# 复刻待做清单
+
+这些条目需要比较多的 token，平时先只放原视频。哪周 token 有富余，对 Claude 说「开始做 <编号>」即可。
+排序：我的评价高的在前，同评价里小的在前。此文件由 `node tools/replicate/queue.js` 生成，不要手改。
+
+## 开工的固定步骤
+1. 准备素材（下面每条写了要什么；AI 视频用可灵 / Runway，提示词已写好）
+2. `bash tools/replicate/new.sh <编号> <模板> [pointer|scroll]`：生成 demos/<编号>.html、素材文件夹、核对剧本草稿
+3. 有视频素材时：`bash tools/replicate/video-to-frames.sh <编号> <视频> 48`
+4. 写效果 → `node tools/verify/compare.js <编号>` → 看 verify/<编号>.jpg → 把分数和差异写进 catalog/items.json（status 改成 replicated）
+5. 模板说明：basic = 单文件 2D 动效；frame-scrub = AI 视频拆帧后跟着鼠标或滚动切换（省 token 的「假 3D」）；three-scene = three.js 真 3D（vendor 在 demos/vendor/three，不依赖外网）
+
+## ❤❤❤ `book-popup` 画册里长出实物
+
+- 大小：中（半小时左右）
+- 模板：frame-scrub（scroll）或 basic（CSS 立体书）
+- 素材：一段 AI 视频：摊开的画册上，平面产品图「长」成立体微缩实物（4–6 秒）；或：3–5 张去背景的产品图（PNG）+ 对应的平面线稿
+- 步骤：
+  - 方案 A（推荐，省 token）：用可灵/Runway 按下面提示词生成视频 → video-to-frames.sh 拆 48 帧 → frame-scrub 模板用滚动驱动「长出来」
+  - 方案 B：CSS 3D 立体书：书页 rotateX 翻开，产品图从 rotateX(90°) 立起到 0°，配合阴影
+  - 两种都加：翻页、材质色卡、规格文字排版
+- AI 视频提示词：
+  > Overhead three-quarter view of an open product catalog lying on a warm walnut table, soft slanted afternoon sunlight through sheer curtains. On the right page a flat printed illustration of a leather handbag slowly rises and becomes a real miniature 3D handbag standing on the paper, casting a soft shadow. Beside it: three fabric swatches and small serif spec text. Cream paper, photorealistic, shallow depth of field, slow and smooth, no people, no text overlays.
+- 验收：核对 ≥ 75 分：平面 → 立体的过程清楚、阳光与纸张质感一致、规格排版像真画册
+- 原视频：数据库 `xhs/6af5abd7000000002b011407.mp4`，本地 `references/xhs/2026-11-20-海外爆款分享-Part.034｜时尚品牌-011407`
+
+## ❤❤ `mouse-tracking` 鼠标追踪的 3D 小黑猫首屏
+
+- 大小：小（几分钟，少量 token）
+- 模板：frame-scrub（pointer）
+- 素材：一张 AI 生成的写实小黑猫（白底，抱咖啡杯，居中，16:9）；一段 AI 视频：小猫从看向左边慢慢转头到看向右边（3–4 秒，镜头不动）
+- 步骤：
+  - 生成图片和视频 → video-to-frames.sh mouse-tracking <视频> 36
+  - new.sh mouse-tracking frame-scrub pointer
+  - 加上杂志风标题「Treat the little things.」（细衬线 + 斜体）
+- AI 视频提示词：
+  > Photorealistic fluffy black kitten with big green eyes sitting on a pure white background holding a takeaway coffee cup, centered, 16:9. The kitten slowly turns its head from looking at the left edge to looking at the right edge, camera locked, soft studio light, 4 seconds, no other motion.
+- 验收：核对 ≥ 80 分：鼠标从左到右，猫头平滑跟着转，没有跳帧
+- 原视频：数据库 `xhs/6abc7965000000000202887b.mp4`，本地 `references/xhs/2026-11-20-鼠标追踪‼️充满趣味的网站首页交互效果-02887b`
+
+## ❤❤ `eva-magi` EVA 风格电子工牌
+
+- 大小：小（几分钟，少量 token）
+- 模板：basic
+- 素材：不需要
+- 步骤：
+  - 黑底 + 橙/青细线框画出 MAGI 三面板（CASPER / BALTHASAR / MELCHIOR）
+  - 点击后三个面板依次跳出「審議 → 承認 / 否定」，随机决策
+  - 做成手机竖屏尺寸，像工牌屏幕
+- 验收：核对 ≥ 80 分
+- 原视频：数据库 `xhs/6af82764000000002501f1a8.mp4`，本地 `references/xhs/2026-11-20-发朋友圈没人懂，但发小红书一定有人懂-01f1a8`
+
+## ❤❤ `ai-status-cards` 满屏会动的 AI 状态卡片
+
+- 大小：中（半小时左右）
+- 模板：basic
+- 素材：不需要
+- 步骤：
+  - 做 6–8 种卡片组件（进度条、滚动数字、声波、头像叠排、状态切换 In Review → Done）
+  - 用 CSS columns 铺满屏幕，每张卡片用随机间隔各自更新
+- 验收：核对 ≥ 75 分：满屏都在动但不乱，暗色和强调色一致
+- 原视频：数据库 `xhs/6afc0db90000000025008af8.mp4`，本地 `references/xhs/2026-11-20-🆓救命！这个UI动效-Skill-也太好看了吧-008af8`
+
+## ❤❤ `live-commerce` 直播电商宣传片：概念板块的讲法
+
+- 大小：中（半小时左右）
+- 模板：basic
+- 素材：不需要
+- 步骤：
+  - 复刻三段：① 大字「Product」+ 实物台灯落在字母上 → ② 品牌/应用文字卡被商品图片围住 → ③ 打字机对话「Hey what do you want to build today?」
+  - ④ 商品节点网络：散落的商品图用细线连起来，中间「découvrent un produit」
+  - ⑤ 文字竖向滚动列表 + 右边网点背景上的商品卡
+- 验收：核对 ≥ 70 分：剪切节奏（每 1–2 秒一个画面）和过渡方式一致
+- 原视频：数据库 `xhs/6affdeee0000000016030f31.mp4`，本地 `references/xhs/2026-11-20-高级感UI交互，让产品视觉更有质感✨-030f31`
+
+## ❤❤ `earbud-scroll` 耳机概念页：滚动拆解
+
+- 大小：大（需要 3D 模型或多段素材，token 最多）
+- 模板：three-scene（有 3D 模型）或 frame-scrub（scroll，用 AI 视频）
+- 素材：耳机的 GLB 模型（可在 Sketchfab 找 CC 授权的 earbuds 模型）；或：三段 AI 视频：开盒、转动、零件分层（爆炸图）
+- 步骤：
+  - 先用 frame-scrub + AI 视频做出三幕滚动（M）
+  - 有模型时换成 three-scene：第一幕镜头推近充电盒，第二幕绕 Y 轴转到耳柄，第三幕按零件在 Y 轴方向分开
+  - 文字：斜体衬线大标题 + 01/02/03 步骤，青色灯带点缀
+- AI 视频提示词：
+  > Product render of matte navy wireless earbuds on a deep navy background, slow turntable rotation revealing the stem, then the earbud separates into exploded layers (shell, battery, driver, circuit board) aligned vertically, thin cyan accent light strip, studio lighting, 4 seconds, seamless, no text.
+- 验收：核对 ≥ 75 分：三幕顺序和镜头节奏一致，第三幕能看清分层
+- 原视频：数据库 `xhs/6b00cfae000000002b033223.mp4`，本地 `references/xhs/2026-11-20-耳机概念-033223`
+

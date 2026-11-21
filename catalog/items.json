@@ -43,12 +43,56 @@
  ],
  "statuses": {
   "replicated": "已复刻",
+  "in-progress": "复刻中",
+  "queued": "排队中（等 token）",
   "todo": "待复刻",
   "needs-asset": "需要素材",
   "use-library": "直接用现成库",
   "n/a": "不需要复刻"
  },
  "items": [
+  {
+   "id": "power-beam",
+   "title": "光束送电（节点之间跑光）",
+   "category": "motion",
+   "tags": [
+    "节点编辑器",
+    "光束",
+    "暗色",
+    "AgentBoard"
+   ],
+   "summary": "黑底节点卡片之间只靠细蓝线相连；点一下，一束白芯粉紫光沿弧线跑过去，碰到卡片就点亮它，再接力跑向下一张。优先用于 AgentBoard。",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/1SPAtr1vjUQ",
+    "author": "大厂劝退师（原作 Anuar D.）",
+    "title": "这束光跑过去的时候，简直神仙动效✨"
+   },
+   "ref": "references/xhs/2026-11-20-这束光跑过去的时候，简直神仙动效✨-0124b0",
+   "video": "xhs/6affc1f800000000250124b0.mp4",
+   "thumb": "references/xhs/2026-11-20-这束光跑过去的时候，简直神仙动效✨-0124b0/frame-02.jpg",
+   "contact": "references/xhs/2026-11-20-这束光跑过去的时候，简直神仙动效✨-0124b0/contact-sheet.jpg",
+   "demo": "demos/power-beam.html",
+   "status": "replicated",
+   "priority": "high",
+   "verify": {
+    "date": "2026-11-20",
+    "score": 80,
+    "image": "verify/power-beam.jpg",
+    "method": "tools/verify/compare.js：Playwright 点「Send power」后按时间截 6 帧，原视频抽 6 帧，上下拼图人工比对；另外把光束飞行中的一帧放大和原作对比",
+    "match": [
+     "黑底点阵、三张节点卡片（Solar roof / Home battery / Car charger）、卡片里的数据格和柱状图",
+     "点击后：接口闪白 → 白芯粉紫光晕带尾巴的光沿弧线往下跑 → 电池卡边缘亮粉色、电量填满 → 停一拍 → 第二束光往上跑 → 充电卡亮起并数到 7.4 kW → 恢复淡蓝",
+     "连线是「光晕 + 亮芯」两层，接口是小亮点（对比后改的）"
+    ],
+    "diff": [
+     "原作充电卡亮起后会出现一排跳动的柱状波形",
+     "原作的连线光晕更宽、更白一些",
+     "原作光束经过时，路过的那段线会短暂变亮再暗回去"
+    ]
+   },
+   "rating": 3
+  },
   {
    "id": "glow-button",
    "title": "发光按钮・流光边框",
@@ -81,7 +125,8 @@
      "原作光晕更柔、更宽一点"
     ],
     "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
-   }
+   },
+   "rating": 2
   },
   {
    "id": "typing-cat",
@@ -121,7 +166,8 @@
      "原作背景是用户的桌面壁纸（桌宠），这里是网页"
     ],
     "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
-   }
+   },
+   "rating": 3
   },
   {
    "id": "mouse-tracking",
@@ -144,9 +190,25 @@
    "thumb": "references/xhs/2026-11-20-鼠标追踪‼️充满趣味的网站首页交互效果-02887b/frame-02.jpg",
    "contact": "references/xhs/2026-11-20-鼠标追踪‼️充满趣味的网站首页交互效果-02887b/contact-sheet.jpg",
    "demo": null,
-   "status": "needs-asset",
+   "status": "queued",
    "status_note": "需要先用 AI 生成小猫图片和转身视频，代码部分很简单；素材准备好再复刻。",
-   "verify": null
+   "verify": null,
+   "rating": 2,
+   "plan": {
+    "size": "S",
+    "template": "frame-scrub（pointer）",
+    "assets": [
+     "一张 AI 生成的写实小黑猫（白底，抱咖啡杯，居中，16:9）",
+     "一段 AI 视频：小猫从看向左边慢慢转头到看向右边（3–4 秒，镜头不动）"
+    ],
+    "steps": [
+     "生成图片和视频 → video-to-frames.sh mouse-tracking <视频> 36",
+     "new.sh mouse-tracking frame-scrub pointer",
+     "加上杂志风标题「Treat the little things.」（细衬线 + 斜体）"
+    ],
+    "prompt": "Photorealistic fluffy black kitten with big green eyes sitting on a pure white background holding a takeaway coffee cup, centered, 16:9. The kitten slowly turns its head from looking at the left edge to looking at the right edge, camera locked, soft studio light, 4 seconds, no other motion.",
+    "accept": "核对 ≥ 80 分：鼠标从左到右，猫头平滑跟着转，没有跳帧"
+   }
   },
   {
    "id": "liquid-tab",
@@ -186,7 +248,8 @@
      "原作标签带关闭 × 和 + 号"
     ],
     "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
-   }
+   },
+   "rating": 2
   },
   {
    "id": "holo-pack",
@@ -226,7 +289,8 @@
      "原作有藏青、红、粉三种颜色的卡包轮换"
     ],
     "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
-   }
+   },
+   "rating": 3
   },
   {
    "id": "hold-to-delete",
@@ -261,7 +325,8 @@
      "文字改成了中文（有意为之）"
     ],
     "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
-   }
+   },
+   "rating": 2
   },
   {
    "id": "ai-status-cards",
@@ -284,8 +349,20 @@
    "thumb": "references/xhs/2026-11-20-🆓救命！这个UI动效-Skill-也太好看了吧-008af8/frame-02.jpg",
    "contact": "references/xhs/2026-11-20-🆓救命！这个UI动效-Skill-也太好看了吧-008af8/contact-sheet.jpg",
    "demo": null,
-   "status": "todo",
-   "verify": null
+   "status": "queued",
+   "verify": null,
+   "rating": 2,
+   "plan": {
+    "size": "M",
+    "template": "basic",
+    "assets": [],
+    "steps": [
+     "做 6–8 种卡片组件（进度条、滚动数字、声波、头像叠排、状态切换 In Review → Done）",
+     "用 CSS columns 铺满屏幕，每张卡片用随机间隔各自更新"
+    ],
+    "prompt": null,
+    "accept": "核对 ≥ 75 分：满屏都在动但不乱，暗色和强调色一致"
+   }
   },
   {
    "id": "glass-dashboard",
@@ -323,7 +400,8 @@
      "原作头像会绕着进度环转"
     ],
     "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
-   }
+   },
+   "rating": 3
   },
   {
    "id": "eva-magi",
@@ -346,8 +424,21 @@
    "thumb": "references/xhs/2026-11-20-发朋友圈没人懂，但发小红书一定有人懂-01f1a8/frame-02.jpg",
    "contact": "references/xhs/2026-11-20-发朋友圈没人懂，但发小红书一定有人懂-01f1a8/contact-sheet.jpg",
    "demo": null,
-   "status": "todo",
-   "verify": null
+   "status": "queued",
+   "verify": null,
+   "rating": 2,
+   "plan": {
+    "size": "S",
+    "template": "basic",
+    "assets": [],
+    "steps": [
+     "黑底 + 橙/青细线框画出 MAGI 三面板（CASPER / BALTHASAR / MELCHIOR）",
+     "点击后三个面板依次跳出「審議 → 承認 / 否定」，随机决策",
+     "做成手机竖屏尺寸，像工牌屏幕"
+    ],
+    "prompt": null,
+    "accept": "核对 ≥ 80 分"
+   }
   },
   {
    "id": "blossom-carousel",
@@ -372,7 +463,8 @@
    "demo": null,
    "status": "use-library",
    "status_note": "直接装官方 Skill 使用，不手写。",
-   "verify": null
+   "verify": null,
+   "rating": 2
   },
   {
    "id": "react-bits",
@@ -394,7 +486,8 @@
    "contact": null,
    "demo": null,
    "status": "use-library",
-   "verify": null
+   "verify": null,
+   "rating": 2
   },
   {
    "id": "revlo",
@@ -419,7 +512,8 @@
    "contact": "references/xhs/2026-11-20-车迷做了个“汽车版宝可梦”，收入1.7万美金！-015aac/contact-sheet.jpg",
    "demo": null,
    "status": "n/a",
-   "verify": null
+   "verify": null,
+   "rating": 3
   },
   {
    "id": "cat-collector",
@@ -444,7 +538,8 @@
    "contact": "references/xhs/2026-11-20-只收真猫的App，30万人抓了46万只猫-000021/contact-sheet.jpg",
    "demo": null,
    "status": "n/a",
-   "verify": null
+   "verify": null,
+   "rating": 3
   },
   {
    "id": "3d-simulator",
@@ -468,7 +563,8 @@
    "contact": "references/xhs/2026-11-20-如果你一直想把任何行业变成一个实时模拟器-024711/contact-sheet.jpg",
    "demo": null,
    "status": "n/a",
-   "verify": null
+   "verify": null,
+   "rating": 2
   },
   {
    "id": "poster-3-steps",
@@ -491,7 +587,8 @@
    "contact": "references/xhs/2026-11-20-排版Skill拆解构图原理🍎丑海报3步变高级-035f2c/contact-sheet.jpg",
    "demo": null,
    "status": "n/a",
-   "verify": null
+   "verify": null,
+   "rating": 2
   },
   {
    "id": "raster-poster",
@@ -515,7 +612,8 @@
    "contact": null,
    "demo": null,
    "status": "n/a",
-   "verify": null
+   "verify": null,
+   "rating": 2
   },
   {
    "id": "geometry-poster",
@@ -540,7 +638,8 @@
    "contact": null,
    "demo": null,
    "status": "n/a",
-   "verify": null
+   "verify": null,
+   "rating": 3
   },
   {
    "id": "bible-mug",
@@ -561,7 +660,8 @@
    "contact": null,
    "demo": null,
    "status": "n/a",
-   "verify": null
+   "verify": null,
+   "rating": 2
   },
   {
    "id": "starbucks-capsule",
@@ -582,7 +682,8 @@
    "contact": null,
    "demo": null,
    "status": "n/a",
-   "verify": null
+   "verify": null,
+   "rating": 2
   },
   {
    "id": "reze-poster",
@@ -603,7 +704,8 @@
    "contact": null,
    "demo": null,
    "status": "n/a",
-   "verify": null
+   "verify": null,
+   "rating": 2
   },
   {
    "id": "wishlist-rules",
@@ -627,7 +729,135 @@
    "contact": null,
    "demo": null,
    "status": "n/a",
-   "verify": null
+   "verify": null,
+   "rating": 2
+  },
+  {
+   "id": "book-popup",
+   "title": "画册里长出实物",
+   "category": "concept",
+   "tags": [
+    "画册",
+    "说明书",
+    "微缩",
+    "AI 视频"
+   ],
+   "summary": "摊开的产品画册，纸上印的平面产品一页一个「长」成立体微缩实物，旁边是材质色卡和规格。我想用在说明书上：打开书，实物从书里变成真的。",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/4M19ecAWlBP",
+    "author": "Alex全球创意库",
+    "title": "海外爆款分享 Part.034｜时尚品牌"
+   },
+   "ref": "references/xhs/2026-11-20-海外爆款分享-Part.034｜时尚品牌-011407",
+   "video": "xhs/6af5abd7000000002b011407.mp4",
+   "thumb": "references/xhs/2026-11-20-海外爆款分享-Part.034｜时尚品牌-011407/frame-08.jpg",
+   "contact": "references/xhs/2026-11-20-海外爆款分享-Part.034｜时尚品牌-011407/contact-sheet.jpg",
+   "demo": null,
+   "status": "queued",
+   "status_note": "可以用 CSS 3D 做「立体书」式复刻：平面图从纸面竖起来，配合翻页；真实质感需要 AI 生成的产品图。",
+   "rating": 3,
+   "verify": null,
+   "plan": {
+    "size": "M",
+    "template": "frame-scrub（scroll）或 basic（CSS 立体书）",
+    "assets": [
+     "一段 AI 视频：摊开的画册上，平面产品图「长」成立体微缩实物（4–6 秒）",
+     "或：3–5 张去背景的产品图（PNG）+ 对应的平面线稿"
+    ],
+    "steps": [
+     "方案 A（推荐，省 token）：用可灵/Runway 按下面提示词生成视频 → video-to-frames.sh 拆 48 帧 → frame-scrub 模板用滚动驱动「长出来」",
+     "方案 B：CSS 3D 立体书：书页 rotateX 翻开，产品图从 rotateX(90°) 立起到 0°，配合阴影",
+     "两种都加：翻页、材质色卡、规格文字排版"
+    ],
+    "prompt": "Overhead three-quarter view of an open product catalog lying on a warm walnut table, soft slanted afternoon sunlight through sheer curtains. On the right page a flat printed illustration of a leather handbag slowly rises and becomes a real miniature 3D handbag standing on the paper, casting a soft shadow. Beside it: three fabric swatches and small serif spec text. Cream paper, photorealistic, shallow depth of field, slow and smooth, no people, no text overlays.",
+    "accept": "核对 ≥ 75 分：平面 → 立体的过程清楚、阳光与纸张质感一致、规格排版像真画册"
+   }
+  },
+  {
+   "id": "earbud-scroll",
+   "title": "耳机概念页：滚动拆解",
+   "category": "interaction",
+   "tags": [
+    "滚动叙事",
+    "产品页",
+    "爆炸图",
+    "深色"
+   ],
+   "summary": "深蓝背景、斜体衬线「Inside an earbud.」；往下滚：01 打开充电盒 → 02 转动耳机 → 03 零件一层层分开。",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/545xD6gXVnV",
+    "author": "Lim Zoey",
+    "title": "耳机概念"
+   },
+   "ref": "references/xhs/2026-11-20-耳机概念-033223",
+   "video": "xhs/6b00cfae000000002b033223.mp4",
+   "thumb": "references/xhs/2026-11-20-耳机概念-033223/frame-03.jpg",
+   "contact": "references/xhs/2026-11-20-耳机概念-033223/contact-sheet.jpg",
+   "demo": null,
+   "status": "queued",
+   "status_note": "滚动驱动的部分代码不难，但需要耳机的 3D 模型或一组按角度拍的产品图。",
+   "rating": 2,
+   "verify": null,
+   "plan": {
+    "size": "L",
+    "template": "three-scene（有 3D 模型）或 frame-scrub（scroll，用 AI 视频）",
+    "assets": [
+     "耳机的 GLB 模型（可在 Sketchfab 找 CC 授权的 earbuds 模型）",
+     "或：三段 AI 视频：开盒、转动、零件分层（爆炸图）"
+    ],
+    "steps": [
+     "先用 frame-scrub + AI 视频做出三幕滚动（M）",
+     "有模型时换成 three-scene：第一幕镜头推近充电盒，第二幕绕 Y 轴转到耳柄，第三幕按零件在 Y 轴方向分开",
+     "文字：斜体衬线大标题 + 01/02/03 步骤，青色灯带点缀"
+    ],
+    "prompt": "Product render of matte navy wireless earbuds on a deep navy background, slow turntable rotation revealing the stem, then the earbud separates into exploded layers (shell, battery, driver, circuit board) aligned vertically, thin cyan accent light strip, studio lighting, 4 seconds, seamless, no text.",
+    "accept": "核对 ≥ 75 分：三幕顺序和镜头节奏一致，第三幕能看清分层"
+   }
+  },
+  {
+   "id": "live-commerce",
+   "title": "直播电商宣传片：概念板块的讲法",
+   "category": "motion",
+   "tags": [
+    "宣传片",
+    "橙色",
+    "打字机",
+    "数据看板"
+   ],
+   "summary": "网站本身一般，值得学的是三块：镜头之间怎么剪切衔接、产品一步步介绍出来的方法、产品本身简约好看的设计。",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/sAiqF7e11W",
+    "author": "NEO商业动画制作",
+    "title": "高级感UI交互，让产品视觉更有质感✨"
+   },
+   "ref": "references/xhs/2026-11-20-高级感UI交互，让产品视觉更有质感✨-030f31",
+   "video": "xhs/6affdeee0000000016030f31.mp4",
+   "thumb": "references/xhs/2026-11-20-高级感UI交互，让产品视觉更有质感✨-030f31/frame-08.jpg",
+   "contact": "references/xhs/2026-11-20-高级感UI交互，让产品视觉更有质感✨-030f31/contact-sheet.jpg",
+   "demo": null,
+   "status": "queued",
+   "rating": 2,
+   "verify": null,
+   "plan": {
+    "size": "M",
+    "template": "basic",
+    "assets": [],
+    "steps": [
+     "复刻三段：① 大字「Product」+ 实物台灯落在字母上 → ② 品牌/应用文字卡被商品图片围住 → ③ 打字机对话「Hey what do you want to build today?」",
+     "④ 商品节点网络：散落的商品图用细线连起来，中间「découvrent un produit」",
+     "⑤ 文字竖向滚动列表 + 右边网点背景上的商品卡"
+    ],
+    "prompt": null,
+    "accept": "核对 ≥ 70 分：剪切节奏（每 1–2 秒一个画面）和过渡方式一致"
+   }
   }
- ]
+ ],
+ "ratings": {
+  "3": "最爱",
+  "2": "喜欢",
+  "1": "一般般"
+ }
 }

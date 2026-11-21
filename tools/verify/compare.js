@@ -6,12 +6,17 @@
 const {chromium}=require('playwright');const fs=require('fs'),path=require('path'),{execFileSync}=require('child_process');
 const ROOT=path.join(__dirname,'../..');const cat=JSON.parse(fs.readFileSync(path.join(ROOT,'catalog/items.json')));
 const S=require('./scenarios');const N=6,TH=360;
-(async()=>{const b=await chromium.launch();
+// 用本地 http 服务打开演示（ES 模块和 three.js 不能用 file:// 打开）
+const http=require('http');const MIME={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.webp':'image/webp','.jpg':'image/jpeg','.png':'image/png','.glb':'model/gltf-binary','.mp4':'video/mp4'};
+const srv=http.createServer((q,r)=>{const f=path.join(ROOT,decodeURIComponent(q.url.split('?')[0]));if(!f.startsWith(ROOT)||!fs.existsSync(f)||fs.statSync(f).isDirectory()){r.writeHead(404);return r.end()}
+  r.writeHead(200,{'Content-Type':MIME[path.extname(f)]||'application/octet-stream'});fs.createReadStream(f).pipe(r)});
+(async()=>{await new Promise(r=>srv.listen(0,'127.0.0.1',r));const BASE=`http://127.0.0.1:${srv.address().port}/`;
+const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist']});
 for(const id of process.argv.slice(2)){
   const it=cat.items.find(i=>i.id===id);if(!it||!it.demo||!S[id]){console.error('✗ 没有演示或剧本',id);continue}
   const tmp=fs.mkdtempSync('/tmp/verify-');const sc=S[id];
   const p=await b.newPage({viewport:sc.viewport||{width:720,height:540}});
-  await p.goto('file://'+path.join(ROOT,it.demo));await p.waitForTimeout(300);
+  await p.goto(BASE+it.demo.split('/').map(encodeURIComponent).join('/'));await p.waitForTimeout(300);
   let k=0;const shot=async()=>{await p.screenshot({path:`${tmp}/mine-${k++}.png`})};
   await sc.run(p,shot);
   while(k<N)await shot();
@@ -29,4 +34,4 @@ for(const id of process.argv.slice(2)){
   else execFileSync('ffmpeg',['-v','error','-y','-i',m,'-vf','scale=1600:-2','-q:v','4',out]);
   console.log('✓',id,'→ verify/'+id+'.jpg',o?'':'（没有原视频，只有复刻）');await p.close();
 }
-await b.close()})();
+await b.close();srv.close()})();

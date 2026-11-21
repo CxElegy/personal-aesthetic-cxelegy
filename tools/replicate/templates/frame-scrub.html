@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{TITLE}}</title>
+<!-- 复刻：{{SOURCE}}
+     模板：按帧拖动。把一段 AI 生成的短视频（角色转身、产品转动、实物从书里长出来）拆成帧序列，
+     用鼠标横向位置（mode=pointer）或页面滚动（mode=scroll）决定显示哪一帧。比真 3D 建模省得多。
+     帧放在 demos/assets/{{ID}}/frames/0001.webp …（用 tools/replicate/video-to-frames.sh 生成），数量写在 FRAMES。 -->
+<style>
+:root{--bg:#F4F2EE;--ink:#17181C;--sub:#6B6D75}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,"Noto Sans SC",system-ui,sans-serif}
+.hero{position:sticky;top:0;height:100vh;display:grid;place-items:center;overflow:hidden}
+canvas{width:min(100vw,calc(100vh*16/9));height:auto;aspect-ratio:16/9}
+h1{position:absolute;left:6vw;top:8vh;margin:0;font:400 clamp(32px,5vw,64px)/1.05 "Instrument Serif",Georgia,serif}h1 em{font-style:italic}
+.hint{position:absolute;left:0;right:0;bottom:24px;text-align:center;color:var(--sub);font-size:12px}
+.spacer{height:200vh}
+</style>
+</head>
+<body>
+<div class="hero"><h1>{{TITLE}}</h1><canvas id="c" width="1280" height="720"></canvas><div class="hint" id="hint">移动鼠标</div></div>
+<div class="spacer" id="spacer"></div>
+<script>
+const ID='{{ID}}',FRAMES={{FRAMES}},MODE='{{MODE}}';   // MODE: pointer | scroll
+const c=document.getElementById('c'),x=c.getContext('2d'),imgs=[];let target=0,cur=0;
+if(MODE!=='scroll')document.getElementById('spacer').remove();else document.getElementById('hint').textContent='往下滚动';
+for(let i=1;i<=FRAMES;i++){const im=new Image();im.src=`./assets/${ID}/frames/${String(i).padStart(4,'0')}.webp`;imgs.push(im)}
+function draw(k){const im=imgs[k];if(im&&im.complete&&im.naturalWidth){x.clearRect(0,0,c.width,c.height);const s=Math.min(c.width/im.naturalWidth,c.height/im.naturalHeight);
+  const w=im.naturalWidth*s,h=im.naturalHeight*s;x.drawImage(im,(c.width-w)/2,(c.height-h)/2,w,h)}
+  else{x.fillStyle='#ddd';x.fillRect(0,0,c.width,c.height);x.fillStyle='#888';x.font='24px sans-serif';x.fillText('还没有帧素材：demos/assets/'+ID+'/frames/',40,60)}}
+addEventListener('pointermove',e=>{if(MODE==='pointer')target=(e.clientX/innerWidth)*(FRAMES-1)});
+addEventListener('scroll',()=>{if(MODE==='scroll'){const m=document.documentElement.scrollHeight-innerHeight;target=(m>0?scrollY/m:0)*(FRAMES-1)}});
+(function loop(){cur+=(target-cur)*.15;draw(Math.round(cur));requestAnimationFrame(loop)})();   // 缓动跟随，不一帧跳到位
+</script>
+</body>
+</html>

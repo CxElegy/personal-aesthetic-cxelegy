@@ -14,6 +14,7 @@ const Aes=(()=>{
           rows.filter(x=>!local.items.find(i=>i.id===x.id)&&x.data).forEach(x=>DATA.items.push({id:x.id,...x.data,video:x.video_path}))}}catch(e){console.warn('数据库读取失败，使用仓库里的索引',e)}}
     return DATA}
   const videoUrl=k=>k&&CFG.supabaseUrl?`${CFG.supabaseUrl}/storage/v1/object/public/${CFG.videoBucket}/${enc(k)}`:null;
+  const hearts=r=>r?`<span class="hearts" title="${['','一般般','喜欢','最爱'][r]}">${'❤'.repeat(r)}</span> `:'';
   const pill=(cls,t)=>`<span class="pill ${cls}"><span>${esc(t)}</span></span>`;
   async function index(){
     const d=await load();const st=d.statuses;let cat='all',stf='all',q='';
@@ -25,11 +26,11 @@ const Aes=(()=>{
       document.getElementById('catdesc').textContent=cat==='all'?'按分类、复刻状态筛选；点卡片看原作和复刻的对比。':(d.categories.find(c=>c.id===cat)||{}).desc;
       [...sts.querySelectorAll('.tg')].forEach(b=>b.remove());
       sts.insertAdjacentHTML('afterbegin',btn('all','所有状态',d.items.length,stf==='all')+Object.entries(st).map(([k,v])=>btn(k,v,n(k),stf===k)).join(''))}
-    function grid(){const L=d.items.filter(i=>(cat==='all'||i.category===cat)&&(stf==='all'||i.status===stf)&&(!q||(i.title+i.summary+(i.tags||[]).join(' ')).toLowerCase().includes(q)));
+    function grid(){const L=d.items.slice().sort((a,b)=>(b.rating||2)-(a.rating||2)).filter(i=>(cat==='all'||i.category===cat)&&(stf==='all'||i.status===stf)&&(!q||(i.title+i.summary+(i.tags||[]).join(' ')).toLowerCase().includes(q)));
       document.getElementById('grid').innerHTML=L.map(i=>{const c=d.categories.find(c=>c.id===i.category);
         return `<a class="card" href="item.html?id=${encodeURIComponent(i.id)}">${i.thumb?`<img loading="lazy" src="${enc(i.thumb)}" alt="">`:''}<div class="body">
         <div class="meta">${pill('',c?c.name:i.category)}${pill('st-'+i.status,st[i.status]||i.status)}${i.verify?`<span class="score">${i.verify.score}<small> 分</small></span>`:''}</div>
-        <h3>${esc(i.title)}</h3><p>${esc(i.summary)}</p></div></a>`}).join('')||'<div class="empty">没有符合条件的条目</div>'}
+        <h3>${hearts(i.rating)}${esc(i.title)}</h3><p>${esc(i.summary)}</p></div></a>`}).join('')||'<div class="empty">没有符合条件的条目</div>'}
     cats.onclick=e=>{const b=e.target.closest('.tg');if(!b)return;cat=b.dataset.k;bars();grid()};
     sts.onclick=e=>{const b=e.target.closest('.tg');if(!b)return;stf=b.dataset.k;bars();grid()};
     document.getElementById('q').oninput=e=>{q=e.target.value.trim().toLowerCase();grid()};
@@ -46,13 +47,15 @@ const Aes=(()=>{
       :`<div class="note">${esc(d.statuses[i.status]||'')}${i.status_note?'：'+esc(i.status_note):''}</div>`;
     const vf=i.verify;
     P.innerHTML=`<a class="back" href="./">← 返回图鉴</a><div class="meta">${pill('',c?c.name:'')}${pill('st-'+i.status,d.statuses[i.status]||'')}${(i.tags||[]).map(t=>pill('st-n/a',t)).join('')}</div>
-      <h1 class="dh">${esc(i.title)}</h1><p class="lead">${esc(i.summary)}</p>
+      <h1 class="dh">${esc(i.title)}</h1> <span class="rate">${hearts(i.rating)}${esc((d.ratings||{})[i.rating]||'')}</span><p class="lead">${esc(i.summary)}</p>
       <div class="pair"><section class="panel"><h2>原作${src.url?` <a href="${esc(src.url)}" target="_blank" rel="noopener">${esc(src.type||'来源')}：${esc(src.author||src.title||'打开')} ↗</a>`:''}</h2>${orig}</section>
         <section class="panel"><h2>我的复刻${i.demo?` <a href="${enc(i.demo)}" target="_blank">全屏打开 ↗</a>`:''}</h2>${mine}</section></div>
       ${vf?`<section class="panel verify"><h2>核对结果 <span>${esc(vf.date)}</span></h2>
         <div class="info"><div><span>相似度（人工评分）</span><b class="big">${vf.score}</b></div><div><span>核对方法</span>${esc(vf.method)}</div></div>
         <img src="${enc(vf.image)}" alt="上排原作、下排复刻"><div class="note">上排：原视频均匀抽 6 帧 · 下排：复刻页面按同样的操作截 6 帧</div>
         <div class="cols"><div><h3>对上了</h3><ul class="ok">${vf.match.map(x=>`<li>${esc(x.replace(/\s*✓$/,''))}</li>`).join('')}</ul></div><div><h3>还不一样</h3><ul class="ng">${vf.diff.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div></div></section>`:''}
+      ${i.plan?`<section class="panel verify"><h2>复刻计划 <span>${esc({S:'小',M:'中',L:'大'}[i.plan.size]||'')}</span></h2><div class="note"><b>模板</b>：${esc(i.plan.template)}<br><b>素材</b>：${esc(i.plan.assets.join('；')||'不需要')}</div>
+        <ul class="ok">${i.plan.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>${i.plan.prompt?`<div class="note"><b>AI 视频提示词</b>：${esc(i.plan.prompt)}</div>`:''}<div class="note"><b>验收</b>：${esc(i.plan.accept)}</div></section>`:''}
       <div class="info"><div><span>素材文件夹</span>${esc(i.ref||'—')}</div><div><span>视频</span>${esc(i.video||'无')}</div><div><span>编号</span>${esc(i.id)}</div></div>`;
   }
   return{index,item};

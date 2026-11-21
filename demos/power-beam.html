@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>光束送电</title>
+<!-- 复刻：小红书「这束光跑过去的时候，简直神仙动效✨」（大厂劝退师，原作 Anuar D.）。
+     节点编辑器：卡片之间只靠细蓝线相连。点「Send power」→ 左边接口亮起 → 一束白芯、粉紫光晕、拖着细尾巴的光沿弧线往下跑 →
+     碰到电池，卡片边缘亮一圈、电量填满 → 隔一拍，另一束光从电池右边出发往上跑，点亮充电卡 → 光过去后只剩淡蓝的线。
+     可以直接用在 AgentBoard：把卡片换成代理，光束表示任务从一个代理交给下一个（见文件底部 Beam API）。 -->
+<style>
+:root{--bg:#060608;--card:#0F1014;--card2:#14151B;--line:#23242C;--text:#E8E8EE;--sub:#7C7E8A;--wire:#7C83FF;--beam:#FF7BD8;--core:#FFFFFF;--blue:#3D7BFF;--ok:#3DDC84;--amber:#F5A524}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:13px/1.4 Inter,"Noto Sans SC",system-ui,sans-serif;overflow:hidden;
+  background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1.2px);background-size:22px 22px}
+#board{position:fixed;inset:0}
+svg#wires{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.wire{fill:none;stroke:#E4E6FF;stroke-width:1.3}
+.wire-halo{fill:none;stroke:#9AA2FF;stroke-width:3.5;opacity:.85;filter:url(#wglow)}
+.beam{fill:none;stroke-linecap:round}
+.node{position:absolute;width:236px;background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:14px;padding:12px;
+  box-shadow:0 20px 40px rgba(0,0,0,.5);transition:border-color .5s,box-shadow .5s}
+.node.lit{border-color:rgba(255,123,216,.9);box-shadow:0 0 0 1px rgba(255,123,216,.5),0 0 28px rgba(255,123,216,.35),0 20px 40px rgba(0,0,0,.5);transition:border-color .08s,box-shadow .08s}
+.node.glow{border-color:rgba(124,131,255,.55);box-shadow:0 0 18px rgba(124,131,255,.18),0 20px 40px rgba(0,0,0,.5)}
+.hd{display:flex;align-items:center;gap:8px;font-weight:600}.hd i{width:6px;height:6px;border-radius:50%;background:var(--amber)}.hd small{margin-left:auto;color:var(--sub);font-weight:400}
+.lb{color:var(--sub);font-size:10px;letter-spacing:.08em;margin:12px 0 6px;display:flex;justify-content:space-between}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:6px}.tile{border:1px solid var(--line);border-radius:8px;padding:6px 8px}.tile span{display:block;color:var(--sub);font-size:10px}.tile b{font-weight:600}
+.bars{display:flex;gap:4px;align-items:flex-end;height:34px}.bars i{flex:1;background:#262833;border-radius:2px}.bars i.on{background:var(--blue)}
+.seg{display:flex;gap:4px}.seg span{flex:1;text-align:center;padding:3px 0;border-radius:6px;color:var(--sub);font-size:11px}.seg span.on{background:#1C2140;color:#AFC2FF;border:1px solid #2B3366}
+.cells{display:flex;gap:3px}.cells i{flex:1;height:12px;border-radius:2px;background:#ECECF2;transition:background .3s}.cells i.e{background:#2A2B33}.cells i.p{background:var(--beam);box-shadow:0 0 8px var(--beam)}
+.status{display:flex;justify-content:space-between;margin-top:10px;color:var(--sub);font-size:11px}
+.prog{height:3px;border-radius:2px;background:#22232B;margin-top:6px;overflow:hidden}.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--wire),var(--beam));transition:width .6s}
+.big{font:600 30px/1 Inter,sans-serif;text-align:center;margin:16px 0 2px;font-variant-numeric:tabular-nums}.big small{font-size:12px;color:var(--sub);margin-left:3px}
+.center{text-align:center;color:var(--sub);font-size:11px}
+.port{position:absolute;width:4px;height:4px;border-radius:50%;background:#fff;box-shadow:0 0 6px #C9CCFF,0 0 14px var(--wire);transform:translate(-50%,-50%);transition:background .1s,box-shadow .1s}
+.port.hot{background:#fff;box-shadow:0 0 6px #fff,0 0 18px var(--beam),0 0 36px var(--beam)}
+.dock{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);display:flex;gap:6px;background:#111217;border:1px solid var(--line);border-radius:999px;padding:5px}
+.dock button{border:0;border-radius:999px;padding:7px 14px;font:500 12px Inter,sans-serif;background:transparent;color:var(--text);cursor:pointer}
+.dock button.primary{background:#1C1D25}.dock button:disabled{opacity:.4;cursor:default}
+@media (prefers-reduced-motion:reduce){.node,.cells i,.prog i{transition:none}}
+</style>
+</head>
+<body>
+<div id="board">
+  <svg id="wires"><defs>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="halo" filterUnits="userSpaceOnUse" x="-2000" y="-2000" width="6000" height="6000"><feGaussianBlur stdDeviation="5"/></filter>
+    <filter id="wglow" filterUnits="userSpaceOnUse" x="-2000" y="-2000" width="6000" height="6000"><feGaussianBlur stdDeviation="2.6"/></filter>
+  </defs><g id="wg"></g><g id="bg"></g></svg>
+
+  <div class="node" id="solar"><div class="hd"><i></i>Solar roof<small>14 panels</small></div>
+    <div class="lb">OUTPUT</div><div class="tiles"><div class="tile"><span>Power</span><b>4.2 kW</b></div><div class="tile"><span>Sunlight</span><b>812 W/m²</b></div></div>
+    <div class="lb">TODAY<span>18.6 kWh</span></div><div class="bars" id="bars"></div></div>
+
+  <div class="node" id="battery"><div class="hd"><i style="background:var(--ok)"></i>Home battery<small>13.5 kWh</small></div>
+    <div class="lb">MODE</div><div class="seg"><span>Store</span><span class="on">Pass on</span><span>Hold</span></div>
+    <div class="lb">CHARGE<span id="pct">84%</span></div><div class="cells" id="cells"></div>
+    <div class="status"><span id="bstat">Standby</span></div><div class="prog"><i id="bprog"></i></div></div>
+
+  <div class="node" id="charger"><div class="hd"><i style="background:#666"></i>Car charger<small>Garage</small></div>
+    <div class="big"><span id="kw">0.0</span><small>kW</small></div><div class="center" id="cstat">Waiting for power</div>
+    <div class="status"><span id="cst2">Not charging</span><span>EV</span></div></div>
+</div>
+<div class="dock"><button class="primary" id="send">▶ Send power</button><button id="reset">Reset</button></div>
+<script>
+// ---------- 布局 ----------
+const $=id=>document.getElementById(id),wg=$('wg'),bg=$('bg');
+[3,4,5,7,9,11,13,16,10,8,6,4].forEach((h,i)=>$('bars').insertAdjacentHTML('beforeend',`<i class="${i===7?'on':''}" style="height:${h*2}px"></i>`));
+const CELLS=10;function cells(n,pink=0){$('cells').innerHTML=[...Array(CELLS)].map((_,i)=>`<i class="${i<n-pink?'':i<n?'p':'e'}"></i>`).join('')}cells(8);
+function layout(){const W=innerWidth,H=innerHeight,s=Math.min(1,W/900),cw=236*s;
+  const place=(el,x,y)=>{el.style.left=x+'px';el.style.top=y+'px';el.style.transform=`scale(${s})`;el.style.transformOrigin='0 0'};
+  const top=Math.max(40,H*.18);place($('solar'),W*.06,top);place($('battery'),W*.5-cw/2,top+150*s);place($('charger'),W*.94-cw,top+24*s);
+  wires()}
+const ports={};
+function port(el,side,k=.5){const r=el.getBoundingClientRect();return{x:side==='r'?r.right:r.left,y:r.top+r.height*k}}
+let W1,W2;
+function wires(){wg.innerHTML='';document.querySelectorAll('.port').forEach(p=>p.remove());
+  const a=port($('solar'),'r'),b=port($('battery'),'l'),c=port($('battery'),'r'),d=port($('charger'),'l');
+  const curve=(p,q)=>{const dx=Math.max(60,(q.x-p.x)*.5);return `M${p.x} ${p.y} C${p.x+dx} ${p.y} ${q.x-dx} ${q.y} ${q.x} ${q.y}`};
+  W1=mk(curve(a,b));W2=mk(curve(c,d));[['a',a],['b',b],['c',c],['d',d]].forEach(([k,p])=>{const e=document.createElement('div');e.className='port';e.style.left=p.x+'px';e.style.top=p.y+'px';document.body.appendChild(e);ports[k]=e})}
+function mk(d){const h=document.createElementNS('http://www.w3.org/2000/svg','path');h.setAttribute('d',d);h.setAttribute('class','wire-halo');wg.appendChild(h);
+  const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',d);p.setAttribute('class','wire');wg.appendChild(p);return p}
+addEventListener('resize',layout);layout();
+
+// ---------- 光束 ----------
+// 光束 = 沿路径移动的一小段线：外层宽的粉紫光晕（模糊）+ 中层粉色 + 内层白芯，再加一截渐隐的尾巴
+const NS='http://www.w3.org/2000/svg';
+function beam(path,{dur=1100,len=120}={}){return new Promise(done=>{
+  const L=path.getTotalLength(),d=path.getAttribute('d');
+  const layers=[{w:14,c:'var(--beam)',o:.6,f:'url(#halo)'},{w:3.2,c:'var(--beam)',o:.95},{w:1.4,c:'var(--core)',o:1}].map(s=>{
+    const p=document.createElementNS(NS,'path');p.setAttribute('d',d);p.setAttribute('class','beam');p.setAttribute('stroke',s.c);p.setAttribute('stroke-width',s.w);p.setAttribute('opacity',s.o);if(s.f)p.setAttribute('filter',s.f);bg.appendChild(p);return p});
+  const tail=document.createElementNS(NS,'path');tail.setAttribute('d',d);tail.setAttribute('class','beam');tail.setAttribute('stroke','var(--beam)');tail.setAttribute('stroke-width',1.2);tail.setAttribute('opacity',.45);bg.appendChild(tail);
+  const head=document.createElementNS(NS,'circle');head.setAttribute('r',3.2);head.setAttribute('fill','#fff');head.setAttribute('filter','url(#soft)');bg.appendChild(head);
+  const t0=performance.now();const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+  (function f(t){const k=Math.min(1,(t-t0)/dur),e=ease(k),pos=e*(L+len);
+    const seg=(l,g)=>{const s=Math.max(0,pos-l);const vis=Math.max(0,Math.min(pos,L)-s);g.setAttribute('stroke-dasharray',`0 ${s} ${vis} ${L*2}`)};
+    layers.forEach((g,i)=>seg(i===0?len*.7:len*(i===1?.55:.35),g));seg(len*1.6,tail);
+    const hp=path.getPointAtLength(Math.min(pos,L));head.setAttribute('cx',hp.x);head.setAttribute('cy',hp.y);head.setAttribute('opacity',pos>L?Math.max(0,1-(pos-L)/len):1);
+    if(k<1)requestAnimationFrame(f);else{[...layers,tail,head].forEach(n=>n.remove());done()}})(t0)})}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const flash=async(el,ms=160)=>{el.classList.add('hot');await wait(ms);el.classList.remove('hot')};
+function countTo(el,to,ms){const from=+el.textContent,t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/ms),e=1-Math.pow(1-k,3);el.textContent=(from+(to-from)*e).toFixed(1);if(k<1)requestAnimationFrame(f)})(t0)}
+
+// ---------- 剧本 ----------
+let busy=false;
+async function send(){if(busy)return;busy=true;$('send').disabled=true;
+  await flash(ports.a,220);$('solar').classList.add('glow');
+  await beam(W1,{dur:1150});
+  ports.b.classList.add('hot');$('battery').classList.add('lit');$('bstat').textContent='Routing';$('bprog').style.width='100%';cells(10,2);$('pct').textContent='100%';
+  await wait(260);ports.b.classList.remove('hot');$('battery').classList.remove('lit');$('battery').classList.add('glow');
+  await wait(380);                                   // 「隔了一拍」
+  await flash(ports.c,180);
+  await beam(W2,{dur:1050});
+  ports.d.classList.add('hot');$('charger').classList.add('lit');$('cstat').textContent='Charging';$('cst2').textContent='Receiving power';countTo($('kw'),7.4,900);
+  await wait(260);ports.d.classList.remove('hot');$('charger').classList.remove('lit');$('charger').classList.add('glow');
+  await wait(900);document.querySelectorAll('.node').forEach(n=>n.classList.remove('glow'));$('bstat').textContent='Passing on';
+  busy=false;$('send').disabled=false}
+function reset(){if(busy)return;cells(8);$('pct').textContent='84%';$('bstat').textContent='Standby';$('bprog').style.width='0';$('kw').textContent='0.0';$('cstat').textContent='Waiting for power';$('cst2').textContent='Not charging'}
+$('send').onclick=()=>{reset();send()};$('reset').onclick=reset;
+// Beam API：在别的页面（如 AgentBoard）里，beam(任意 SVG path, {dur}) 返回 Promise，光到达后 resolve，可以接着点亮下一张卡片
+window.Beam={beam,send,reset};
+</script>
+</body>
+</html>

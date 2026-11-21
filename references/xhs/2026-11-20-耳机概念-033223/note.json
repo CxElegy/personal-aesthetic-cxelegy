@@ -1,0 +1,38 @@
+{
+ "id": "6b00cfae000000002b033223",
+ "type": "video",
+ "title": "耳机概念",
+ "desc": "做这个耳机概念页时，我最想让人看到的是最后那一下：往下滑，耳机的零件一层层分开。\n\t\n所以前面先留了两个视角。先看它放在充电盒里的样子，再转个角度看耳柄。等看到内部，才知道刚刚那一小块里面藏了什么。\n\t\n如果换成你的产品，客人最常问「能不能拍近一点」的是哪个细节？\n\t\n#网页设计 #产品展示 #交互设计 #马来西亚设计师",
+ "user": "Lim Zoey",
+ "tags": [],
+ "interact": {
+  "liked": false,
+  "likedCount": "",
+  "commentCount": "",
+  "shareCount": "",
+  "followed": false,
+  "relation": "none",
+  "collected": false,
+  "collectedCount": "2",
+  "niceCount": ""
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611210753/fe2951cb9fe9cf5cf620966d84ffbcbc/spectrum/1040g0k0327qfinevmc005p9khd4hgtiadlvj108!nd_dft_wlteh_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v11.rednotecdn.com/stream/1/110/258/01eb00cf6b091d6501037001a1fb2b516c_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/1/110/258/01eb00cf6b091d6501037001a1fb2b516c_258.mp4"
+   ],
+   "w": 720,
+   "h": 900,
+   "size": 1134143
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/545xD6gXVnV",
+ "fetched": "2026-11-20T23:53:10.855Z",
+ "videoNote": ""
+}

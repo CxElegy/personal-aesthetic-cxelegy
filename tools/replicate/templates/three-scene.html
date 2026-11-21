@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{TITLE}}</title>
+<!-- 复刻：{{SOURCE}}
+     模板：3D 场景（three.js r170，文件在 demos/vendor/three/，不依赖外网）。
+     模型放 demos/assets/{{ID}}/model.glb；没有模型时显示占位方块。滚动进度 0–1 会传给 onProgress()，在里面写镜头和零件的动作。 -->
+<style>
+:root{--bg:#0B1020;--ink:#E8ECF5;--sub:#8A93A8;--accent:#5EE6E0}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,"Noto Sans SC",system-ui,sans-serif}
+#stage{position:fixed;inset:0}
+.story{position:relative;z-index:1;pointer-events:none}
+.story section{height:100vh;display:flex;align-items:center;padding:0 8vw}
+.story h2{font:italic 400 clamp(28px,4vw,52px)/1.1 "Instrument Serif",Georgia,serif;margin:0}
+.story p{color:var(--sub);max-width:320px}
+.step{position:fixed;left:24px;bottom:24px;z-index:2;font-size:12px;color:var(--sub)}.step b{color:var(--ink);font-weight:500}
+</style>
+<script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js","three/addons/":"./vendor/three/addons/"}}</script>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<div class="story">
+  <section><div><h2>{{TITLE}}</h2><p>01 · 第一幕</p></div></section>
+  <section><div><h2>第二幕</h2><p>02 · 换一个角度</p></div></section>
+  <section><div><h2>第三幕</h2><p>03 · 揭开内部</p></div></section>
+</div>
+<div class="step" id="step">SCROLL · <b>01</b></div>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+const canvas=document.getElementById('stage');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(2,devicePixelRatio));
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.outputColorSpace=THREE.SRGBColorSpace;
+const scene=new THREE.Scene();const pmrem=new THREE.PMREMGenerator(renderer);scene.environment=pmrem.fromScene(new RoomEnvironment(),.04).texture;
+const camera=new THREE.PerspectiveCamera(35,1,.1,100);camera.position.set(0,.4,4);
+const key=new THREE.DirectionalLight(0xffffff,1.2);key.position.set(3,4,2);scene.add(key);
+const root=new THREE.Group();scene.add(root);
+// 模型：有 assets/{{ID}}/model.glb 就用，没有就放占位
+new GLTFLoader().load('./assets/{{ID}}/model.glb',g=>{root.add(g.scene);parts=g.scene.children},undefined,()=>{
+  const m=new THREE.Mesh(new THREE.BoxGeometry(1,1.4,.5,4,4,4),new THREE.MeshPhysicalMaterial({color:0x2B4CFF,roughness:.35,metalness:.1,clearcoat:.6}));root.add(m);parts=[m]});
+let parts=[],progress=0;
+// 在这里写每一幕的动作：p 是整页滚动进度 0–1
+function onProgress(p){root.rotation.y=p*Math.PI*1.2;camera.position.z=4-p*1.2;
+  parts.forEach((o,i)=>{o.position.y=Math.max(0,p-.66)*3*(i-(parts.length-1)/2)});   // 第三幕：零件分开
+  document.getElementById('step').innerHTML='SCROLL · <b>0'+(1+Math.min(2,Math.floor(p*3)))+'</b>'}
+function size(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+addEventListener('resize',size);size();
+addEventListener('scroll',()=>{const max=document.documentElement.scrollHeight-innerHeight;progress=max>0?scrollY/max:0});
+let shown=0;renderer.setAnimationLoop(()=>{shown+=(progress-shown)*.12;onProgress(shown);renderer.render(scene,camera)});
+</script>
+</body>
+</html>

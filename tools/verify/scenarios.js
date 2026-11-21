@@ -21,4 +21,6 @@ module.exports={
     await p.mouse.click(s.x+(60+118+55)*sc,ty);await w(120);await shot()}},
   'holo-pack':{viewport:{width:720,height:560},run:async(p,shot)=>{
     await p.mouse.move(520,200);await w(200);await shot();await p.click('#pack');await w(500);await shot();await w(400);await shot();await w(500);await shot();await w(700);await shot();await w(900);await shot()}},
+  'power-beam':{viewport:{width:1146,height:720},window:[.25,.55],run:async(p,shot)=>{
+    await shot();await p.click('#send');await w(260);await shot();await w(500);await shot();await w(550);await shot();await w(1200);await shot();await w(900);await shot()}},
 };

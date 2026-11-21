@@ -26,6 +26,7 @@
 3. **登记**：在 `catalog/items.json` 加一条：分类（`categories` 里的 id）、标签、摘要、来源、`video`（数据库里的路径 `xhs/<笔记id>.mp4`）、状态。
 4. **复刻**（能便宜复刻的就做）：单文件 HTML 放 `demos/`，在 `tools/verify/scenarios.js` 写操作剧本。
 5. **核对**：`node tools/verify/compare.js <id>` 生成 `verify/<id>.jpg`（上排原作、下排复刻），自己看图，把分数、对上的、不一样的写进该条的 `verify`；分数低就改演示再核对一次。
+5b. **耗 token 的复刻先排队**（2026-11-21 用户定的）：3D 建模、需要 AI 生成素材的效果，平时不做，只放原视频；在条目里写 `plan`（大小、模板、素材、步骤、AI 提示词、验收），状态设为 `queued`，运行 `node tools/replicate/queue.js` 更新 `tools/replicate/QUEUE.md`。用户说「开始做 <编号>」时，按 QUEUE.md 的固定步骤开工（`tools/replicate/new.sh` 生成起点）。
 6. **视频**：`bash tools/xhs/compress.sh <video.mp4>` 压成 AV1，`node tools/db/upload.js` 上传到数据库并同步条目（需要 `SUPABASE_URL`、`SUPABASE_SERVICE_KEY` 环境变量）。视频不进 git。
 7. **发布**：推到 main 后 `.github/workflows/pages.yml` 自动生成并发布网站；本地预览 `node tools/site/build.js` 后打开 `dist/`。
 
