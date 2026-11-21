@@ -38,9 +38,8 @@
 5b. **耗 token 的复刻先排队**（2026-11-21 用户定的）：3D 建模、需要 AI 生成素材的效果，平时不做，只放原视频；在条目里写 `plan`（大小、模板、素材、步骤、AI 提示词、验收），状态设为 `queued`，运行 `node tools/replicate/queue.js` 更新 `tools/replicate/QUEUE.md`。用户说「开始做 <编号>」时，按 QUEUE.md 的固定步骤开工（`tools/replicate/new.sh` 生成起点）。
 6. **视频**（2026-11-21 定）：存在**店长 PC 的自建 Supabase**（`https://elegy.tailc8cfff.ts.net`，存储桶 `aesthetic-videos`，公开读取）。网站播放用 H.264（`video.web.mp4`，原片加 faststart；超过 20MB 的重编码 CRF 23），**不用 AV1**（很多设备播不了）。条目的 `video` 是桶里的路径 `xhs/<笔记id>-h264.mp4`。
    - 上传：`node tools/db/upload-videos.js`（已在桶里的会跳过；`--check` 只检查）。
-   - 上传方式（2026-11-21 店长定）：**PC 只负责开放数据库接口**，提供限时上传链接 `https://elegy.tailc8cfff.ts.net/upload/<令牌>`（约一天有效，新链接发在 Discord）。`PUT <链接>/<桶里的路径>` 就写进 `aesthetic-videos` 同一路径，同名不能覆盖。
-   - 用户发来新链接时存到 `~/.cache/aesthetic-upload-url`（或环境变量 `AESTHETIC_UPLOAD_URL`），**链接不进仓库、不写进任何提交的文件**。
-   - **不要开 PC 会话**（店长原话「不要开会话」），也不要让用户传话。链接过期（401/403/404）时，直接请用户发 Discord 里的新链接。
+   - 上传方式：仓库已连上上传服务器，做法见文末「视频上传」一节；`upload-videos.js` 会自动做第 1–4 步（空提交验证 → 上传）。
+   - **不要开 PC 会话**（店长原话「不要开会话」），也不要找用户要链接或传话。
    - **不需要也不要索取 service_role 密钥。**
    - 视频不进 git。
 7. **发布**：推到 main 后 `.github/workflows/pages.yml` 自动生成并发布网站；本地预览 `node tools/site/build.js` 后打开 `dist/`。
@@ -48,3 +47,20 @@
 
 ## 在其他任务中
 做任何带审美判断的工作时，先读 `AESTHETIC.md` 并遵循。
+
+## 视频上传（Supabase aesthetic-videos）
+
+这个仓库（cxelegy/personal-aesthetic-cxelegy）已经连上上传服务器。需要上传时，每个会话先做一次验证：
+1. 取一次性验证码（10 分钟内有效）：
+   curl -s -X POST "https://elegy.tailc8cfff.ts.net/upload/auth/start?repo=cxelegy/personal-aesthetic-cxelegy"
+2. 在当前分支推一个空提交（不改任何文件）：
+   git commit --allow-empty -m "upload-proof <nonce>" && git push
+3. 验证：
+   curl -s -X POST "https://elegy.tailc8cfff.ts.net/upload/auth/verify?repo=cxelegy/personal-aesthetic-cxelegy&branch=<当前分支>&nonce=<nonce>"
+   返回的 upload_url 每次使用都会续期，连续 12 小时不用才失效（失效后重做 1–3 即可）。只留在本次会话里，不要写进任何文件。
+4. 上传：curl -X PUT --data-binary @video.mp4 <upload_url>/video.mp4
+- 支持 .mp4 / .webm / .json，每个文件最大 100MB（按扩展名判断类型）
+- 文件名只能用英文字母、数字和 . _ -，可以放进子文件夹（最多 5 层）
+- 同名文件不能覆盖，请每次用新文件名
+- 成功时返回 JSON，其中 public_url 是公开地址
+- 网络受限的环境需要放行 elegy.tailc8cfff.ts.net
