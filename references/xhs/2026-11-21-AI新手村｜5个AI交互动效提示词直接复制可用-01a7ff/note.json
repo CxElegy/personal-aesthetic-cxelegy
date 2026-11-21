@@ -1,0 +1,49 @@
+{
+ "id": "6affc46c000000001601a7ff",
+ "type": "video",
+ "title": "AI新手村｜5个AI交互动效提示词直接复制可用",
+ "desc": "#AI新手村[话题]# #UI设计[话题]# #AI玩家[话题]# #AI跟练玩家[话题]# #VibeCoding玩家[话题]# #vibecoding[话题]# #howto用好AI[话题]# #我这行的AI路[话题]# #交互设计[话题]# @科技薯 @艺术薯",
+ "user": "短耳兔设计",
+ "tags": [
+  "AI新手村",
+  "UI设计",
+  "AI玩家",
+  "AI跟练玩家",
+  "VibeCoding玩家",
+  "vibecoding",
+  "howto用好AI",
+  "我这行的AI路",
+  "交互设计"
+ ],
+ "interact": {
+  "liked": false,
+  "collectedCount": "605",
+  "shareCount": "52",
+  "followed": false,
+  "relation": "none",
+  "niceCount": "",
+  "likedCount": "226",
+  "collected": false,
+  "commentCount": "53"
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611211422/cb7df52e9cf368dad67658c3919b2c25/1040g008327pem61hn0005q8iursdof67hfr48e0!nd_dft_wlteh_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v28.rednotecdn.com/stream/1/110/258/01eaffc241092e5501037001a1f71774ed_258.mp4",
+    "http://sns-v11.rednotecdn.com/stream/1/110/258/01eaffc241092e5501037001a1f71774ed_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/1/110/258/01eaffc241092e5501037001a1f71774ed_258.mp4"
+   ],
+   "w": 720,
+   "h": 960,
+   "size": 3721838
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/2nVhntcuXWr",
+ "fetched": "2026-11-21T06:22:47.278Z",
+ "videoNote": ""
+}
