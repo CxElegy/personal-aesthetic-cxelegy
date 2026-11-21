@@ -76,8 +76,8 @@
    "status": "replicated",
    "priority": "high",
    "verify": {
-    "date": "2026-11-20",
-    "score": 80,
+    "date": "2026-11-21",
+    "score": 6.5,
     "image": "verify/power-beam.jpg",
     "method": "tools/verify/compare.js：Playwright 点「Send power」后按时间截 6 帧，原视频抽 6 帧，上下拼图人工比对；另外把光束飞行中的一帧放大和原作对比",
     "match": [
@@ -89,7 +89,29 @@
      "原作充电卡亮起后会出现一排跳动的柱状波形",
      "原作的连线光晕更宽、更白一些",
      "原作光束经过时，路过的那段线会短暂变亮再暗回去"
-    ]
+    ],
+    "scale": 10,
+    "scores": {
+     "motion": 6,
+     "form": 7,
+     "states": 7,
+     "render": 6,
+     "context": 7
+    },
+    "raw": 6.5,
+    "cap": 8,
+    "rubric": "tools/verify/RUBRIC.md",
+    "gap": {
+     "original_tech": "网页 SVG 或 Canvas：多层发光描边加粒子尾巴，卡片边框发光；可能用了 shader 做辉光。",
+     "my_tech": "SVG 三层描边加 dasharray 移动光段，卡片用 box-shadow 发光。",
+     "why": "技术接近。缺充电卡的波形柱、光经过时线段变亮再暗下去，辉光也不够通透（原作像 bloom 效果）。",
+     "paths": [
+      {
+       "target": "8 分",
+       "need": "加线段余辉、充电波形；辉光改用 Canvas 的 bloom（叠加模式模糊）。中等 token。"
+      }
+     ]
+    }
    },
    "rating": 3
   },
@@ -119,7 +141,7 @@
    "status": "replicated",
    "verify": {
     "date": "2026-11-21",
-    "score": 75,
+    "score": 5,
     "image": "verify/burger-layers.jpg",
     "method": "tools/verify/compare.js：逐屏滚动截 6 帧，原视频抽 6 帧上下对比；另外截了两屏之间的转场帧单独对比",
     "match": [
@@ -133,7 +155,33 @@
      "原作是实拍食材，从斜上方看得到面包顶面；这里是 SVG 插画、侧面视角",
      "原作标题字体更窄更紧",
      "原作右上角有「ONE」这类小号步骤字和细线框装饰"
-    ]
+    ],
+    "scale": 10,
+    "scores": {
+     "motion": 6,
+     "form": 4,
+     "states": 7,
+     "render": 3,
+     "context": 6
+    },
+    "raw": 5.3,
+    "cap": 5,
+    "rubric": "tools/verify/RUBRIC.md",
+    "gap": {
+     "original_tech": "网页滚动叙事（GSAP ScrollTrigger 一类），食材是去背景的实拍或 3D 渲染图片，从斜上方看。",
+     "my_tech": "同样的滚动结构和幕布转场；食材是我用 SVG 画的侧面插画。",
+     "why": "结构对了，但最吸引人的是「真实食材叠起来」，我的插画一眼就不像（一秒钟测试不通过）。",
+     "paths": [
+      {
+       "target": "7 分",
+       "need": "每层食材换成 AI 生成的去背景图片（同一个斜上方视角），代码不用改，替换图片即可。少量 token，需要生图。"
+      },
+      {
+       "target": "8 分",
+       "need": "标题换成更窄的高对比衬线体，加上原作的「ONE」步骤字和细线框。"
+      }
+     ]
+    }
    }
   },
   {
@@ -157,8 +205,8 @@
    "demo": "demos/glow-button.html",
    "status": "replicated",
    "verify": {
-    "date": "2026-11-20",
-    "score": 85,
+    "date": "2026-11-21",
+    "score": 6.6,
     "image": "verify/glow-button.jpg",
     "match": [
      "暗色胶囊按钮、细白内边、彩虹光沿边框流动 ✓",
@@ -167,7 +215,29 @@
     "diff": [
      "原作光晕更柔、更宽一点"
     ],
-    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
+    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对",
+    "scale": 10,
+    "scores": {
+     "motion": 6,
+     "form": 7,
+     "states": 8,
+     "render": 6,
+     "context": 6
+    },
+    "raw": 6.6,
+    "cap": 8,
+    "rubric": "tools/verify/RUBRIC.md",
+    "gap": {
+     "original_tech": "CSS conic-gradient 旋转边框加模糊光晕，或用 shader 做的流光。",
+     "my_tech": "同样是 conic-gradient 加 mask 加模糊。",
+     "why": "技术相同；原作的光晕更柔、更有层次（可能叠了两三层不同模糊程度），面板背景有暗角渐变。",
+     "paths": [
+      {
+       "target": "8 分",
+       "need": "光晕叠三层不同模糊程度，面板加暗角，按原作调色。少量 token。"
+      }
+     ]
+    }
    },
    "rating": 2
   },
@@ -195,8 +265,8 @@
    "demo": "demos/typing-cat.html",
    "status": "replicated",
    "verify": {
-    "date": "2026-11-20",
-    "score": 75,
+    "date": "2026-11-21",
+    "score": 2.9,
     "image": "verify/typing-cat.jpg",
     "match": [
      "扁平黑猫、大黄绿眼睛、胡须、尾巴 ✓",
@@ -208,7 +278,38 @@
      "原作摸头时会伸爪去按圆按钮",
      "原作背景是用户的桌面壁纸（桌宠），这里是网页"
     ],
-    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
+    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对",
+    "scale": 10,
+    "scores": {
+     "motion": 2,
+     "form": 4,
+     "states": 3,
+     "render": 3,
+     "context": 3
+    },
+    "raw": 2.9,
+    "cap": 5,
+    "rubric": "tools/verify/RUBRIC.md",
+    "gap": {
+     "original_tech": "很可能是 Rive 这类骨骼加网格变形的角色动画（也可能是手绘逐帧），用状态机切换「侧身搭爪待机 → 被摸眯眼 → 正面坐直打字」；做成桌面悬浮窗 App，监听全局键盘；按过的字母排成一行飘在键盘上方，带运动模糊；键盘上按到的键会亮绿色。",
+     "my_tech": "一张静止的 SVG 小猫，只有爪子上下平移、瞳孔偏移；只有一个正面姿势，没有侧身搭爪；只在网页获得焦点时才能收到按键；键帽是单颗弹飞，不是排成一行。",
+     "why": "动画层差了一级：我没有骨骼或网格变形，身体不会动，也没有姿势切换。素材层：原作的轮廓是手绘有机曲线，我画的是几何拼图。环境层：网页拿不到全局键盘，原作是桌面 App。",
+     "paths": [
+      {
+       "target": "5 分",
+       "need": "不用新软件：用 SVG 路径插值画出 3 个姿势（侧身搭爪、坐直、左右爪按下）并在它们之间变形；加尾巴弹簧、耳朵抖动；字母排成一行加运动模糊；键盘按键亮起。中等 token。"
+      },
+      {
+       "target": "7 分",
+       "need": "画面要像：需要一套分层的猫素材（自己画，或用 AI 生成后转成矢量、按身体部位拆层），再用代码做变形动画。"
+      },
+      {
+       "target": "9 分",
+       "need": "用 Rive 编辑器（免费，网页版）给猫绑骨骼、做状态机，导出 .riv 文件，网页用 @rive-app/canvas 播放；想要真正的桌面宠物，再用 Tauri 或 Electron 做透明悬浮窗加全局键盘监听。"
+      }
+     ]
+    },
+    "user_score": 3
    },
    "rating": 3
   },
@@ -276,8 +377,8 @@
    "demo": "demos/liquid-tab.html",
    "status": "replicated",
    "verify": {
-    "date": "2026-11-20",
-    "score": 70,
+    "date": "2026-11-21",
+    "score": 4.9,
     "image": "verify/liquid-tab.jpg",
     "match": [
      "标签和面板是一条连续路径、反向圆角 ✓",
@@ -290,7 +391,29 @@
      "原作有点阵背景和辅助线标注",
      "原作标签带关闭 × 和 + 号"
     ],
-    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
+    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对",
+    "scale": 10,
+    "scores": {
+     "motion": 4,
+     "form": 5,
+     "states": 6,
+     "render": 5,
+     "context": 5
+    },
+    "raw": 4.9,
+    "cap": 5,
+    "rubric": "tools/verify/RUBRIC.md",
+    "gap": {
+     "original_tech": "一条连续的 SVG 路径，按物理（弹簧、速度）实时计算弯角半径；有调试面板和点阵背景。",
+     "my_tech": "同样是连续路径加弹簧，但「脖子」的形状算法粗糙，像气泡。",
+     "why": "路径算法不对：原作只在两个底角拉出细丝，拉伸量跟着速度变化；我的是整体收窄成一个脖子。这是数学形状的问题，不缺软件。",
+     "paths": [
+      {
+       "target": "7 分",
+       "need": "重写路径：两个底角各自用贝塞尔曲线拉丝，宽度随距离和速度变化；加点阵背景和标注。中等 token。"
+      }
+     ]
+    }
    },
    "rating": 2
   },
@@ -318,8 +441,8 @@
    "demo": "demos/holo-pack.html",
    "status": "replicated",
    "verify": {
-    "date": "2026-11-20",
-    "score": 70,
+    "date": "2026-11-21",
+    "score": 4.2,
     "image": "verify/holo-pack.jpg",
     "match": [
      "铝箔卡包随鼠标倾斜反光 ✓",
@@ -331,7 +454,33 @@
      "原作卡面是 3D 角色插画，我用的是 emoji",
      "原作有藏青、红、粉三种颜色的卡包轮换"
     ],
-    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
+    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对",
+    "scale": 10,
+    "scores": {
+     "motion": 4,
+     "form": 4,
+     "states": 5,
+     "render": 3,
+     "context": 5
+    },
+    "raw": 4.2,
+    "cap": 5,
+    "rubric": "tools/verify/RUBRIC.md",
+    "gap": {
+     "original_tech": "3D 卡包和卡片（WebGL / three.js 或 Spline）：真实的铝箔反光、物理撕开、彩虹是粗的立体波浪、卡面是 3D 角色插画。",
+     "my_tech": "CSS 平面卡包、emoji 卡面、细彩条。",
+     "why": "素材和渲染层级都差：原作是 3D 材质的反光，我是平面渐变；卡面插画是关键，我用 emoji 代替。",
+     "paths": [
+      {
+       "target": "6 分",
+       "need": "用 three-scene 模板做 3D 卡包（铝箔用环境贴图），彩虹改成粗的立体波浪。中等偏大。"
+      },
+      {
+       "target": "8 分",
+       "need": "卡面需要 5 张角色插画（自己画或 AI 生成）。"
+      }
+     ]
+    }
    },
    "rating": 3
   },
@@ -358,8 +507,8 @@
    "demo": "demos/hold-to-delete.html",
    "status": "replicated",
    "verify": {
-    "date": "2026-11-20",
-    "score": 95,
+    "date": "2026-11-21",
+    "score": 7.8,
     "image": "verify/hold-to-delete.jpg",
     "match": [
      "长按进度环、红色提示文字、松手取消、行收起、数量更新、删空后找回 ✓"
@@ -367,7 +516,29 @@
     "diff": [
      "文字改成了中文（有意为之）"
     ],
-    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
+    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对",
+    "scale": 10,
+    "scores": {
+     "motion": 7,
+     "form": 8,
+     "states": 9,
+     "render": 7,
+     "context": 8
+    },
+    "raw": 7.8,
+    "cap": 8,
+    "rubric": "tools/verify/RUBRIC.md",
+    "gap": {
+     "original_tech": "网页 UI 动效：SVG 圆环进度 + 行高收起，常见的 React 或 Framer Motion 写法。",
+     "my_tech": "同样的技术：SVG 圆环加 CSS 过渡。",
+     "why": "技术层级一致。差的是细节：原作行收起时有轻微弹性，进度环更细；文字我改成了中文。",
+     "paths": [
+      {
+       "target": "9 分",
+       "need": "收起改用弹簧曲线，环的线宽和颜色逐像素对齐原作。少量 token。"
+      }
+     ]
+    }
    },
    "rating": 2
   },
@@ -430,8 +601,8 @@
    "demo": "demos/glass-stats.html",
    "status": "replicated",
    "verify": {
-    "date": "2026-11-20",
-    "score": 75,
+    "date": "2026-11-21",
+    "score": 5.8,
     "image": "verify/glass-dashboard.jpg",
     "match": [
      "暖色毛玻璃卡片、珊瑚红主卡、斜体衬线强调词 ✓",
@@ -442,7 +613,33 @@
      "原作侧边栏会展开成带文字的菜单",
      "原作头像会绕着进度环转"
     ],
-    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对"
+    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对",
+    "scale": 10,
+    "scores": {
+     "motion": 6,
+     "form": 6,
+     "states": 5,
+     "render": 6,
+     "context": 6
+    },
+    "raw": 5.8,
+    "cap": 8,
+    "rubric": "tools/verify/RUBRIC.md",
+    "gap": {
+     "original_tech": "React + Framer Motion：开场从圆形模糊里放大出现，侧边栏展开，头像沿圆环转动，数字逐位滚动。背景是一张实拍的暖色室内照片。",
+     "my_tech": "原生 JS 做了数字滚动和悬停浮起；背景用 CSS 光斑代替照片。",
+     "why": "缺开场动画、侧边栏展开、头像转动这三个状态；用光斑代替照片，毛玻璃后面没有真实的细节，所以「透」的感觉弱。",
+     "paths": [
+      {
+       "target": "7 分",
+       "need": "补上开场、侧边栏、头像转动三个状态。中等 token。"
+      },
+      {
+       "target": "8 分",
+       "need": "背景换成一张真实的暖色室内照片（自己拍，或 AI 生成）。"
+      }
+     ]
+    }
    },
    "rating": 3
   },
