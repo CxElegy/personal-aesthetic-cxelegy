@@ -35,7 +35,10 @@
 5. **核对**：按 `tools/verify/RUBRIC.md` 打分（10 分制，五个维度加权，先做「一秒钟测试」，有硬性封顶）。**宁可打低，不要只看功能齐不齐**；每条都写差距分析（原作技术 / 我的技术 / 为什么没做到 / 提分路线）。用户打分后写进 RUBRIC.md 的校准记录，差 1 分以上就修改标准。
 5a. 原来的核对：`node tools/verify/compare.js <id>` 生成 `verify/<id>.jpg`（上排原作、下排复刻），自己看图，把分数、对上的、不一样的写进该条的 `verify`；分数低就改演示再核对一次。
 5b. **耗 token 的复刻先排队**（2026-11-21 用户定的）：3D 建模、需要 AI 生成素材的效果，平时不做，只放原视频；在条目里写 `plan`（大小、模板、素材、步骤、AI 提示词、验收），状态设为 `queued`，运行 `node tools/replicate/queue.js` 更新 `tools/replicate/QUEUE.md`。用户说「开始做 <编号>」时，按 QUEUE.md 的固定步骤开工（`tools/replicate/new.sh` 生成起点）。
-6. **视频**：`bash tools/xhs/compress.sh <video.mp4>` 压成 AV1，`node tools/db/upload.js` 上传到数据库并同步条目（需要 `SUPABASE_URL`、`SUPABASE_SERVICE_KEY` 环境变量）。视频不进 git。
+6. **视频**（2026-11-21 定）：存在**店长 PC 的自建 Supabase**（`https://elegy.tailc8cfff.ts.net`，存储桶 `aesthetic-videos`，公开读取）。网站播放用 H.264（`video.web.mp4`，原片加 faststart；超过 20MB 的重编码 CRF 23），**不用 AV1**（很多设备播不了）。条目的 `video` 是桶里的路径 `xhs/<笔记id>-h264.mp4`。
+   - 上传：`node tools/db/upload-videos.js`（用公开的 publishable key，已存在的会跳过；`--check` 只检查）。
+   - 上传权限是限时的：先在 PC 上执行 `db/open-video-upload.sql`（改成新的到期时间）。云端会话做法：用 `create_session` 在环境「Elegy:D:\Claude」开一个 PC 会话执行这段 SQL。**不需要也不要索取 service_role 密钥。**
+   - 视频不进 git。
 7. **发布**：推到 main 后 `.github/workflows/pages.yml` 自动生成并发布网站；本地预览 `node tools/site/build.js` 后打开 `dist/`。
 8. **网站自己的设计**（2026-11-21 用户定的）：不要用 Wishlist 的 P5 风格（那是 Wishlist 专用的）。现在是「收藏家的图鉴」：书脊分类、收藏卡（稀有度 = 用户评价）、画册式详情页。
 

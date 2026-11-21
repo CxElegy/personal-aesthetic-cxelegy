@@ -14,7 +14,7 @@ const cfg=JSON.parse(fs.readFileSync(path.join(OUT,'config.json')));
 if(process.env.SUPABASE_URL)cfg.supabaseUrl=process.env.SUPABASE_URL;if(process.env.SUPABASE_ANON_KEY)cfg.anonKey=process.env.SUPABASE_ANON_KEY;
 // 本地预览：LOCAL_VIDEOS=1 时把本地视频复制进 dist/videos/，网站直接从这里播放（只用于预览，不发布到 GitHub）
 if(process.env.LOCAL_VIDEOS==='1'){let k=0;for(const it of cat.items){if(!it.video)continue;
-  const f=['video.av1.mp4','video.mp4','like-发光按钮-流光边框.mp4'].map(n=>path.join(ROOT,it.ref,n)).find(fs.existsSync);
+  const f=['video.web.mp4','video.mp4','like-发光按钮-流光边框.mp4'].map(n=>path.join(ROOT,it.ref,n)).find(fs.existsSync);
   if(f){const d=path.join(OUT,'videos',it.video);fs.mkdirSync(path.dirname(d),{recursive:true});fs.copyFileSync(f,d);k++}}
   cfg.videoBase='videos/';console.log(`  本地视频 ${k} 段 → dist/videos/`)}
 fs.writeFileSync(path.join(OUT,'config.json'),JSON.stringify(cfg,null,1));
