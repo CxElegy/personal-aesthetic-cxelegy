@@ -1,0 +1,49 @@
+{
+ "id": "6afd3db6000000002b03d614",
+ "type": "video",
+ "title": "审美积累|极简板式变化",
+ "desc": "#编排设计[话题]# #文字编排[话题]# #版式设计[话题]# #品牌设计[话题]# #字体设计[话题]# #设计[话题]# #设计灵感[话题]# #没有天赋那就反复[话题]##设计[话题]##审美提升[话题]#",
+ "user": "曹小阳",
+ "tags": [
+  "编排设计",
+  "文字编排",
+  "版式设计",
+  "品牌设计",
+  "字体设计",
+  "设计",
+  "设计灵感",
+  "没有天赋那就反复",
+  "审美提升"
+ ],
+ "interact": {
+  "collected": false,
+  "followed": false,
+  "relation": "none",
+  "liked": false,
+  "likedCount": "147",
+  "collectedCount": "164",
+  "commentCount": "1",
+  "shareCount": "13",
+  "niceCount": ""
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611210904/703baffc2f34e8f2abcc939a5499f110/1040g008327mvsd0mn6005od1m0v40t1md0tn2d0!nd_dft_wlteh_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v28.rednotecdn.com/stream/1/110/258/01eafd3db508f68901037001a1ed39252c_258.mp4",
+    "http://sns-v11.rednotecdn.com/stream/1/110/258/01eafd3db508f68901037001a1ed39252c_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/1/110/258/01eafd3db508f68901037001a1ed39252c_258.mp4"
+   ],
+   "w": 720,
+   "h": 1408,
+   "size": 901963
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/Ajyqnujbaj6",
+ "fetched": "2026-11-21T01:04:57.312Z",
+ "videoNote": ""
+}

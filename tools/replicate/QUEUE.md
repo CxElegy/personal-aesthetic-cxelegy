@@ -76,6 +76,20 @@
 - 验收：核对 ≥ 80 分：切换跟手、不闪烁、名字和图同步
 - 原视频：数据库 `xhs/6afa42fd00000000190256d2.mp4`，本地 `references/xhs/2026-11-21-海外社媒灵感：简单好复刻的顶级轮播创意-0256d2`
 
+## ❤❤ `anchor-wordmark` 字标不动、载体在变的品牌版式
+
+- 大小：小（几分钟，少量 token）
+- 模板：basic
+- 素材：5–6 张统一暗蓝色调的场景图，字标位置留空（AI 生成）
+- 步骤：
+  - 字标用 CSS 固定在画面中上方，所有场景共用
+  - 场景图每 0.4–0.8 秒硬切一张，节奏可以跟着鼠标或滚动
+  - 字标颜色随场景反转（浅底用深色字、深底用奶白字）
+- AI 视频提示词：
+  > Moody dark navy studio photograph, [canvas tote bag held by a hand | open glass laptop on a black desk | back of a black leather jacket | rough stone floating in fog], centered, the upper-middle area left plain for a logo, low-key lighting, cool navy and warm cream tones, minimal, 9:16, no text.
+- 验收：RUBRIC ≥ 7：字标位置一帧都不能跳，切换节奏和色调一致
+- 原视频：数据库 `xhs/6afd3db6000000002b03d614.mp4`，本地 `references/xhs/2026-11-21-审美积累-极简板式变化-03d614`
+
 ## ❤❤ `ai-status-cards` 满屏会动的 AI 状态卡片
 
 - 大小：中（半小时左右）

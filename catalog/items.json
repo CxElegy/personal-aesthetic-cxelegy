@@ -1196,6 +1196,64 @@
     "prompt": null,
     "accept": "核对 ≥ 80 分：切换跟手、不闪烁、名字和图同步"
    }
+  },
+  {
+   "id": "anchor-wordmark",
+   "title": "字标不动、载体在变的品牌版式",
+   "category": "visual",
+   "tags": [
+    "品牌",
+    "字标",
+    "匹配剪辑",
+    "极简",
+    "深蓝"
+   ],
+   "rating": 2,
+   "summary": "小写粗体字标「drench」固定在画面同一位置，背后的载体一直在换：帆布袋、纯黑、玻璃笔记本、皮夹克、烟雾里的石头。深海军蓝 + 奶白。",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/Ajyqnujbaj6",
+    "author": "曹小阳",
+    "title": "审美积累|极简板式变化"
+   },
+   "ref": "references/xhs/2026-11-21-审美积累-极简板式变化-03d614",
+   "video": "xhs/6afd3db6000000002b03d614.mp4",
+   "thumb": "references/xhs/2026-11-21-审美积累-极简板式变化-03d614/frame-01.jpg",
+   "contact": "references/xhs/2026-11-21-审美积累-极简板式变化-03d614/contact-sheet.jpg",
+   "demo": null,
+   "status": "queued",
+   "verify": null,
+   "evidence": [
+    {
+     "id": "E-01",
+     "finding": "字标在每一个镜头里位置和大小都完全一样（画面中上方）",
+     "confidence": "observed"
+    },
+    {
+     "id": "E-02",
+     "finding": "镜头之间是硬切，没有过渡",
+     "confidence": "observed"
+    },
+    {
+     "id": "E-03",
+     "finding": "背景场景是 AI 生成或摄影后统一调成暗蓝色调",
+     "confidence": "inferred"
+    }
+   ],
+   "plan": {
+    "size": "S",
+    "template": "basic",
+    "assets": [
+     "5–6 张统一暗蓝色调的场景图，字标位置留空（AI 生成）"
+    ],
+    "steps": [
+     "字标用 CSS 固定在画面中上方，所有场景共用",
+     "场景图每 0.4–0.8 秒硬切一张，节奏可以跟着鼠标或滚动",
+     "字标颜色随场景反转（浅底用深色字、深底用奶白字）"
+    ],
+    "prompt": "Moody dark navy studio photograph, [canvas tote bag held by a hand | open glass laptop on a black desk | back of a black leather jacket | rough stone floating in fog], centered, the upper-middle area left plain for a logo, low-key lighting, cool navy and warm cream tones, minimal, 9:16, no text.",
+    "accept": "RUBRIC ≥ 7：字标位置一帧都不能跳，切换节奏和色调一致"
+   }
   }
  ],
  "ratings": {
