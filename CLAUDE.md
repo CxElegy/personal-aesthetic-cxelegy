@@ -21,6 +21,8 @@
 - 学到的交互、动效、视觉效果都要做成单文件 HTML 演示放进 `demos/`（不依赖构建，直接用浏览器打开），用 Playwright 实际操作并截图检查，再在 `AESTHETIC.md` 对应条目里写上演示路径。
 
 ## 审美图鉴网站（整套流程）
+复刻按 `tools/replicate/METHOD.md`（改编自 REA 和 self-learning-loop）：先找源头 → 证据标信心 → 动手前写清单（`verify/checklists/<id>.md`，用户确认）→ 做 → 对比 + 独立复查 + 差距报告 → 循环到必须项连续两轮通过 → 经验写进 `tools/replicate/LESSONS.md`。
+
 1. **抓取**：`node tools/xhs/fetch.js <链接>`（云端加 `XHS_HEADLESS=1`）→ `node tools/xhs/media.js <文件夹>` 下载图片视频、抽关键帧。
 2. **学习**：看图片和 `contact-sheet.jpg`，写进 `AESTHETIC.md` 和该条 `note.md` 的「学到的」。
 3. **登记**：在 `catalog/items.json` 加一条：分类（`categories` 里的 id）、标签、摘要、来源、`video`（数据库里的路径 `xhs/<笔记id>.mp4`）、状态。
