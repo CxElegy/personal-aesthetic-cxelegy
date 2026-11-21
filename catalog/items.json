@@ -116,6 +116,69 @@
    "rating": 3
   },
   {
+   "id": "swipe-aurora-pay",
+   "title": "上滑发送的极光转账",
+   "category": "interaction",
+   "tags": [
+    "手机",
+    "手势",
+    "极光",
+    "屏幕边缘光",
+    "支付"
+   ],
+   "rating": 3,
+   "summary": "上滑「Swipe to send」→ 底部涌起紫蓝极光、发光箭头往上冲 → 光环收到金额上、出现对勾 → 整块屏幕边缘亮起紫青色光。",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/63Kptqehfr2",
+    "author": "屿安 designer",
+    "title": "炫酷的交互动效分享"
+   },
+   "ref": "references/xhs/2026-11-21-炫酷的交互动效分享-025a2d",
+   "video": "xhs/6afe9aa9000000002b025a2d.mp4",
+   "thumb": "references/xhs/2026-11-21-炫酷的交互动效分享-025a2d/frame-03.jpg",
+   "contact": "references/xhs/2026-11-21-炫酷的交互动效分享-025a2d/contact-sheet.jpg",
+   "demo": null,
+   "status": "queued",
+   "verify": null,
+   "evidence": [
+    {
+     "id": "E-01",
+     "finding": "在真实手机上操作（手持拍摄），不是网页录屏",
+     "confidence": "observed"
+    },
+    {
+     "id": "E-02",
+     "finding": "极光是会流动、边缘柔和的体积光，带噪声纹理，不是简单的渐变",
+     "confidence": "observed"
+    },
+    {
+     "id": "E-03",
+     "finding": "成功后屏幕四周的边缘光沿着屏幕圆角走，颜色从紫过渡到青",
+     "confidence": "observed"
+    },
+    {
+     "id": "E-04",
+     "finding": "极光可能是用 shader（Metal / WebGL 噪声）做的",
+     "confidence": "inferred"
+    }
+   ],
+   "plan": {
+    "size": "M",
+    "template": "basic + WebGL shader（片段着色器做噪声极光）",
+    "assets": [],
+    "steps": [
+     "先按 METHOD.md 写清单：滑块跟手、极光涌起、箭头上冲、光环收缩、对勾、屏幕边缘光，每项写通过标准",
+     "极光：全屏 canvas 跑片段着色器（多层 fbm 噪声 + 紫蓝调色 + 从底部往上的遮罩），滑动进度控制遮罩高度",
+     "光环：径向渐变加模糊，半径从大收到金额周围；对勾用 SVG 描边动画",
+     "屏幕边缘光：沿圆角矩形的发光描边，颜色沿周长从紫渐变到青，缓慢流动",
+     "做成手机竖屏尺寸，电脑上用鼠标拖动模拟上滑"
+    ],
+    "prompt": null,
+    "accept": "RUBRIC ≥ 7：一秒钟测试能认出是同一个效果；极光要有流动的噪声质感"
+   }
+  },
+  {
    "id": "burger-layers",
    "title": "一层层叠起来的汉堡官网",
    "category": "interaction",

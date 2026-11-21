@@ -10,6 +10,20 @@
 4. 写效果 → `node tools/verify/compare.js <编号>` → 看 verify/<编号>.jpg → 把分数和差异写进 catalog/items.json（status 改成 replicated）
 5. 模板说明：basic = 单文件 2D 动效；frame-scrub = AI 视频拆帧后跟着鼠标或滚动切换（省 token 的「假 3D」）；three-scene = three.js 真 3D（vendor 在 demos/vendor/three，不依赖外网）
 
+## ❤❤❤ `swipe-aurora-pay` 上滑发送的极光转账
+
+- 大小：中（半小时左右）
+- 模板：basic + WebGL shader（片段着色器做噪声极光）
+- 素材：不需要
+- 步骤：
+  - 先按 METHOD.md 写清单：滑块跟手、极光涌起、箭头上冲、光环收缩、对勾、屏幕边缘光，每项写通过标准
+  - 极光：全屏 canvas 跑片段着色器（多层 fbm 噪声 + 紫蓝调色 + 从底部往上的遮罩），滑动进度控制遮罩高度
+  - 光环：径向渐变加模糊，半径从大收到金额周围；对勾用 SVG 描边动画
+  - 屏幕边缘光：沿圆角矩形的发光描边，颜色沿周长从紫渐变到青，缓慢流动
+  - 做成手机竖屏尺寸，电脑上用鼠标拖动模拟上滑
+- 验收：RUBRIC ≥ 7：一秒钟测试能认出是同一个效果；极光要有流动的噪声质感
+- 原视频：数据库 `xhs/6afe9aa9000000002b025a2d.mp4`，本地 `references/xhs/2026-11-21-炫酷的交互动效分享-025a2d`
+
 ## ❤❤❤ `book-popup` 画册里长出实物
 
 - 大小：中（半小时左右）

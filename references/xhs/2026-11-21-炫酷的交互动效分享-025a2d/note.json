@@ -1,0 +1,45 @@
+{
+ "id": "6afe9aa9000000002b025a2d",
+ "type": "video",
+ "title": "炫酷的交互动效分享",
+ "desc": "#交互[话题]# #动效设计[话题]# #动态设计[话题]# #交互设计[话题]# #交互手势控制[话题]# #UI界面设计[话题]#",
+ "user": "屿安 designer",
+ "tags": [
+  "交互",
+  "动效设计",
+  "动态设计",
+  "交互设计",
+  "交互手势控制",
+  "UI界面设计"
+ ],
+ "interact": {
+  "collected": false,
+  "commentCount": "",
+  "shareCount": "27",
+  "likedCount": "266",
+  "collectedCount": "238",
+  "followed": false,
+  "relation": "none",
+  "niceCount": "",
+  "liked": false
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611210858/40a872ae1272c630f450984cf7c26961/spectrum/1040g0k0327oajoscmg00416htg60qrlfe5clrf0!nd_dft_wlteh_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v11.rednotecdn.com/stream/1/110/258/01eafe9a6708c57801037001a1f28c3d7c_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/1/110/258/01eafe9a6708c57801037001a1f28c3d7c_258.mp4"
+   ],
+   "w": 720,
+   "h": 900,
+   "size": 1008574
+  }
+ ],
+ "comments": [],
+ "source": "https://xhslink.cn/o/63Kptqehfr2",
+ "fetched": "2026-11-21T00:58:31.533Z",
+ "videoNote": ""
+}
