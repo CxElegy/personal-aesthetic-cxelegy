@@ -4,120 +4,292 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>打字小黑猫</title>
-<!-- 复刻：小红书「有没有能get到的🐱」（艾_）。眼睛跟着鼠标；摸头会眯眼；你打字时它用爪子敲小键盘，按下的字母键帽弹出去。 -->
+<!--
+复刻：小红书「有没有能get到的🐱」（艾_）。第 2 版：代码骨骼 + 轮廓变形 + 状态机（对标 Rive 的做法）。
+- 身体：同点数的轮廓关键形（正坐 / 侧身搭鼠标 / 打字）用弹簧权重连续插值 → 姿势之间是变形，不是切图
+- 前爪：两节 IK 骨骼，够不到时像橡皮管一样拉长；按键时有运动拖影
+- 尾巴：角度弹簧链，越靠尾尖越软，自带滞后
+- 状态机：待机（正坐）/ 用鼠标（侧身，爪子搭在鼠标上跟着动）/ 打字（正面，两爪交替敲）/ 被摸（眯成细线、头歪向手）
+-->
 <style>
-:root{--cat:#141416;--eye:#D7F23A;--pupil:#141416;--line:#3A3B40;--kb:#F4F1EA;--kb-edge:#1B1B1E;--key:#FFFFFF;--accent:#F28C28;
-  --sky1:#E8E4DA;--sky2:#B9BCC6;--ink:#2A2B30}
+:root{--ink:#2A2B30}
 *{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;overflow:hidden;font:14px/1.4 "Noto Sans SC",system-ui,sans-serif;color:var(--ink);
-  background:radial-gradient(80% 60% at 30% 20%,#F3EFE6 0%,transparent 60%),linear-gradient(170deg,var(--sky1),var(--sky2));}
-.stage{position:fixed;inset:0;display:grid;place-items:center}
-svg#cat{width:min(340px,80vw);height:auto;overflow:visible;touch-action:none}
-.hint{position:fixed;left:0;right:0;bottom:20px;text-align:center;font-size:13px;color:#55575E}
-.hint kbd{font:12px/1 ui-monospace,monospace;background:#fff;border-radius:4px;padding:2px 5px;box-shadow:0 1px 0 #ccc}
-.cap{position:fixed;pointer-events:none;width:26px;height:26px;border-radius:6px;background:var(--key);box-shadow:0 2px 0 #C9C3B6,0 4px 10px rgba(0,0,0,.12);
-  display:grid;place-items:center;font:700 13px/1 ui-monospace,monospace;color:var(--ink);will-change:transform,opacity}
-#tail{transform-origin:212px 236px;animation:wag 3.2s ease-in-out infinite}
-@keyframes wag{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}
-.paw{transition:transform .09s cubic-bezier(.3,1.6,.5,1)}
-.paw.down{transform:translateY(10px)}
-#lids path{transition:transform .18s ease;transform:scaleY(0)}
-#smile{opacity:0;transition:opacity .15s}
-.happy #lids path{transform:scaleY(1)}
-.happy #smile{opacity:1}
-.blink #lids path{transform:scaleY(1);transition-duration:.08s}
-#pet{transition:transform .25s cubic-bezier(.3,1.5,.5,1);transform-origin:150px 150px}
-.happy #pet{transform:rotate(-4deg) translateY(2px)}
-@media (prefers-reduced-motion:reduce){#tail{animation:none}.paw,#lids path,#pet{transition:none}}
+html,body{height:100%;margin:0}
+body{overflow:hidden;background:#C9C8C4;font:13px/1.4 "Noto Sans SC",system-ui,sans-serif;color:var(--ink)}
+canvas{position:fixed;inset:0;width:100%;height:100%;touch-action:none;display:block}
+.hint{position:fixed;left:0;right:0;bottom:14px;text-align:center;color:rgba(40,42,48,.72);pointer-events:none;padding:0 16px}
+.hint b{font-weight:600}
+#ime{position:fixed;left:-200px;top:0;opacity:0;width:10px}
 </style>
 </head>
-<body class="">
-<div class="stage">
-<svg id="cat" viewBox="0 0 300 330" aria-label="会跟着你打字的小黑猫">
-  <!-- 尾巴 -->
-  <path id="tail" d="M212 236 C252 236 262 200 248 186 C240 178 232 184 238 192 C246 204 238 222 212 222" fill="var(--cat)"/>
-  <!-- 身体 -->
-  <path d="M86 250 C76 200 92 160 150 156 C208 160 224 200 214 250 Z" fill="var(--cat)"/>
-  <path d="M120 200 C118 222 120 240 124 250 M180 200 C182 222 180 240 176 250" stroke="var(--line)" stroke-width="2" fill="none" stroke-linecap="round"/>
-  <!-- 头 -->
-  <g id="pet">
-    <path id="head" d="M84 150 C80 110 94 82 104 66 L116 92 C136 86 164 86 184 92 L196 66 C206 82 220 110 216 150 C212 182 184 196 150 196 C116 196 88 182 84 150 Z" fill="var(--cat)"/>
-    <path d="M104 74 L112 90 M196 74 L188 90" stroke="var(--line)" stroke-width="2" stroke-linecap="round"/>
-    <!-- 眼睛 -->
-    <g id="eyes">
-      <circle cx="122" cy="134" r="20" fill="var(--eye)"/><circle cx="178" cy="134" r="20" fill="var(--eye)"/>
-      <circle class="pupil" cx="122" cy="134" r="9" fill="var(--pupil)"/><circle class="pupil" cx="178" cy="134" r="9" fill="var(--pupil)"/>
-      <circle class="glint" cx="126" cy="129" r="3" fill="#fff"/><circle class="glint" cx="182" cy="129" r="3" fill="#fff"/>
-    </g>
-    <!-- 眯眼（摸头、眨眼时盖下来） -->
-    <g id="lids" fill="var(--cat)">
-      <path d="M100 112 H144 V157 H100 Z" style="transform-origin:122px 112px"/>
-      <path d="M156 112 H200 V157 H156 Z" style="transform-origin:178px 112px"/>
-    </g>
-    <!-- 被摸时的笑眼 ^ ^ -->
-    <g id="smile" fill="none" stroke="var(--eye)" stroke-width="6" stroke-linecap="round">
-      <path d="M106 140 Q122 120 138 140"/><path d="M162 140 Q178 120 194 140"/>
-    </g>
-    <path d="M146 158 L154 158 L150 163 Z" fill="#5A5B60"/>
-    <!-- 胡须 -->
-    <g stroke="#E9E7E1" stroke-width="1.6" stroke-linecap="round" opacity=".9">
-      <path d="M96 160 L66 154 M96 166 L64 168 M204 160 L234 154 M204 166 L236 168"/>
-    </g>
-  </g>
-  <!-- 键盘 -->
-  <g id="kb">
-    <rect x="54" y="254" width="192" height="56" rx="10" fill="var(--kb-edge)"/>
-    <rect x="58" y="258" width="184" height="44" rx="8" fill="var(--kb)"/>
-    <g id="keys"></g>
-    <rect x="226" y="266" width="9" height="9" rx="2" fill="var(--accent)"/>
-  </g>
-  <circle cx="34" cy="276" r="10" fill="#FFFFFF" stroke="#D6D2C8" stroke-width="1.5"/>
-  <!-- 爪子（在键盘前面） -->
-  <g class="paw" id="pawL"><ellipse cx="122" cy="262" rx="15" ry="10" fill="var(--cat)"/><path d="M116 266 v4 M122 267 v4 M128 266 v4" stroke="var(--line)" stroke-width="1.5" stroke-linecap="round"/></g>
-  <g class="paw" id="pawR"><ellipse cx="178" cy="262" rx="15" ry="10" fill="var(--cat)"/><path d="M172 266 v4 M178 267 v4 M184 266 v4" stroke="var(--line)" stroke-width="1.5" stroke-linecap="round"/></g>
-</svg>
-</div>
-<div class="hint">移动鼠标，它会看着你 · 把鼠标放在它头上摸一摸 · 直接<kbd>打字</kbd>（手机上点小键盘），它会跟着敲</div>
+<body>
+<canvas id="c" aria-label="会跟着你打字的小黑猫"></canvas>
+<input id="ime" autocomplete="off" autocapitalize="off" aria-hidden="true">
+<div class="hint">移动鼠标，它会搭着鼠标看你 · 把手放在它头上摸一摸 · 直接<b>打字</b>（手机上点键盘）</div>
 <script>
-const svg=document.getElementById('cat'),body=document.body;
-// 键盘：3 行小键帽，第一个键帽是橙色点缀
-const ROWS=['QWERTYUIOP','ASDFGHJKL','ZXCVBNM'],keys=document.getElementById('keys'),keyPos={};
-ROWS.forEach((row,ri)=>[...row].forEach((ch,ci)=>{const w=15,g=2.2,x0=66+ri*7,x=x0+ci*(w+g),y=264+ri*12;keyPos[ch]={x:x+w/2,y,ri};
-  const r=document.createElementNS('http://www.w3.org/2000/svg','rect');Object.assign(r,{});r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',w);r.setAttribute('height',9);r.setAttribute('rx',2);
-  r.setAttribute('fill',ri===0&&ci===0?'var(--accent)':'var(--key)');r.dataset.k=ch;keys.appendChild(r)}));
-// 眼睛跟随：瞳孔朝鼠标方向偏移，限制在眼眶里，带缓动
-const pupils=[...document.querySelectorAll('.pupil')],glints=[...document.querySelectorAll('.glint')],C=[[122,134],[178,134]];
-let target={x:0,y:0},cur={x:0,y:0};
-function toSvg(cx,cy){const p=svg.createSVGPoint();p.x=cx;p.y=cy;return p.matrixTransform(svg.getScreenCTM().inverse())}
-addEventListener('pointermove',e=>{const p=toSvg(e.clientX,e.clientY);target={x:p.x-150,y:p.y-134}});
-function tick(){cur.x+=(target.x-cur.x)*.15;cur.y+=(target.y-cur.y)*.15;
-  const d=Math.hypot(cur.x,cur.y)||1,m=Math.min(8,d/12),dx=cur.x/d*m,dy=cur.y/d*m;
-  pupils.forEach((p,i)=>{p.setAttribute('cx',C[i][0]+dx);p.setAttribute('cy',C[i][1]+dy)});
-  glints.forEach((g,i)=>{g.setAttribute('cx',C[i][0]+4+dx*.8);g.setAttribute('cy',C[i][1]-5+dy*.8)});
-  requestAnimationFrame(tick)}
-tick();
-// 摸头：鼠标停在头上 → 眯眼、歪头
-const head=document.getElementById('pet');
-head.addEventListener('pointerenter',()=>body.classList.add('happy'));head.addEventListener('pointerleave',()=>body.classList.remove('happy'));
-head.style.cursor='grab';
-// 随机眨眼
-(function blink(){setTimeout(()=>{if(!body.classList.contains('happy')){body.classList.add('blink');setTimeout(()=>body.classList.remove('blink'),120)}blink()},2500+Math.random()*3500)})();
-// 打字：按键所在的半边由对应的爪子去敲，键帽弹起并飞出
-const pawL=document.getElementById('pawL'),pawR=document.getElementById('pawR');
-// 手机没有键盘：直接点小键盘上的键
-keys.addEventListener('pointerdown',e=>{const k=e.target.dataset&&e.target.dataset.k;if(k)type(k)});
-addEventListener('keydown',e=>{if(e.metaKey||e.ctrlKey||e.altKey)return;type((e.key.length===1?e.key:'').toUpperCase())});
-function type(ch){
-  const kp=keyPos[ch];const paw=kp?(kp.x<150?pawL:pawR):(Math.random()<.5?pawL:pawR);
-  paw.classList.add('down');setTimeout(()=>paw.classList.remove('down'),110);
-  if(!kp)return;const rect=keys.querySelector(`[data-k="${ch}"]`);rect.setAttribute('fill','#E7E2D6');setTimeout(()=>rect.setAttribute('fill',ch==='Q'?'var(--accent)':'var(--key)'),140);
-  const m=svg.getScreenCTM(),sx=m.a*kp.x+m.e,sy=m.d*kp.y+m.f;const cap=document.createElement('div');cap.className='cap';cap.textContent=ch;document.body.appendChild(cap);
-  const vx=(Math.random()-.5)*160,vy=-(140+Math.random()*80),rot=(Math.random()-.5)*120;
-  cap.animate([{transform:`translate(${sx-13}px,${sy-13}px) scale(.6) rotate(0)`,opacity:1},
-    {transform:`translate(${sx-13+vx*.6}px,${sy-13+vy}px) scale(1) rotate(${rot*.6}deg)`,opacity:1,offset:.55},
-    {transform:`translate(${sx-13+vx}px,${sy-13+vy*.4}px) scale(.9) rotate(${rot}deg)`,opacity:0}],{duration:900,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>cap.remove();
+'use strict';
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let W=0,H=0,DPR=1,SC=1,OX=0,OY=0,bg=null;const back=document.createElement('canvas'),front=document.createElement('canvas');const bx=back.getContext('2d'),fx_=front.getContext('2d');
+
+// ---------- 小工具 ----------
+const lerp=(a,b,t)=>a+(b-a)*t, clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mixP=(A,B,t)=>A.map((p,i)=>[lerp(p[0],B[i][0],t),lerp(p[1],B[i][1],t)]);
+const P=(x,y)=>({x,y}), dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+// 弹簧：k 刚度，z 阻尼比（<1 会有一点回弹）
+class Spring{constructor(v,k=120,z=.75){this.x=v;this.v=0;this.t=v;this.k=k;this.z=z}
+  step(dt){const c=2*Math.sqrt(this.k)*this.z;const a=this.k*(this.t-this.x)-c*this.v;this.v+=a*dt;this.x+=this.v*dt;return this.x}}
+class Spring2{constructor(x,y,k,z){this.a=new Spring(x,k,z);this.b=new Spring(y,k,z)}
+  set(x,y){this.a.t=x;this.b.t=y} step(dt){this.a.step(dt);this.b.step(dt)} get x(){return this.a.x} get y(){return this.b.x}
+  get speed(){return Math.hypot(this.a.v,this.b.v)}}
+
+// ---------- 场景坐标：键盘上沿中点 = (0,0)，向上为负 ----------
+// 身体轮廓关键形（12 个控制点，顺时针，从脖子左侧开始）
+const BODY={
+  front:[[-96,-292],[-130,-215],[-144,-132],[-152,-58],[-140,-12],[-100,0],[18,0],[54,-12],[64,-60],[54,-136],[32,-215],[6,-292]],
+  lean: [[-205,-292],[-230,-226],[-206,-150],[-162,-80],[-120,-16],[-76,0],[24,0],[58,-16],[66,-70],[48,-136],[-12,-216],[-82,-296]],
+  type: [[-100,-292],[-136,-218],[-148,-134],[-154,-60],[-142,-12],[-100,0],[20,0],[56,-12],[66,-60],[58,-138],[36,-218],[2,-292]]};
+const HEAD={front:{x:-44,y:-322,r:0},lean:{x:-152,y:-324,r:-.16},type:{x:-46,y:-316,r:0}};
+const SHOULDER={front:[[-98,-178],[-14,-178]],lean:[[-196,-212],[-92,-142]],type:[[-104,-182],[18,-182]]};
+const TAILBASE={front:[52,-66],lean:[44,-104],type:[54,-70]};
+const TAILREST=[-.15,-.42,-.75,-1.0,-1.08,-.9,-.5,-.08,.28,.5];
+
+// ---------- 键盘布局（60%）----------
+const KB={x:-200,y:0,w:400,h:104,pad:11};
+const ROWS=[
+ [['`',1],['1',1],['2',1],['3',1],['4',1],['5',1],['6',1],['7',1],['8',1],['9',1],['0',1],['-',1],['=',1],['Backspace',2]],
+ [['Tab',1.5,'o'],['Q',1],['W',1],['E',1],['R',1],['T',1],['Y',1],['U',1],['I',1],['O',1],['P',1],['[',1],[']',1],['\\',1.5]],
+ [['CapsLock',1.75],['A',1],['S',1],['D',1],['F',1],['G',1],['H',1],['J',1],['K',1],['L',1],[';',1],["'",1],['Enter',2.25]],
+ [['Shift',2.25],['Z',1],['X',1],['C',1],['V',1],['B',1],['N',1],['M',1],[',',1],['.',1],['/',1],['ShiftR',1.75],['ArrowUp',1]],
+ [['Control',1.25],['Alt',1.25],['Meta',1.25],[' ',6.25],['MetaR',1],['Fn',1],['ArrowLeft',1],['ArrowDown',1],['ArrowRight',1,'o']]];
+const KEYS={};const keyList=[];
+(function(){const iw=KB.w-KB.pad*2,ih=KB.h-KB.pad*2-6,u=iw/15,rh=ih/5;
+  ROWS.forEach((row,ri)=>{let x=KB.x+KB.pad;row.forEach(([id,wu,o])=>{const k={id,x:x+1.2,y:KB.y+KB.pad+ri*rh+1.2,w:wu*u-2.4,h:rh-2.4,orange:!!o,glow:0,ri};
+    k.cx=k.x+k.w/2;k.cy=k.y+k.h/2;KEYS[id]=k;keyList.push(k);x+=wu*u})})})();
+const LABEL={' ':'␣',Enter:'↵',Backspace:'⌫',Shift:'⇧',ShiftR:'⇧',Tab:'⇥'};
+const MOUSE={x:-248,y:22,r:27};
+
+// ---------- 状态 ----------
+const S={
+  wLean:new Spring(0,70,.62), wType:new Spring(0,90,.68), squint:new Spring(0,160,.8), tilt:new Spring(0,60,.55),
+  paw:[new Spring2(-96,-6,260,.62),new Spring2(-14,-6,260,.62)],
+  mouseDev:new Spring2(MOUSE.x,MOUSE.y,120,.8),
+  look:new Spring2(0,-200,90,.8),
+  blink:0, nextBlink:2.5, t:0,
+  lastMouse:-99,lastType:-99, cursor:{x:-999,y:-999,in:false}, prevCursor:null,
+  press:[null,null], lastArm:1, ghosts:[[],[]],
+  caps:[], tail:TAILREST.map(a=>({a,v:0})),
+};
+
+// ---------- 布局 ----------
+function resize(){DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;
+  SC=Math.min(W/600,H/700)*1.0;OX=W/2+20*SC;OY=H*.6+110*SC*0;OY=H/2+130*SC;bg=makeWallpaper();for(const c of [back,front]){c.width=cv.width;c.height=cv.height}}
+addEventListener('resize',resize);
+const toScene=(cx,cy)=>({x:(cx-OX)/SC,y:(cy-OY)/SC});
+
+// 桌面壁纸：雾气 + 远处的树（原作是 macOS 雾林壁纸上的桌宠）
+function makeWallpaper(){const o=document.createElement('canvas');o.width=W*DPR;o.height=H*DPR;const g=o.getContext('2d');g.scale(DPR,DPR);
+  let gr=g.createLinearGradient(0,0,W*.3,H);gr.addColorStop(0,'#D9D4C6');gr.addColorStop(.45,'#CFCBC2');gr.addColorStop(1,'#A9AAB2');g.fillStyle=gr;g.fillRect(0,0,W,H);
+  let rnd=1;const R=()=>(rnd=(rnd*16807)%2147483647)/2147483647;
+  g.filter='blur(7px)';
+  for(let i=0;i<26;i++){const x=R()*W*.38-20,h=80+R()*200,y=H*(.05+R()*.75),w=18+R()*26;g.fillStyle=`rgba(${60+R()*30},${70+R()*30},${66+R()*20},${.10+R()*.18})`;
+    g.beginPath();g.moveTo(x,y-h);g.lineTo(x+w,y+h*.2);g.lineTo(x-w,y+h*.2);g.fill()}
+  g.filter='blur(40px)';
+  for(let i=0;i<14;i++){g.fillStyle=`rgba(${232+R()*20},${228+R()*20},${215+R()*20},${.25+R()*.3})`;g.beginPath();g.ellipse(R()*W,R()*H,120+R()*220,60+R()*120,R()*3,0,7);g.fill()}
+  g.filter='blur(30px)';for(let i=0;i<6;i++){g.fillStyle=`rgba(${120+R()*40},${130+R()*40},${170+R()*40},.16)`;g.beginPath();g.ellipse(W*(.5+R()*.5),H*(.6+R()*.4),160,90,0,0,7);g.fill()}
+  g.filter='none';
+  // 胶片颗粒
+  const id=g.getImageData(0,0,o.width,o.height),d=id.data;for(let i=0;i<d.length;i+=4){const n=(Math.random()-.5)*9;d[i]+=n;d[i+1]+=n;d[i+2]+=n}g.putImageData(id,0,0);
+  return o}
+
+// ---------- 输入 ----------
+function overHead(p){const h=curHead;return h&&Math.hypot(p.x-h.x,(p.y-h.y)*1.15)<88}
+function setCursor(p){const pet=overHead(p);cv.style.cursor=pet?HAND:'default'}
+const HAND=`url("data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M11 17V7.5a1.6 1.6 0 0 1 3.2 0V15V5.5a1.6 1.6 0 0 1 3.2 0V15V6.5a1.6 1.6 0 0 1 3.2 0V15.5V9a1.6 1.6 0 0 1 3.2 0v9c0 5-3 9-8 9c-3.6 0-5.4-1.6-7.2-4.4L5 17.8c-.8-1.3.9-2.8 2.1-1.8L11 19.5z" fill="white" stroke="black" stroke-width="1.5" stroke-linejoin="round"/></svg>')}") 14 14, pointer`;
+cv.addEventListener('pointermove',e=>{const p=toScene(e.clientX,e.clientY);
+  if(S.prevCursor&&dist(p,S.prevCursor)>.5)S.lastMouse=S.t;S.prevCursor=p;S.cursor={...p,in:true};setCursor(p)});
+cv.addEventListener('pointerleave',()=>{S.cursor.in=false});
+cv.addEventListener('pointerdown',e=>{const p=toScene(e.clientX,e.clientY);S.cursor={...p,in:true};
+  const k=keyList.find(k=>p.x>k.x&&p.x<k.x+k.w&&p.y>k.y&&p.y<k.y+k.h);if(k){hit(k.id);e.preventDefault()}
+  else if(e.pointerType!=='mouse'&&!overHead(p))document.getElementById('ime').focus()});
+addEventListener('keydown',e=>{if(e.metaKey||e.ctrlKey)return;let id=e.key.length===1?e.key.toUpperCase():e.key;
+  if(id==='Shift'&&e.location===2)id='ShiftR';if(!KEYS[id]&&e.code==='Space')id=' ';if(KEYS[id]){hit(id);if(id===' '||id==='Tab')e.preventDefault()}});
+
+function hit(id){const k=KEYS[id];S.lastType=S.t;k.glow=1;
+  // 左半边用左爪，右半边用右爪；同一只爪还没抬起时换另一只
+  let arm=k.cx<-30?0:1;if(S.press[arm]&&S.t-S.press[arm].t<.08)arm=1-arm;
+  S.press[arm]={k,t:S.t};S.lastArm=arm;
+  const ch=LABEL[id]||(id.length===1?id:null);if(ch)addCap(ch,k)}
+
+// 键帽：从被按的键位置弹起，排成一行悬在胸前；新的从右边进，旧的往左挤
+const SLOT=34,MAXCAP=6;
+function addCap(ch,k){for(const c of S.caps)c.slot--;S.caps.push({ch,slot:0,p:new Spring2(k.cx,k.cy-6,140,.62),a:new Spring(.85,200,.9),trail:[],rot:new Spring((Math.random()-.5)*.8,120,.5)});
+  S.caps.forEach(c=>{if(c.slot<=-MAXCAP)c.a.t=0;});}
+
+// ---------- 动画 ----------
+let last=performance.now(),curHead=null;
+function frame(now){let dt=Math.min(.033,(now-last)/1000);last=now;S.t=now/1000;update(dt);draw();requestAnimationFrame(frame)}
+
+function update(dt){const t=S.t;
+  const typing=t-S.lastType<1.3, mousing=!typing&&t-S.lastMouse<2.2;
+  S.wType.t=typing?1:0;S.wLean.t=mousing?1:0;S.wType.step(dt);S.wLean.step(dt);
+  const pet=S.cursor.in&&overHead(S.cursor)&&!typing;
+  S.squint.t=pet?1:0;S.squint.step(dt);S.tilt.t=pet?clamp((S.cursor.x-(curHead?curHead.x:0))/90,-1,1)*.16+(-.04):0;S.tilt.step(dt);
+  // 眨眼
+  if(t>S.nextBlink){S.blink=1;S.nextBlink=t+2.2+Math.random()*3.5}S.blink=Math.max(0,S.blink-dt*7);
+  // 鼠标设备：用鼠标时跟着光标小幅滑动
+  if(mousing&&S.cursor.in){S.mouseDev.set(MOUSE.x+clamp((S.cursor.x+40)*.05,-14,14),MOUSE.y+clamp((S.cursor.y+200)*.03,-6,8))}else S.mouseDev.set(MOUSE.x,MOUSE.y);S.mouseDev.step(dt);
+  // 视线
+  if(typing){const a=S.press[S.lastArm];const tk=a?a.k:KEYS.G;S.look.set(tk.cx,tk.cy)}else if(S.cursor.in)S.look.set(S.cursor.x,S.cursor.y);else S.look.set(-40,-200);S.look.step(dt);
+  // 爪子目标
+  const L=S.wLean.x,T=S.wType.x;
+  const rest=[[lerp(lerp(-96,MOUSE.x+4,0),0,0),-6],[-14,-6]];
+  const lean=[[S.mouseDev.x+4,S.mouseDev.y-10],[-42,-6]];
+  const bob=Math.sin(t*14)*3;
+  const hover=[[-92,16+bob],[26,16-bob]];
+  for(let i=0;i<2;i++){let x=lerp(rest[i][0],lean[i][0],L),y=lerp(rest[i][1],lean[i][1],L);x=lerp(x,hover[i][0],T);y=lerp(y,hover[i][1],T);
+    const pr=S.press[i],po=S.press[1-i];if(T>.5&&po&&t-po.t<.32&&(!pr||pr.t<po.t)){x=lerp(x,i?40:-110,.5);y=-78}
+    if(pr&&t-pr.t<.14){x=pr.k.cx;y=pr.k.cy-2}
+    const sp=S.paw[i];sp.set(x,y);sp.a.k=sp.b.k=pr&&t-pr.t<.3?900:260;sp.step(dt);
+    const g=S.ghosts[i];g.unshift([sp.x,sp.y,sp.speed]);if(g.length>4)g.pop()}
+  // 键盘高亮衰减
+  for(const k of keyList)k.glow=Math.max(0,k.glow-dt*1.6);
+  // 键帽
+  const typingNow=typing;
+  S.caps.forEach((c,i)=>{const n=S.caps.length;let tx,ty;
+    if(typingNow||i<n-1){tx=-28+c.slot*SLOT+ (MAXCAP-1)*0 + 70;ty=-136+Math.abs(c.slot)*1.5;}
+    else{tx=118;ty=-54+Math.sin(t*2.2)*3}  // 停下来后，最后一颗飘到尾巴旁边
+    if(!typingNow&&i<n-1)c.a.t=0;else if(c.slot>-MAXCAP)c.a.t=1;
+    c.p.set(tx,ty);c.p.step(dt);c.a.step(dt);c.rot.t=0;c.rot.step(dt);
+    c.trail.unshift([c.p.x,c.p.y]);if(c.trail.length>5)c.trail.pop()});
+  S.caps=S.caps.filter(c=>!(c.a.t===0&&c.a.x<.02));
+  // 尾巴：角度弹簧链 + 摆动
+  const sway=reduce?0:1;
+  S.tail.forEach((s,i)=>{const f=i/S.tail.length;const target=TAILREST[i]+sway*(.2*Math.sin(t*1.7-i*.5)*f+.06*Math.sin(t*.7))-L*.12*f+T*.08*Math.sin(t*6-i)*f;
+    const k=lerp(160,26,f),c=2*Math.sqrt(k)*.45;s.v+=(k*(target-s.a)-c*s.v)*dt;s.a+=s.v*dt});
 }
+
+// ---------- 绘制 ----------
+function smoothClosed(g,pts){const n=pts.length;const m=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2];let s=m(pts[n-1],pts[0]);g.moveTo(s[0],s[1]);
+  for(let i=0;i<n;i++){const p=pts[i],q=m(p,pts[(i+1)%n]);g.quadraticCurveTo(p[0],p[1],q[0],q[1])}g.closePath()}
+function blend3(o,L,T){const a=x=>x;return {lean:L,type:T}}
+function mixPose(key,L,T){const A=key.front,B=key.lean,C=key.type;
+  if(Array.isArray(A))return mixP(mixP(A,B,L),C,T);return {x:lerp(lerp(A.x,B.x,L),C.x,T),y:lerp(lerp(A.y,B.y,L),C.y,T),r:lerp(lerp(A.r,B.r,L),C.r,T)}}
+
+// 两节 IK：肩 → 肘 → 爪，够不到就拉长
+function ik(s,p,l1,l2,bend){const dx=p[0]-s[0],dy=p[1]-s[1];const d=Math.hypot(dx,dy);const ang=Math.atan2(dy,dx);
+  if(d>=l1+l2-1){return [s,[s[0]+dx*l1/(l1+l2),s[1]+dy*l1/(l1+l2)],p]}
+  const a=Math.acos(clamp((l1*l1+d*d-l2*l2)/(2*l1*d),-1,1));const e=[s[0]+Math.cos(ang+bend*a)*l1,s[1]+Math.sin(ang+bend*a)*l1];return [s,e,p]}
+
+function strokeLimb(g,ch,w){g.beginPath();g.moveTo(ch[0][0],ch[0][1]);g.quadraticCurveTo(ch[1][0],ch[1][1],ch[2][0],ch[2][1]);g.lineWidth=w;g.lineCap='round';g.lineJoin='round';g.stroke()}
+// 沿着骨骼求点和法线（二次曲线）
+function qpt(ch,t){const [a,b,c]=ch;const u=1-t;return [u*u*a[0]+2*u*t*b[0]+t*t*c[0],u*u*a[1]+2*u*t*b[1]+t*t*c[1]]}
+function qtan(ch,t){const [a,b,c]=ch;return [2*(1-t)*(b[0]-a[0])+2*t*(c[0]-b[0]),2*(1-t)*(b[1]-a[1])+2*t*(c[1]-b[1])]}
+function limbEdges(g,ch,w,from){for(const side of [-1,1]){g.beginPath();for(let i=0;i<=12;i++){const t=lerp(from,.93,i/12);const p=qpt(ch,t),d=qtan(ch,t);const l=Math.hypot(d[0],d[1])||1;
+  const x=p[0]-d[1]/l*side*(w/2-1.4),y=p[1]+d[0]/l*side*(w/2-1.4);i?g.lineTo(x,y):g.moveTo(x,y)}g.stroke()}}
+
+const INK='#0E0E10',EDGE='rgba(232,238,226,.9)',LIME='#C9F23C';
+function draw(){const g=ctx;g.setTransform(1,0,0,1,0,0);g.drawImage(bg,0,0);
+  g.setTransform(DPR*SC,0,0,DPR*SC,DPR*OX,DPR*OY);
+  const L=S.wLean.x,T=S.wType.x,t=S.t;const Lc=clamp(L,-.1,1.1),Tc=clamp(T,-.1,1.1);
+  const breathe=reduce?0:Math.sin(t*2.1);
+  // 身体
+  let body=mixPose(BODY,Lc,Tc).map(([x,y])=>[x,y*(1+.012*breathe)]);
+  const head=mixPose(HEAD,Lc,Tc);head.y+=breathe*1.6+S.squint.x*6;head.r+=S.tilt.x;curHead=head;
+  const sh=mixPose(SHOULDER,Lc,Tc);const tb=mixPose({front:[TAILBASE.front],lean:[TAILBASE.lean],type:[TAILBASE.type]},Lc,Tc)[0];
+
+  // 地面阴影
+  g.fillStyle='rgba(30,32,40,.16)';g.filter='blur(6px)';g.beginPath();g.ellipse(-10,KB.h+14,230,12,0,0,7);g.fill();g.filter='none';
+
+  // 猫身体在键盘后面（贴纸感的浅色描边用 drop-shadow 做）
+  const M=[DPR*SC,0,0,DPR*SC,DPR*OX,DPR*OY];
+  // 整只猫的剪影先画进一层，再统一加浅色描边，这样尾巴、身体、头之间没有接缝
+  const B=bx;B.setTransform(1,0,0,1,0,0);B.clearRect(0,0,back.width,back.height);B.setTransform(...M);B.fillStyle=INK;B.strokeStyle=INK;
+  { const g=B;
+  // 尾巴
+  let x=tb[0],y=tb[1]*(1+.012*breathe);const segL=15.5;g.lineCap='round';
+  const tpts=[[x,y]];for(const s of S.tail){x+=Math.cos(s.a)*segL;y+=Math.sin(s.a)*segL;tpts.push([x,y])}
+  for(let i=0;i<tpts.length-1;i++){g.lineWidth=lerp(21,15,i/tpts.length);g.beginPath();g.moveTo(...tpts[i]);g.lineTo(...tpts[i+1]);g.stroke()}
+  g.beginPath();g.arc(...tpts[tpts.length-1],9,0,7);g.fill();
+  g.beginPath();smoothClosed(g,body);g.fill();
+  drawHead(g,head,'shape');}
+  g.save();g.setTransform(1,0,0,1,0,0);g.filter=`drop-shadow(0 0 ${1.3*DPR}px rgba(255,255,255,.8))`;g.drawImage(back,0,0);g.restore();
+  drawHead(g,head,'face');
+
+  // 键盘、鼠标
+  drawKeyboard(g);drawMouse(g);
+
+  // 前爪（在键盘上面）
+  const pawPts=S.paw.map(p=>[p.x,p.y]);
+  const F=fx_;F.setTransform(1,0,0,1,0,0);F.clearRect(0,0,front.width,front.height);F.setTransform(...M);
+  {const g=F;
+  for(let i=0;i<2;i++){const s=[sh[i][0],sh[i][1]*(1+.012*breathe)];const ch=ik(s,pawPts[i],88,84,i?-1:1);
+    // 运动拖影
+    const gh=S.ghosts[i];if(!reduce&&gh[0]&&gh[0][2]>380){for(let j=1;j<gh.length;j++){g.globalAlpha=.16/j;g.strokeStyle=INK;strokeLimb(g,ik(s,gh[j],88,84,i?-1:1),25)}g.globalAlpha=1}
+    g.strokeStyle=INK;strokeLimb(g,ch,26);g.fillStyle=INK;g.beginPath();g.ellipse(ch[2][0],ch[2][1]+1,15,12,0,0,7);g.fill();
+    S.ghosts[i].ch=ch}}
+  g.save();g.setTransform(1,0,0,1,0,0);g.filter=`drop-shadow(0 ${2.5*DPR}px ${2.5*DPR}px rgba(0,0,0,.3))`;g.drawImage(front,0,0);g.restore();
+  // 腿的浅色分界线（原作里腿和身体之间的细浅线）
+  g.strokeStyle=EDGE;g.lineWidth=1.5;g.lineCap='round';
+  for(let i=0;i<2;i++){const ch=S.ghosts[i].ch;limbEdges(g,ch,26,lerp(.42,.6,Tc))}
+  // 后腿的分界线
+  g.beginPath();g.moveTo(lerp(-118,-120,Lc),-12);g.quadraticCurveTo(lerp(-124,-96,Lc),-70,lerp(-112,-60,Lc),-112);g.moveTo(lerp(34,30,Lc),-10);g.quadraticCurveTo(lerp(44,44,Lc),-60,lerp(30,10,Lc),-104);
+  g.globalAlpha=.55*(1-Tc*.6);g.stroke();g.globalAlpha=1;
+
+  drawCaps(g);
+}
+
+function drawHead(g,h,part){g.save();g.translate(h.x,h.y);g.rotate(h.r);
+  const sq=S.squint.x;const lk=S.look;const lx=clamp((lk.x-h.x)/220,-1,1),ly=clamp((lk.y-h.y)/220,-1,1);
+  // 脸跟着视线有一点转（伪 3D）
+  const fx=lx*6,fy=ly*4;
+  // 头：宽脸 + 两只耳朵
+  g.beginPath();g.moveTo(-84,8);
+  g.bezierCurveTo(-92,-34,-78,-60,-62,-66);g.lineTo(-74+fx*.3,-112-sq*-8);g.quadraticCurveTo(-68,-118,-60,-112);g.lineTo(-20,-74);
+  g.quadraticCurveTo(0+fx,-80,20,-74);g.lineTo(54,-110);g.quadraticCurveTo(62,-116,66+fx*.3,-108-sq*-8);g.lineTo(62,-62);
+  g.bezierCurveTo(80,-52,90,-30,86,6);g.bezierCurveTo(84,40,50,60,0,60);g.bezierCurveTo(-50,60,-82,40,-84,8);
+  if(part==='shape'){g.fill();g.restore();return}
+  // 胡须
+  g.strokeStyle='rgba(225,230,222,.85)';g.lineWidth=1.3;g.lineCap='round';
+  for(const s of [-1,1])for(let i=0;i<3;i++){const y=18+i*7;g.beginPath();g.moveTo(s*56+fx,y+fy);g.quadraticCurveTo(s*70+fx,y-4+i*2,s*(82+i*3)+fx,y-2+i*4);g.stroke()}
+  // 眼睛
+  const open=Math.max(0,1-sq)*(1-Math.min(1,S.blink*1.6));
+  for(const s of [-1,1]){const ex=s*38+fx,ey=-6+fy;
+    if(open>.08){g.fillStyle=LIME;g.beginPath();g.ellipse(ex,ey,22,25*open,0,0,7);g.fill();
+      g.save();g.beginPath();g.ellipse(ex,ey,22,25*open,0,0,7);g.clip();
+      // 瞳孔贴着眼眶边缘转
+      const px=ex+lx*11,py=ey+ly*12;g.fillStyle='#16170F';g.beginPath();g.ellipse(px,py,9,14,0,0,7);g.fill();
+      g.fillStyle='rgba(255,255,255,.85)';g.beginPath();g.arc(px-3,py-6,2.2,0,7);g.fill();g.restore();
+      g.strokeStyle='rgba(20,22,10,.55)';g.lineWidth=1.4;g.beginPath();g.ellipse(ex,ey,22,25*open,0,0,7);g.stroke()}
+    if(sq>.15||S.blink>.4){// 眯成一条细线
+      g.strokeStyle=LIME;g.lineWidth=4;g.lineCap='round';g.globalAlpha=Math.max(sq,S.blink>.4?1:0);
+      g.beginPath();g.moveTo(ex-20,ey+2-s*2);g.quadraticCurveTo(ex,ey+5,ex+20,ey+2+s*2);g.stroke();g.globalAlpha=1}}
+  g.restore()}
+
+function rr(g,x,y,w,h,r){g.beginPath();g.roundRect(x,y,w,h,r)}
+function drawKeyboard(g){const {x,y,w,h}=KB;
+  // 黑色外框，下沿厚一点看起来有俯视角
+  g.fillStyle='#121214';rr(g,x-2,y-2,w+4,h+10,16);g.fill();
+  g.fillStyle='#1C1C1F';rr(g,x,y,w,h,14);g.fill();
+  for(const k of keyList){const glow=k.glow;let top=k.orange?'#F29A1F':'#F5F2EB';
+    // 右侧带一点粉色反光（原作键帽右边偏粉）
+    if(!k.orange){const pink=clamp((k.cx-60)/140,0,1)*.35;top=mixHex('#F5F2EB','#F2D6DC',pink)}
+    g.fillStyle=k.orange?'#C5740E':'#C9C4BA';rr(g,k.x,k.y+1.6,k.w,k.h,3);g.fill();
+    g.fillStyle=glow>0?mixHex(top,'#B6F236',Math.min(1,glow*1.4)):top;rr(g,k.x,k.y-(glow>.7?-1:0),k.w,k.h-1.2,3);g.fill();
+    if(glow>0){g.save();g.globalAlpha=glow*.7;g.filter='blur(5px)';g.fillStyle='#C6FF3A';rr(g,k.x-2,k.y-2,k.w+4,k.h+4,4);g.fill();g.restore()}}
+}
+function drawMouse(g){const m=S.mouseDev;g.fillStyle='rgba(0,0,0,.18)';g.beginPath();g.ellipse(m.x+2,m.y+5,MOUSE.r,MOUSE.r*.92,0,0,7);g.fill();
+  g.fillStyle='#F7F6F2';g.beginPath();g.arc(m.x,m.y,MOUSE.r,0,7);g.fill();g.strokeStyle='#D9D6CF';g.lineWidth=1.5;g.stroke();
+  g.strokeStyle='#8E8B84';g.lineWidth=2;g.beginPath();g.moveTo(m.x+2,m.y-7);g.lineTo(m.x-2,m.y+5);g.stroke()}
+function drawCaps(g){for(const c of S.caps){const a=c.a.x;if(a<.02)continue;
+  for(let j=2;j<c.trail.length;j+=2){const [x,y]=c.trail[j];const sp=Math.hypot(x-c.p.x,y-c.p.y);if(sp>4){g.globalAlpha=a*.22;g.fillStyle='#FFFFFF';rr(g,x-14,y-14,28,25,6);g.fill();g.globalAlpha=1}}
+  cap(g,c.p.x,c.p.y,c.ch,a,c.rot.x)}}
+function cap(g,x,y,ch,a,r){g.save();g.globalAlpha=clamp(a,0,1);g.translate(x,y);g.rotate(r);g.fillStyle='rgba(0,0,0,.25)';rr(g,-14,-11,28,28,6);g.filter='blur(3px)';g.fill();g.filter='none';
+  g.fillStyle='#CFCBC3';rr(g,-14,-13,28,28,6);g.fill();g.fillStyle='#FBFAF7';rr(g,-14,-14,28,25,6);g.fill();
+  g.fillStyle='#3B3C40';g.font='600 13px ui-sans-serif,system-ui,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(ch,0,-1.5);g.restore()}
+function mixHex(a,b,t){const p=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));const A=p(a),B=p(b);return `rgb(${A.map((v,i)=>Math.round(lerp(v,B[i],t))).join(',')})`}
+
+resize();requestAnimationFrame(frame);
 </script>
 </body>
 </html>
