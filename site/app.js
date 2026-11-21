@@ -114,7 +114,7 @@
     document.title = it.title + ' · 审美图鉴';
     const v = it.verify, src = it.source || {}, vu = videoUrl(it.video), c = cat(it.category);
     const orig = vu ? player(vu, it.thumb)
-      : it.thumb ? `<img src="${enc(it.thumb)}" alt="原作截图"><div class="note">${it.video ? '原视频还没上传到数据库，先显示截图。' : '原作没有视频。'}</div>` : '<div class="note">没有原作图片。</div>';
+      : it.thumb ? `<img src="${enc(it.thumb)}" alt="原作截图"><div class="note">${it.video ? (CFG.preview ? '预览版不能播放视频，原视频在正式网站上播放。' : '原视频还没上传到数据库，先显示截图。') : '原作没有视频。'}</div>` : '<div class="note">没有原作图片。</div>';
     const mine = it.demo ? `<iframe src="${enc(it.demo)}" title="复刻：${esc(it.title)}" loading="lazy"></iframe>`
       : `<div class="note">${esc(D.statuses[it.status] || '')}${it.status_note ? '：' + esc(it.status_note) : ''}</div>`;
     let specs = '';
