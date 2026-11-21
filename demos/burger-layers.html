@@ -42,7 +42,7 @@ h1{margin:0;font:500 clamp(44px,6.6vw,96px)/.9 "Playfair Display",Georgia,serif;
 .dots button.on{opacity:.9;width:18px}
 .arrow{position:absolute;top:50%;z-index:4;width:30px;height:30px;border-radius:50%;border:0;background:var(--btnBg,#1B1A17);color:var(--btnText,#fff);cursor:pointer;font-size:13px;display:grid;place-items:center;transition:background .5s,color .5s,opacity .3s}
 .arrow.l{left:2vw}.arrow.r{right:2vw}
-.num{position:absolute;right:5vw;top:13vh;font:500 38px/1 "Playfair Display",serif;text-transform:uppercase;z-index:3;text-align:right}
+.num{position:absolute;right:5vw;top:13vh;transition:opacity .5s;font:500 38px/1 "Playfair Display",serif;text-transform:uppercase;z-index:3;text-align:right}
 .num small{display:block;font:500 9px/1 Inter;letter-spacing:.3em;margin-top:8px;opacity:.7}
 /* 汉堡舞台 */
 #burger{position:absolute;left:62%;top:50%;width:min(31vw,440px);aspect-ratio:1;transform:translate(-50%,-50%);z-index:2}
@@ -94,8 +94,8 @@ const ING=[
  {id:'patty',  w:.98,ry:.41,thick:.24,screen:1,name:'Beef patty',spec:'Flame-grilled · 180 g'},
  {id:'cheese', w:.94,ry:.40,thick:.05,screen:1,name:'Aged cheddar',spec:'Melted 30 s',delay:.45},
  {id:'lettuce',w:1.08,ry:.34,thick:.10,screen:2,name:'Butter lettuce',spec:'Picked this morning'},
- {id:'tomato', w:.98,ry:.46,thick:.10,screen:3,name:'Vine tomato',spec:'3 slices · 6 mm'},
- {id:'onion',  w:.86,ry:.40,thick:.08,screen:3,name:'Red onion',spec:'Raw · thin rings',delay:.5},
+ {id:'tomato', w:.98,ry:.46,thick:.10,screen:2,delay:.75,name:'Vine tomato',spec:'3 slices · 6 mm'},
+ {id:'onion',  w:.86,ry:.40,thick:.08,screen:3,name:'Red onion',spec:'Raw · thin rings',delay:.25},
  {id:'bun-top',w:1.0,ry:.30,thick:0,screen:4,name:'Sesame crown',spec:'Glazed brioche'},
 ];
 const NAT={plate:[472,343],'bun-bottom':[462,314],patty:[447,312],cheese:[488,331],lettuce:[457,379],tomato:[487,289],onion:[417,298],'bun-top':[463,353]};
@@ -128,7 +128,7 @@ function layout(){const out={};let face=null;
   return out}
 const POS=layout();
 
-let lock=0,baseYs=null,cur=0,shown=-1,hover=0,hoverT=0,mx=0,my=0;
+let lock=0,gs=null,baseYs=null,cur=0,shown=-1,hover=0,hoverT=0,mx=0,my=0;
 function setScreen(i,instant){i=Math.max(0,Math.min(N-1,i));if(i===shown)return;const prev=shown;shown=i;const S=SCREENS[i];
   // 背景：下一屏颜色从底部升起
   const fromBg=prev<0?S.bg:SCREENS[prev].bg;
@@ -151,6 +151,7 @@ function swapText(S,instant){
   if(instant||!old.length)put();else setTimeout(put,330);
   for(const [id,txt] of [['#eb',S.eb],['#p',S.p],['#num .line',S.num]]){const el=$(id);el.classList.add('out');
     setTimeout(()=>{el.firstElementChild.textContent=txt;el.classList.remove('out');el.classList.add('pre');requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.remove('pre')))},instant?0:300)}
+  $('#num').style.opacity=shown===0?1:0;  // 原作的大号序号只在第一屏
   $('#num small').textContent=['●','○','○','○','○','○'].map((_,k)=>k===shown?'●':'○').join(' ');
   $('#hint').style.opacity=shown===N-1?'.55':shown===0?'.55':'0';$('#hint').textContent=shown===N-1?(matchMedia('(hover:hover)').matches?'把鼠标放在汉堡上：拉开成爆炸图':'点一下汉堡：拉开成爆炸图'):'往下滚动 · 每一屏叠一层';
 }
@@ -169,34 +170,43 @@ addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;mx=e.client
 const ease=t=>1-Math.pow(1-t,3);
 // 落地：带一点压缩回弹
 function landCurve(t){if(t<.62){const u=t/.62;return {y:1-u*u,sq:0}}const u=(t-.62)/.38;return {y:0,sq:Math.sin(u*Math.PI)*(1-u)*.9}}
-function frame(now){const W=burger.clientWidth;const ht=shown===N-1?Math.max(hoverT,lock):0;hover+=(ht-hover)*.08;
-  const stackShift=shown>=5?ease(Math.min(1,(now-(els.plate.land??now))/900)):0;
-  // 整个汉堡的中心：叠得越高越往下沉，保持在画面中间
-  const topMost=Math.min(...ING.filter(g=>g.id!=='plate'&&els[g.id].land!=null&&now>=els[g.id].land).map(g=>POS[g.id].top),POS['bun-bottom'].top);
-  // 叠得越高，整体越往下移，让汉堡中段保持在画面中间
-  const bot=shown>=5?POS.plate.bottom:0;const want=W*(.62-(topMost+bot)*.5);baseYs=baseYs==null?want:baseYs+(want-baseYs)*.06;const baseY=baseYs;
+function frame(now){const W0=burger.clientWidth;const ht=shown===N-1?Math.max(hoverT,lock):0;hover+=(ht-hover)*.08;
+  const landed=ING.filter(g=>g.id!=='plate'&&els[g.id].land!=null&&now>=els[g.id].land);
+  const topMost=Math.min(...landed.map(g=>POS[g.id].top),POS['bun-bottom'].top);
+  const botMost=shown>=5?POS.plate.bottom:.02;
+  // 构图（原作：越往后汉堡越靠下、相对越小）：底部压在画面 84% 处，顶部不超过导航下方；放不下就整体缩小
+  const boxTop=burger.getBoundingClientRect().top;const anchor=innerHeight*(shown===0?.66:.86);
+  const avail=anchor-96-(hover*W0*.5);const need=(botMost-topMost)*W0;const gsW=Math.min(1,avail/need);
+  gs=gs==null?gsW:gs+(gsW-gs)*.07;const W=W0*gs;
+  const want=anchor-boxTop-botMost*W;baseYs=baseYs==null?want:baseYs+(want-baseYs)*.07;const baseY=baseYs;
   const order=['plate','bun-bottom','patty','cheese','lettuce','tomato','onion','bun-top'];
-  lines.innerHTML='';const NOTES=[];
-  order.forEach((id,z)=>{const e=els[id],g=e.g,P=POS[id];const w=g.w*W*(id==='plate'?1:1-stackShift*.08),h=P.h*W*(id==='plate'?1:1-stackShift*.08);
-    let ty,rot=0,sx=1,sy=1,op=1,shOp=1;
-    // 爆炸图：最后一屏悬停时各层按顺序拉开
+  const NOTES=[];
+  // 平时只标注最新落下的那一层（原作的标注很克制）；爆炸图时全部标出
+  const newest=[...landed].sort((a,b)=>els[b.id].land-els[a.id].land)[0];
+  order.forEach((id,z)=>{const e=els[id],g=e.g,P=POS[id];const w=g.w*W,h=P.h*W;
+    let ty,rot=0,sx=1,sy=1,op=1,shOp=1,tx=0;
+    // 爆炸图：最后一屏悬停时，以中间层为中心上下拉开
     const ex=(z-4)*hover*W*.075;
-    const restTop=baseY+P.top*W*(id==='plate'?1:1-stackShift*.08)-ex;
+    const restTop=baseY+P.top*W-ex;
     if(e.land==null){ // 不在场：飞回上方
       const t=e.leave?Math.min(1,(now-e.leave)/500):1;ty=lerp(restTop,-W*1.6,ease(t));op=1-t;shOp=0}
-    else{const t=Math.max(0,Math.min(1,(now-e.land)/950));
+    else{const t=Math.max(0,Math.min(1,(now-e.land)/1000));
       if(id==='bun-bottom'&&shown===0){ // 第一屏：底面包悬浮，轻轻上下
         const lt=Math.min(1,(now-e.land)/900);ty=restTop-W*.14*(1-ease(lt))+Math.sin(now/700)*W*.008-W*.02;rot=-6+Math.sin(now/900)*1.5;shOp=.55}
-      else{const c=landCurve(t);ty=restTop-c.y*(innerHeight*1.1);rot=e.spin*c.y*(id==='lettuce'?Math.cos(now/140):1);sy=1-c.sq*.07;sx=1+c.sq*.04;shOp=Math.min(1,t*1.4)}
+      else{const c=landCurve(t);ty=restTop-c.y*(innerHeight*1.1);
+        if(id==='lettuce'){rot=e.spin*c.y*Math.cos(now/170);tx=Math.sin(now/260)*W*.06*c.y;sy=1-c.sq*.12+Math.sin(now/120)*.05*c.y}  // 生菜在空中翻、飘
+        else{rot=e.spin*c.y;sy=1-c.sq*.11;sx=1+c.sq*.06}
+        shOp=Math.min(1,t*1.4)}
       if(t<=0&&id!=='bun-bottom'){op=0}}
-    const px=(mx*W*.03)*(z/7),py=(my*W*.02)*(z/7);
+    const px=(mx*W*.03)*(z/7)+tx,py=(my*W*.02)*(z/7);
     e.im.style.width=w+'px';e.im.style.opacity=op;e.im.style.zIndex=z*2+1;
     e.im.style.transform=`translate(calc(-50% + ${px}px),${ty+py}px) rotate(${rot}deg) scale(${sx},${sy})`;e.im.style.transformOrigin='50% 100%';
     // 阴影：投在下一层上，落下时由淡变实
     const shY=restTop+h-(g.ry*h)*1.1;e.sh.style.cssText=`width:${w*.92}px;height:${g.ry*h*1.5}px;transform:translate(calc(-50% + ${px}px),${shY+py+(id==='plate'?h*.12:0)}px);opacity:${shOp*(id==='plate'?.55:.75)};z-index:${z*2}`;
     // 标注线
-    const showNote=e.land!=null&&now-e.land>(id==='bun-bottom'?0:700)&&(id!=='plate'||shown===N-1);const n=e.n;n.classList.toggle('on',showNote);
-    if(showNote){const br=burger.getBoundingClientRect();const cx=br.left+W/2+px,cy=br.top+ty+py+h*(1-g.ry);const ax=cx+w*.47,lx=br.left+W*1.22;
+    const isNew=newest&&newest.id===id;const showNote=e.land!=null&&now-e.land>(id==='bun-bottom'?0:700)&&(hover>.5?true:isNew||(id==='bun-bottom'&&shown===0))&&(id!=='plate'||shown===N-1);
+    const n=e.n;n.classList.toggle('on',showNote);
+    if(showNote){const br=burger.getBoundingClientRect();const cx=br.left+W0/2+px,cy=br.top+ty+py+h*(1-g.ry);const ax=cx+w*.47,lx=br.left+W0/2+W*.5+W0*.2;
       const k=Math.min(1,(now-e.land-(id==='bun-bottom'?0:700))/450);NOTES.push({n,ax,ay:cy,lx,k})}
   });
   // 标注：按高度排开，间距至少 30px，折线连过去

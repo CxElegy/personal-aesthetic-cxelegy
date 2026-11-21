@@ -38,7 +38,8 @@ const mixP=(A,B,t)=>A.map((p,i)=>[lerp(p[0],B[i][0],t),lerp(p[1],B[i][1],t)]);
 const P=(x,y)=>({x,y}), dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 // 弹簧：k 刚度，z 阻尼比（<1 会有一点回弹）
 class Spring{constructor(v,k=120,z=.75){this.x=v;this.v=0;this.t=v;this.k=k;this.z=z}
-  step(dt){const c=2*Math.sqrt(this.k)*this.z;const a=this.k*(this.t-this.x)-c*this.v;this.v+=a*dt;this.x+=this.v*dt;return this.x}}
+  step(dt){const c=2*Math.sqrt(this.k)*this.z;const n=Math.max(1,Math.ceil(dt*240)),h=dt/n;  // 子步长，刚度高时也不发散
+    for(let i=0;i<n;i++){const a=this.k*(this.t-this.x)-c*this.v;this.v+=a*h;this.x+=this.v*h}return this.x}}
 class Spring2{constructor(x,y,k,z){this.a=new Spring(x,k,z);this.b=new Spring(y,k,z)}
   set(x,y){this.a.t=x;this.b.t=y} step(dt){this.a.step(dt);this.b.step(dt)} get x(){return this.a.x} get y(){return this.b.x}
   get speed(){return Math.hypot(this.a.v,this.b.v)}}
@@ -47,10 +48,10 @@ class Spring2{constructor(x,y,k,z){this.a=new Spring(x,k,z);this.b=new Spring(y,
 // 身体轮廓关键形（12 个控制点，顺时针，从脖子左侧开始）
 const BODY={
   front:[[-96,-292],[-130,-215],[-144,-132],[-152,-58],[-140,-12],[-100,0],[18,0],[54,-12],[64,-60],[54,-136],[32,-215],[6,-292]],
-  lean: [[-205,-292],[-230,-226],[-206,-150],[-162,-80],[-120,-16],[-76,0],[24,0],[58,-16],[66,-70],[48,-136],[-12,-216],[-82,-296]],
+  lean: [[-214,-282],[-236,-214],[-218,-140],[-190,-72],[-166,-16],[-124,0],[30,0],[66,-18],[80,-84],[66,-164],[4,-246],[-78,-302]],
   type: [[-102,-238],[-142,-190],[-156,-124],[-160,-58],[-146,-12],[-100,0],[22,0],[60,-12],[70,-58],[62,-124],[40,-190],[0,-238]]};
-const HEAD={front:{x:-44,y:-322,r:0},lean:{x:-152,y:-324,r:-.16},type:{x:-48,y:-268,r:0}};
-const SHOULDER={front:[[-98,-178],[-14,-178]],lean:[[-196,-212],[-92,-142]],type:[[-108,-140],[22,-140]]};
+const HEAD={front:{x:-44,y:-322,r:0},lean:{x:-150,y:-332,r:-.1},type:{x:-48,y:-268,r:0}};
+const SHOULDER={front:[[-98,-178],[-14,-178]],lean:[[-196,-176],[-96,-150]],type:[[-108,-140],[22,-140]]};
 const TAILBASE={front:[52,-66],lean:[44,-104],type:[58,-56]};
 const TAILREST=[-.15,-.42,-.75,-1.0,-1.08,-.9,-.5,-.08,.28,.5];
 
@@ -121,6 +122,8 @@ function hit(id){const k=KEYS[id];S.lastType=S.t;k.glow=1;
   if(S.wMouseArm.t>.5)arm=1;  // 左爪按着鼠标时，全部由右爪来敲
   S.big.v-=9;
   S.press[arm]={k,t:S.t};S.lastArm=arm;
+  // 先把爪子往目标猛拉一段，再交给弹簧（敲得快、拖影长）
+  const sp=S.paw[arm];sp.a.x+=(k.cx-sp.a.x)*.55;sp.b.x+=(k.cy-sp.b.x)*.55;
   const ch=LABEL[id]||(id.length===1?id:null);if(ch)addCap(ch,k)}
 
 // 键帽：胸前有一颗大的空白键帽；新字母从它旁边冒出来，把旧的往右推（原作 25–28 秒逐帧）
@@ -154,9 +157,9 @@ function update(dt){const t=S.t;
   for(let i=0;i<2;i++){let x=lerp(rest[i][0],lean[i][0],L),y=lerp(rest[i][1],lean[i][1],L);x=lerp(x,hover[i][0],T);y=lerp(y,hover[i][1],T);
     const pr=S.press[i],po=S.press[1-i];if(T>.5&&po&&t-po.t<.32&&(!pr||pr.t<po.t)){x=lerp(x,i?40:-110,.5);y=-52}
     if(i===0){const M=S.wMouseArm.x;const ck=t-S.click<.12?5:0;x=lerp(x,S.mouseDev.x+4,M);y=lerp(y,S.mouseDev.y-10+ck,M)}
-    if(pr&&t-pr.t<.14){x=pr.k.cx;y=pr.k.cy-2}
-    const sp=S.paw[i];sp.set(x,y);sp.a.k=sp.b.k=pr&&t-pr.t<.3?900:260;sp.step(dt);
-    const g=S.ghosts[i];g.unshift([sp.x,sp.y,sp.speed]);if(g.length>4)g.pop()}
+    if(pr&&t-pr.t<.3){x=pr.k.cx;y=pr.k.cy-2}
+    const sp=S.paw[i];sp.set(x,y);sp.a.k=sp.b.k=pr&&t-pr.t<.45?2200:260;sp.step(dt);
+    const g=S.ghosts[i];g.unshift([sp.x,sp.y,sp.speed]);if(g.length>6)g.pop()}
   // 键盘高亮衰减
   for(const k of keyList)k.glow=Math.max(0,k.glow-dt*1.6);
   // 键帽
@@ -230,13 +233,13 @@ function draw(){const g=ctx;g.setTransform(1,0,0,1,0,0);g.drawImage(bg,0,0);
   {const g=F;
   for(let i=0;i<2;i++){const s=[sh[i][0],sh[i][1]*(1+.012*breathe)];const ch=ik(s,pawPts[i],88,84,i?-1:1);
     // 运动拖影
-    const gh=S.ghosts[i];if(!reduce&&gh[0]&&gh[0][2]>380){for(let j=1;j<gh.length;j++){g.globalAlpha=.16/j;g.strokeStyle=INK;strokeLimb(g,ik(s,gh[j],88,84,i?-1:1),25)}g.globalAlpha=1}
-    g.strokeStyle=INK;strokeLimb(g,ch,26);g.fillStyle=INK;g.beginPath();g.ellipse(ch[2][0],ch[2][1]+1,15,12,0,0,7);g.fill();
+    const gh=S.ghosts[i];if(!reduce&&gh[0]&&gh[0][2]>160){for(let j=1;j<gh.length;j++){g.globalAlpha=.24/j;g.strokeStyle=INK;strokeLimb(g,ik(s,gh[j],88,84,i?-1:1),25)}g.globalAlpha=1}
+    g.strokeStyle=INK;strokeLimb(g,ch,24);g.lineWidth=31;g.beginPath();g.moveTo(...ch[0]);for(let q=1;q<=8;q++)g.lineTo(...qpt(ch,q/8*.5));g.stroke();g.fillStyle=INK;g.beginPath();g.ellipse(ch[2][0],ch[2][1]+1,16.5,13,0,0,7);g.fill();
     S.ghosts[i].ch=ch}}
   g.save();g.setTransform(1,0,0,1,0,0);g.filter=`drop-shadow(0 ${2.5*DPR}px ${2.5*DPR}px rgba(0,0,0,.3))`;g.drawImage(front,0,0);g.restore();
   // 腿的浅色分界线（原作里腿和身体之间的细浅线）
   g.strokeStyle=EDGE;g.lineWidth=1.5;g.lineCap='round';
-  for(let i=0;i<2;i++){const ch=S.ghosts[i].ch;limbEdges(g,ch,26,lerp(.42,.6,Tc))}
+  for(let i=0;i<2;i++){const ch=S.ghosts[i].ch;limbEdges(g,ch,24,lerp(.42,.6,Tc));g.beginPath();g.ellipse(ch[2][0],ch[2][1]+1,16.5,13,0,.15,Math.PI-.15);g.stroke()}
   // 后腿的分界线
   g.beginPath();g.moveTo(lerp(-118,-120,Lc),-12);g.quadraticCurveTo(lerp(-124,-96,Lc),-70,lerp(-112,-60,Lc),-112);g.moveTo(lerp(34,30,Lc),-10);g.quadraticCurveTo(lerp(44,44,Lc),-60,lerp(30,10,Lc),-104);
   g.globalAlpha=.55*(1-Tc*.6);g.stroke();g.globalAlpha=1;
