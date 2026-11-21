@@ -1,0 +1,46 @@
+{
+ "id": "6b000087000000002a02bffe",
+ "type": "video",
+ "title": "当海报设计遇上舒适卡点",
+ "desc": "#天才设计师[话题]# #好看[话题]# #排版设计[话题]# #海报设计[话题]# #视觉设计[话题]# #排版[话题]# #卡点[话题]#",
+ "user": "Teacher帅",
+ "tags": [
+  "天才设计师",
+  "好看",
+  "排版设计",
+  "海报设计",
+  "视觉设计",
+  "排版",
+  "卡点"
+ ],
+ "interact": {
+  "shareCount": "35",
+  "relation": "none",
+  "liked": false,
+  "collected": false,
+  "followed": false,
+  "niceCount": "",
+  "likedCount": "1305",
+  "collectedCount": "529",
+  "commentCount": "15"
+ },
+ "images": [
+  "http://sns-web-i10.rednotecdn.com/202611211851/67dcd0ba2cf1ba6085f87a3ad0e4a618/spectrum/1040g34o327pm76hv6c1049km8ksf0ceslml0jkg!nd_dft_wlteh_webp_3"
+ ],
+ "video": [
+  {
+   "q": "h264",
+   "urls": [
+    "http://sns-v11.rednotecdn.com/stream/79/110/258/01eaffffc733469a4f037001a1f8025a0d_258.mp4",
+    "http://sns-v27.rednotecdn.com/stream/79/110/258/01eaffffc733469a4f037001a1f8025a0d_258.mp4"
+   ],
+   "w": 720,
+   "h": 1280,
+   "size": 2541787
+  }
+ ],
+ "comments": [],
+ "source": "https://www.xiaohongshu.com/discovery/item/6b000087000000002a02bffe?app_platform=android&ignoreEngage=true&app_version=9.54.0&share_from_user_hidden=true&xsec_source=app_share&type=video&xsec_token=CBnJX3ut44J45vkyPqUkmWuX8i0EvfAD6ZlxaUYIPwwqc%3D&author_share=1&xhsshare=CopyLink&shareRedId=ODo0Qkc2Oj42NzUyOTgwNjc1OTg2OTc-&apptime=1795258210&share_id=ba9a7e0bacb94599946a3fb21e81faf2&share_channel=copy_link&track_code=6VgUqZlwSAB",
+ "fetched": "2026-11-21T10:51:23.218Z",
+ "videoNote": ""
+}

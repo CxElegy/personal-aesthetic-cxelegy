@@ -1688,6 +1688,51 @@
      "note": "原文照录自笔记正文。第 3 条的大字单词按画面情绪自选（示例：FLOAT / PATH / HOPE / FREEDOM / ROMANCE / SUMMER / WONDER / WILD）。"
     }
    ]
+  },
+  {
+   "id": "poster-beat-build",
+   "title": "卡点生长的建筑海报",
+   "category": "video",
+   "tags": [
+    "海报",
+    "卡点",
+    "排版",
+    "建筑",
+    "遮罩生长",
+    "视频剪辑"
+   ],
+   "rating": 2,
+   "summary": "每张建筑海报都从黑底里「沿着建筑自己的线条」长出来：先是圆窗、弯曲楼板、错落阳台的轮廓或线稿，再填进照片，最后中英文大标题卡着节拍砸进来；6 张海报 16 秒连播。",
+   "source": {
+    "type": "小红书",
+    "url": "https://xhslink.cn/o/6VgUqZlwSAB",
+    "author": "Teacher帅",
+    "title": "当海报设计遇上舒适卡点"
+   },
+   "ref": "references/xhs/2026-11-21-当海报设计遇上舒适卡点-02bffe",
+   "video": "xhs/6b000087000000002a02bffe-h264.mp4",
+   "thumb": "references/xhs/2026-11-21-当海报设计遇上舒适卡点-02bffe/frame-06.jpg",
+   "contact": "references/xhs/2026-11-21-当海报设计遇上舒适卡点-02bffe/contact-sheet.jpg",
+   "demo": null,
+   "status": "queued",
+   "status_note": "需要建筑照片素材，交给复刻会话；遮罩生长用 CSS clip-path / SVG 描边就能做。",
+   "verify": null,
+   "plan": {
+    "size": "M",
+    "template": "basic",
+    "assets": [
+     "2–3 张建筑照片（圆窗、弯曲楼板、错落阳台这类几何感强的）"
+    ],
+    "steps": [
+     "每张海报 4 拍：① 黑底上沿建筑轮廓的遮罩/线稿出现 ② 照片填进遮罩 ③ 轮廓描边线（亮黄/青）沿建筑曲线画出 ④ 中英文标题和小字卡点砸入",
+     "遮罩用 SVG path（跟着照片里的建筑形状手描），描边用 stroke-dashoffset 动画",
+     "拍点约每 0.5s 一下，海报之间硬切黑场",
+     "结尾黑底 + 白色品牌标"
+    ],
+    "prompt": null,
+    "accept": "心动点（画面沿建筑自己的线条长出来 + 文字卡点）做到；RUBRIC ≥ 6"
+   },
+   "evidence": null
   }
  ],
  "ratings": {
