@@ -22,24 +22,7 @@
   - 屏幕边缘光：沿圆角矩形的发光描边，颜色沿周长从紫渐变到青，缓慢流动
   - 做成手机竖屏尺寸，电脑上用鼠标拖动模拟上滑
 - 验收：RUBRIC ≥ 7：一秒钟测试能认出是同一个效果；极光要有流动的噪声质感
-- 原视频：数据库 `xhs/6afe9aa9000000002b025a2d.mp4`，本地 `references/xhs/2026-11-21-炫酷的交互动效分享-025a2d`
-
-## ❤❤❤ `burger-layers` 一层层叠起来的汉堡官网
-
-- 大小：中（半小时左右）
-- 模板：basic（写实图片分层 + 滚动），以后可升级 three-scene
-- 素材：8 张写实食材图，同一个斜上方 3/4 视角、同一光源、透明背景：底面包（切面朝上，看得到气孔）、肉饼、融化芝士片、生菜、番茄横切片 ×3、红洋葱圈、顶面包（芝麻清晰）、盘子；可选：每层一张「剖面特写」，用于标注线旁的放大圆
-- 步骤：
-  - 先按 METHOD.md 写清单（verify/checklists/burger-layers.md），第一个必须项就是心动点
-  - 素材：AI 生成（提示词见下），用同一个种子 / 同一个参考图保证视角和光线一致，去背景后检查边缘
-  - 每屏一层食材从上方落下，带真实阴影（落下时阴影由淡变实）；落下时有轻微旋转，落地有一点压缩回弹
-  - 每层旁边画细标注线（1px 线 + 小圆点）和两行小字（名称、规格，如「Brioche bun · toasted 40s」），标注线随该层出现时画出来
-  - 背景色幕布转场、标题切换沿用第一版的代码
-  - 最后一屏汉堡完整落到盘子上，鼠标悬停可以把汉堡「拉开」成爆炸图
-- AI 视频提示词：
-  > Studio product photo of a single [toasted brioche burger bun, cut side up, visible airy crumb | glossy flame-grilled beef patty | slice of melting cheddar draping | ruffled fresh green lettuce leaf, translucent edges | thick tomato slice cross-section with seeds and gel | red onion rings | sesame seed burger top bun], three-quarter top-down view at 35 degrees, soft key light from upper left, natural soft shadow, isolated on plain light background for cutout, ultra-detailed macro texture, consistent lighting across series, no text.
-- 验收：RUBRIC ≥ 7，并且心动点通过：一秒钟测试里能认出是「真实汉堡被拆开」；切面和质感清楚
-- 原视频：数据库 `xhs/6affdde0000000002a00f625.mp4`，本地 `references/xhs/2026-11-21-把汉堡做成网页动效🍔-00f625`
+- 原视频：数据库 `xhs/6afe9aa9000000002b025a2d-h264.mp4`，本地 `references/xhs/2026-11-21-炫酷的交互动效分享-025a2d`
 
 ## ❤❤❤ `book-popup` 画册里长出实物
 
@@ -53,7 +36,7 @@
 - AI 视频提示词：
   > Overhead three-quarter view of an open product catalog lying on a warm walnut table, soft slanted afternoon sunlight through sheer curtains. On the right page a flat printed illustration of a leather handbag slowly rises and becomes a real miniature 3D handbag standing on the paper, casting a soft shadow. Beside it: three fabric swatches and small serif spec text. Cream paper, photorealistic, shallow depth of field, slow and smooth, no people, no text overlays.
 - 验收：核对 ≥ 75 分：平面 → 立体的过程清楚、阳光与纸张质感一致、规格排版像真画册
-- 原视频：数据库 `xhs/6af5abd7000000002b011407.mp4`，本地 `references/xhs/2026-11-20-海外爆款分享-Part.034｜时尚品牌-011407`
+- 原视频：数据库 `xhs/6af5abd7000000002b011407-h264.mp4`，本地 `references/xhs/2026-11-20-海外爆款分享-Part.034｜时尚品牌-011407`
 
 ## ❤❤ `mouse-tracking` 鼠标追踪的 3D 小黑猫首屏
 
@@ -67,7 +50,7 @@
 - AI 视频提示词：
   > Photorealistic fluffy black kitten with big green eyes sitting on a pure white background holding a takeaway coffee cup, centered, 16:9. The kitten slowly turns its head from looking at the left edge to looking at the right edge, camera locked, soft studio light, 4 seconds, no other motion.
 - 验收：核对 ≥ 80 分：鼠标从左到右，猫头平滑跟着转，没有跳帧
-- 原视频：数据库 `xhs/6abc7965000000000202887b.mp4`，本地 `references/xhs/2026-11-20-鼠标追踪‼️充满趣味的网站首页交互效果-02887b`
+- 原视频：数据库 `xhs/6abc7965000000000202887b-h264.mp4`，本地 `references/xhs/2026-11-20-鼠标追踪‼️充满趣味的网站首页交互效果-02887b`
 
 ## ❤❤ `eva-magi` EVA 风格电子工牌
 
@@ -79,7 +62,7 @@
   - 点击后三个面板依次跳出「審議 → 承認 / 否定」，随机决策
   - 做成手机竖屏尺寸，像工牌屏幕
 - 验收：核对 ≥ 80 分
-- 原视频：数据库 `xhs/6af82764000000002501f1a8.mp4`，本地 `references/xhs/2026-11-20-发朋友圈没人懂，但发小红书一定有人懂-01f1a8`
+- 原视频：数据库 `xhs/6af82764000000002501f1a8-h264.mp4`，本地 `references/xhs/2026-11-20-发朋友圈没人懂，但发小红书一定有人懂-01f1a8`
 
 ## ❤❤ `menu-point-swap` 指哪变哪的菜单联动
 
@@ -91,7 +74,7 @@
   - 鼠标划过菜单项：产品图交叉淡入并轻微缩放，菜名用大字从上方滑入
   - 停止划动后定格在当前产品，手机上改为点击
 - 验收：核对 ≥ 80 分：切换跟手、不闪烁、名字和图同步
-- 原视频：数据库 `xhs/6afa42fd00000000190256d2.mp4`，本地 `references/xhs/2026-11-21-海外社媒灵感：简单好复刻的顶级轮播创意-0256d2`
+- 原视频：数据库 `xhs/6afa42fd00000000190256d2-h264.mp4`，本地 `references/xhs/2026-11-21-海外社媒灵感：简单好复刻的顶级轮播创意-0256d2`
 
 ## ❤❤ `anchor-wordmark` 字标不动、载体在变的品牌版式
 
@@ -105,7 +88,7 @@
 - AI 视频提示词：
   > Moody dark navy studio photograph, [canvas tote bag held by a hand | open glass laptop on a black desk | back of a black leather jacket | rough stone floating in fog], centered, the upper-middle area left plain for a logo, low-key lighting, cool navy and warm cream tones, minimal, 9:16, no text.
 - 验收：RUBRIC ≥ 7：字标位置一帧都不能跳，切换节奏和色调一致
-- 原视频：数据库 `xhs/6afd3db6000000002b03d614.mp4`，本地 `references/xhs/2026-11-21-审美积累-极简板式变化-03d614`
+- 原视频：数据库 `xhs/6afd3db6000000002b03d614-h264.mp4`，本地 `references/xhs/2026-11-21-审美积累-极简板式变化-03d614`
 
 ## ❤❤ `ai-status-cards` 满屏会动的 AI 状态卡片
 
@@ -116,7 +99,7 @@
   - 做 6–8 种卡片组件（进度条、滚动数字、声波、头像叠排、状态切换 In Review → Done）
   - 用 CSS columns 铺满屏幕，每张卡片用随机间隔各自更新
 - 验收：核对 ≥ 75 分：满屏都在动但不乱，暗色和强调色一致
-- 原视频：数据库 `xhs/6afc0db90000000025008af8.mp4`，本地 `references/xhs/2026-11-20-🆓救命！这个UI动效-Skill-也太好看了吧-008af8`
+- 原视频：数据库 `xhs/6afc0db90000000025008af8-h264.mp4`，本地 `references/xhs/2026-11-20-🆓救命！这个UI动效-Skill-也太好看了吧-008af8`
 
 ## ❤❤ `live-commerce` 直播电商宣传片：概念板块的讲法
 
@@ -128,7 +111,7 @@
   - ④ 商品节点网络：散落的商品图用细线连起来，中间「découvrent un produit」
   - ⑤ 文字竖向滚动列表 + 右边网点背景上的商品卡
 - 验收：核对 ≥ 70 分：剪切节奏（每 1–2 秒一个画面）和过渡方式一致
-- 原视频：数据库 `xhs/6affdeee0000000016030f31.mp4`，本地 `references/xhs/2026-11-20-高级感UI交互，让产品视觉更有质感✨-030f31`
+- 原视频：数据库 `xhs/6affdeee0000000016030f31-h264.mp4`，本地 `references/xhs/2026-11-20-高级感UI交互，让产品视觉更有质感✨-030f31`
 
 ## ❤❤ `rain-glass` 窗玻璃上的雨滴（Shader Lab）
 
@@ -141,7 +124,7 @@
   - 动作：大水滴缓慢下滑、合并小水滴、留下拖尾和细小残留
   - 场景切换：飞机舷窗（圆角椭圆遮罩）、车窗（斜向流动）、房屋窗户（垂直下落）
 - 验收：RUBRIC ≥ 7，并且心动点通过：放大看，每颗雨滴里都是清晰的折射背景
-- 原视频：数据库 `xhs/6afc1f62000000002a025b5f.mp4`，本地 `references/xhs/2026-11-21-把下雨效果做出来了！这个开源项目太酷了-025b5f`
+- 原视频：数据库 `xhs/6afc1f62000000002a025b5f-h264.mp4`，本地 `references/xhs/2026-11-21-把下雨效果做出来了！这个开源项目太酷了-025b5f`
 
 ## ❤❤ `earbud-scroll` 耳机概念页：滚动拆解
 
@@ -155,5 +138,5 @@
 - AI 视频提示词：
   > Product render of matte navy wireless earbuds on a deep navy background, slow turntable rotation revealing the stem, then the earbud separates into exploded layers (shell, battery, driver, circuit board) aligned vertically, thin cyan accent light strip, studio lighting, 4 seconds, seamless, no text.
 - 验收：核对 ≥ 75 分：三幕顺序和镜头节奏一致，第三幕能看清分层
-- 原视频：数据库 `xhs/6b00cfae000000002b033223.mp4`，本地 `references/xhs/2026-11-20-耳机概念-033223`
+- 原视频：数据库 `xhs/6b00cfae000000002b033223-h264.mp4`，本地 `references/xhs/2026-11-20-耳机概念-033223`
 

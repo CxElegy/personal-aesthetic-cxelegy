@@ -211,56 +211,78 @@
    "thumb": "references/xhs/2026-11-21-把汉堡做成网页动效🍔-00f625/frame-02.jpg",
    "contact": "references/xhs/2026-11-21-把汉堡做成网页动效🍔-00f625/contact-sheet.jpg",
    "demo": "demos/burger-layers.html",
-   "status": "queued",
+   "status": "replicated",
    "verify": {
     "date": "2026-11-21",
-    "score": 1.5,
+    "version": 2,
+    "score": 6.2,
     "image": "verify/burger-layers.jpg",
-    "method": "tools/verify/compare.js：逐屏滚动截 6 帧，原视频抽 6 帧上下对比；另外截了两屏之间的转场帧单独对比",
-    "match": [
-     "六屏顺序、背景色（米白 → 黑 → 灰绿 → 珊瑚红 → 焦糖 → 米白）和标题文案",
-     "每屏落下一层食材叠到汉堡上，最后落到盘子里",
-     "换屏时下一屏颜色从底部像幕布升起（对比后补上）",
-     "汉堡占画面四成左右（对比后放大）",
-     "鼠标移动时汉堡轻微倾斜"
-    ],
-    "diff": [
-     "原作是实拍食材，从斜上方看得到面包顶面；这里是 SVG 插画、侧面视角",
-     "原作标题字体更窄更紧",
-     "原作右上角有「ONE」这类小号步骤字和细线框装饰"
-    ],
+    "checklist": "verify/checklists/burger-layers.md",
+    "rubric": "tools/verify/RUBRIC.md",
     "scale": 10,
+    "method": "compare.js 逐屏对比 + 两轮独立复查；分数取第 2 轮独立复查",
     "scores": {
-     "motion": 6,
-     "form": 4,
+     "motion": 5.5,
+     "form": 6,
      "states": 7,
-     "render": 3,
+     "render": 7,
      "context": 6
     },
-    "raw": 5.3,
-    "cap": 1.5,
-    "rubric": "tools/verify/RUBRIC.md",
+    "raw": 6.2,
+    "cap": 8,
+    "rounds": [
+     {
+      "round": 1,
+      "reviewer": 6.3,
+      "fails": [
+       "HT-02 标注太密、悬停溢出"
+      ]
+     },
+     {
+      "round": 2,
+      "reviewer": 6.2,
+      "fails": []
+     }
+    ],
+    "heart": {
+     "text": "真实食材被拆开，看得到内部构造和质感（面包气孔、番茄切面、芝麻、标注线）",
+     "met": "yes",
+     "material_downgraded": false
+    },
+    "match": [
+     "8 层写实食材，同一视角同一光源（一张 AI 图切出来）",
+     "逐屏累加，顺序和配色与原作一致",
+     "落下带旋转和回弹，阴影由淡变实；生菜空中飘",
+     "下一屏颜色从底部升起",
+     "每层落地画 1px 标注线；最后落盘，悬停拉开成爆炸图"
+    ],
+    "diff": [
+     "芝士是硬方片，原作融化下垂",
+     "原作汉堡更小更扁、更俯视，留白多",
+     "原作标题跟整屏一起滚，复刻是裁切淡出",
+     "落地回弹在截图里不明显",
+     "原作最后一屏盘子从下方升起接住汉堡"
+    ],
     "gap": {
-     "original_tech": "网页滚动叙事（GSAP ScrollTrigger 一类），食材是去背景的实拍或 3D 渲染图片，从斜上方看。",
-     "my_tech": "同样的滚动结构和幕布转场；食材是我用 SVG 画的侧面插画。",
-     "why": "结构对了，但最吸引人的是「真实食材叠起来」，我的插画一眼就不像（一秒钟测试不通过）。",
+     "original_tech": "滚动叙事网页 + 写实（AI 或实拍）去背景食材图",
+     "my_tech": "同样的结构；素材是 AI 一张图生成 8 层再 rembg 抠图",
+     "why": "心动点做到了；剩下是构图比例、芝士素材、转场节奏的细节",
      "paths": [
       {
        "target": "7 分",
-       "need": "每层食材换成 AI 生成的去背景图片（同一个斜上方视角），代码不用改，替换图片即可。少量 token，需要生图。"
+       "need": "重新生成融化下垂的芝士；汉堡缩到屏宽 30% 并压扁；落地 scaleY 0.92 回弹更明显"
       },
       {
        "target": "8 分",
-       "need": "标题换成更窄的高对比衬线体，加上原作的「ONE」步骤字和细线框。"
+       "need": "标题改成跟整屏滚动；盘子从下方升起；更俯视的一套素材"
       }
      ]
     },
-    "heart": {
-     "text": "真实食材被拆开，看得到内部构造和质感（面包气孔、番茄切面、芝麻、标注线）",
-     "met": "no",
-     "material_downgraded": true
-    },
-    "user_score": 1
+    "previous": {
+     "version": 1,
+     "score": 1.5,
+     "user_score": 1
+    }
    },
    "status_note": "第一版（卡通插画叠层）只得 1 分：丢了「真实拆解」这个心动点。要重做，需要写实的食材素材。",
    "plan": {
@@ -279,7 +301,8 @@
      "最后一屏汉堡完整落到盘子上，鼠标悬停可以把汉堡「拉开」成爆炸图"
     ],
     "prompt": "Studio product photo of a single [toasted brioche burger bun, cut side up, visible airy crumb | glossy flame-grilled beef patty | slice of melting cheddar draping | ruffled fresh green lettuce leaf, translucent edges | thick tomato slice cross-section with seeds and gel | red onion rings | sesame seed burger top bun], three-quarter top-down view at 35 degrees, soft key light from upper left, natural soft shadow, isolated on plain light background for cutout, ultra-detailed macro texture, consistent lighting across series, no text.",
-    "accept": "RUBRIC ≥ 7，并且心动点通过：一秒钟测试里能认出是「真实汉堡被拆开」；切面和质感清楚"
+    "accept": "RUBRIC ≥ 7，并且心动点通过：一秒钟测试里能认出是「真实汉堡被拆开」；切面和质感清楚",
+    "done": "2026-11-21 第 2 版已做（素材来源改为 AI 一张图 + 抠图，见 demos/assets/burger/SOURCE.md）"
    }
   },
   {
@@ -369,54 +392,77 @@
    "status": "replicated",
    "verify": {
     "date": "2026-11-21",
-    "score": 2.9,
+    "version": 2,
+    "score": 5.2,
     "image": "verify/typing-cat.jpg",
+    "checklist": "verify/checklists/typing-cat.md",
+    "rubric": "tools/verify/RUBRIC.md",
+    "scale": 10,
+    "method": "compare.js 逐帧对比 + 两轮独立复查（子代理只看原作帧、复刻帧和清单）；分数取第 2 轮独立复查",
+    "scores": {
+     "motion": 5,
+     "form": 4.5,
+     "states": 7,
+     "render": 5.5,
+     "context": 4
+    },
+    "raw": 5.2,
+    "cap": 8,
+    "rounds": [
+     {
+      "round": 1,
+      "reviewer": 4.7,
+      "fails": [
+       "ST-02 侧身剪影",
+       "MO-01 爪子够不到键、没拖影"
+      ]
+     },
+     {
+      "round": 2,
+      "reviewer": 5.2,
+      "fails": [
+       "ST-02 侧身剪影（第 2 轮后已改，待下一轮复查）"
+      ]
+     }
+    ],
+    "heart": {
+     "text": "一只会表演的小黑猫：姿势之间连续变形；动鼠标就伸爪搭鼠标，打字就趴下两爪交替敲，被摸眯成细线",
+     "met": "partial",
+     "material_downgraded": false
+    },
     "match": [
-     "扁平黑猫、大黄绿眼睛、胡须、尾巴 ✓",
-     "眼睛跟随鼠标、摸头眯眼、打字时爪子敲键盘、字母键帽弹出 ✓",
-     "对比后补上键盘黑边和左边白色圆按钮 ✓"
+     "正坐 / 侧身搭鼠标 / 打字缩身 / 被摸眯眼四个状态，弹簧插值连续变形",
+     "分层：左爪搭鼠标的同时右爪打字；点鼠标亮绿",
+     "爪子像橡皮管一样伸到被按的键上，带拖影",
+     "胸前大空白键帽，字母往右推；停手后最后一颗飘到尾巴旁",
+     "被按的键亮荧光绿"
     ],
     "diff": [
-     "原作打字时身体前倾、两只爪子抬起交替敲",
-     "原作摸头时会伸爪去按圆按钮",
-     "原作背景是用户的桌面壁纸（桌宠），这里是网页"
+     "侧身剪影仍不够像（第 2 轮后又改了一次）",
+     "键盘没有 3/4 透视",
+     "壁纸是程序生成的雾，不是具体的雾林；猫在画面里偏大",
+     "过渡时没有原作的浅色重影",
+     "手绘感的二级变形（脸颊、耳朵）缺失"
     ],
-    "method": "tools/verify/compare.js：Playwright 按剧本操作复刻页面截 6 帧，原视频均匀抽 6 帧，上下拼图后人工逐项比对",
-    "scale": 10,
-    "scores": {
-     "motion": 2,
-     "form": 4,
-     "states": 3,
-     "render": 3,
-     "context": 3
-    },
-    "raw": 2.9,
-    "cap": 3,
-    "rubric": "tools/verify/RUBRIC.md",
     "gap": {
-     "original_tech": "很可能是 Rive 这类骨骼加网格变形的角色动画（也可能是手绘逐帧），用状态机切换「侧身搭爪待机 → 被摸眯眼 → 正面坐直打字」；做成桌面悬浮窗 App，监听全局键盘；按过的字母排成一行飘在键盘上方，带运动模糊；键盘上按到的键会亮绿色。",
-     "my_tech": "一张静止的 SVG 小猫，只有爪子上下平移、瞳孔偏移；只有一个正面姿势，没有侧身搭爪；只在网页获得焦点时才能收到按键；键帽是单颗弹飞，不是排成一行。",
-     "why": "动画层差了一级：我没有骨骼或网格变形，身体不会动，也没有姿势切换。素材层：原作的轮廓是手绘有机曲线，我画的是几何拼图。环境层：网页拿不到全局键盘，原作是桌面 App。",
+     "original_tech": "Rive 一类的骨骼 + 网格变形 + 分层状态机（推测），做成桌面悬浮窗",
+     "my_tech": "canvas 代码骨骼：同点数轮廓关键形弹簧插值、两节 IK 橡皮管前爪、角度弹簧尾巴、分层状态机",
+     "why": "技术层级相同，但轮廓是我按测量写的控制点，没有画师调过的手绘曲线和二级变形；环境（壁纸、键盘透视）也简化了",
      "paths": [
       {
-       "target": "5 分",
-       "need": "不用新软件：用 SVG 路径插值画出 3 个姿势（侧身搭爪、坐直、左右爪按下）并在它们之间变形；加尾巴弹簧、耳朵抖动；字母排成一行加运动模糊；键盘按键亮起。中等 token。"
+       "target": "6.5 分",
+       "need": "侧身剪影再对一轮；过渡叠 2–3 层浅色残影；键盘做 3/4 透视；猫缩小到桌宠比例"
       },
       {
-       "target": "7 分",
-       "need": "画面要像：需要一套分层的猫素材（自己画，或用 AI 生成后转成矢量、按身体部位拆层），再用代码做变形动画。"
-      },
-      {
-       "target": "9 分",
-       "need": "用 Rive 编辑器（免费，网页版）给猫绑骨骼、做状态机，导出 .riv 文件，网页用 @rive-app/canvas 播放；想要真正的桌面宠物，再用 Tauri 或 Electron 做透明悬浮窗加全局键盘监听。"
+       "target": "8 分",
+       "need": "用生图服务做一张雾林壁纸；请画师或用户在 Rive 里画一版角色（我可以写状态机输入）"
       }
      ]
     },
-    "user_score": 3,
-    "heart": {
-     "text": "一只会变形、会表演的小黑猫：侧身搭爪、被摸眯眼、坐直打字",
-     "met": "no",
-     "material_downgraded": false
+    "previous": {
+     "version": 1,
+     "score": 2.9,
+     "user_score": 3
     }
    },
    "rating": 3
@@ -1409,8 +1455,8 @@
   }
  ],
  "ratings": {
-  "3": "最爱",
+  "1": "一般般",
   "2": "喜欢",
-  "1": "一般般"
+  "3": "最爱"
  }
 }
