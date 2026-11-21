@@ -13,6 +13,11 @@
   4. 只从一两个素材推断出的规则标为「待确认」，有新证据再确认或删除。
 - 与已有规则冲突时，不要静默覆盖，向用户确认。
 
+## 两个会话的分工（2026-11-21 用户定的）
+- **投稿会话**（主会话「审美图鉴 · 投稿」）：用户发链接、说喜欢什么 → 抓取素材、写 `AESTHETIC.md` 和 `references/`、在 `catalog/items.json` 登记新条目（状态先设为 `queued` 或 `n/a`，可以写 `plan` 草稿）。**不做复刻。**
+- **复刻会话**（「审美图鉴 · REA 复刻」）：按 `tools/replicate/METHOD.md` 做复刻、对比、打分、循环改进。主要改 `demos/`、`verify/`、`tools/verify/`、`tools/replicate/`，以及条目的 `demo` / `status` / `verify` / `plan` / `evidence` 字段；不改 `AESTHETIC.md` 和 `references/`。
+- 两边推同一个分支：**提交前先 `git pull --rebase`**，小步提交；`catalog/items.json` 冲突时保留对方新增的条目，只合并自己负责的字段。
+
 ## 小红书素材
 - 用 `tools/xhs/fetch.js` 抓取（见 `tools/xhs/README.md`）。不要伪装身份或绕过登录；需要登录时用户扫码（云端：`XHS_HEADLESS=1`，二维码截图发给用户）。登录状态缓存在 `~/.cache/rednote-profile`，不进仓库。
 - 抓完后看每条的图片、`contact-sheet.jpg` 和 `frame-*.jpg`，填写 `note.md` 的「学到的」，再按上面的步骤更新 `AESTHETIC.md`。
