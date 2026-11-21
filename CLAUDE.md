@@ -37,9 +37,10 @@
 5a. 原来的核对：`node tools/verify/compare.js <id>` 生成 `verify/<id>.jpg`（上排原作、下排复刻），自己看图，把分数、对上的、不一样的写进该条的 `verify`；分数低就改演示再核对一次。
 5b. **耗 token 的复刻先排队**（2026-11-21 用户定的）：3D 建模、需要 AI 生成素材的效果，平时不做，只放原视频；在条目里写 `plan`（大小、模板、素材、步骤、AI 提示词、验收），状态设为 `queued`，运行 `node tools/replicate/queue.js` 更新 `tools/replicate/QUEUE.md`。用户说「开始做 <编号>」时，按 QUEUE.md 的固定步骤开工（`tools/replicate/new.sh` 生成起点）。
 6. **视频**（2026-11-21 定）：存在**店长 PC 的自建 Supabase**（`https://elegy.tailc8cfff.ts.net`，存储桶 `aesthetic-videos`，公开读取）。网站播放用 H.264（`video.web.mp4`，原片加 faststart；超过 20MB 的重编码 CRF 23），**不用 AV1**（很多设备播不了）。条目的 `video` 是桶里的路径 `xhs/<笔记id>-h264.mp4`。
-   - 上传：`node tools/db/upload-videos.js`（用公开的 publishable key，已存在的会跳过；`--check` 只检查）。
-   - 上传身份（2026-11-21 用户选的方案 1B）：**专用上传令牌**，数据库角色 `video_uploader`，只能往 `aesthetic-videos` 写。令牌存在云端环境的 Network secrets（主机 `elegy.tailc8cfff.ts.net`，Authorization: Bearer），代理自动加上，对话里看不到。
-   - **不要再开 PC 会话来上传**（用户原话「不要开会话」），也不要让用户传话。上传失败 401/403 时，告诉用户令牌缺失或过期：PC 上重新签一个（角色 video_uploader，一年有效），用户自己加到环境的 Network secrets。
+   - 上传：`node tools/db/upload-videos.js`（已在桶里的会跳过；`--check` 只检查）。
+   - 上传方式（2026-11-21 店长定）：**PC 只负责开放数据库接口**，提供限时上传链接 `https://elegy.tailc8cfff.ts.net/upload/<令牌>`（约一天有效，新链接发在 Discord）。`PUT <链接>/<桶里的路径>` 就写进 `aesthetic-videos` 同一路径，同名不能覆盖。
+   - 用户发来新链接时存到 `~/.cache/aesthetic-upload-url`（或环境变量 `AESTHETIC_UPLOAD_URL`），**链接不进仓库、不写进任何提交的文件**。
+   - **不要开 PC 会话**（店长原话「不要开会话」），也不要让用户传话。链接过期（401/403/404）时，直接请用户发 Discord 里的新链接。
    - **不需要也不要索取 service_role 密钥。**
    - 视频不进 git。
 7. **发布**：推到 main 后 `.github/workflows/pages.yml` 自动生成并发布网站；本地预览 `node tools/site/build.js` 后打开 `dist/`。
